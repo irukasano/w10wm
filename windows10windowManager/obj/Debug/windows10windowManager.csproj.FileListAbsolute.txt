@@ -1,0 +1,9 @@
+E:\Projects\github\w10wm\windows10windowManager\bin\Debug\windows10windowManager.exe.config
+E:\Projects\github\w10wm\windows10windowManager\bin\Debug\windows10windowManager.exe
+E:\Projects\github\w10wm\windows10windowManager\bin\Debug\windows10windowManager.pdb
+E:\Projects\github\w10wm\windows10windowManager\obj\Debug\windows10windowManager.csprojAssemblyReference.cache
+E:\Projects\github\w10wm\windows10windowManager\obj\Debug\windows10windowManager.Properties.Resources.resources
+E:\Projects\github\w10wm\windows10windowManager\obj\Debug\windows10windowManager.csproj.GenerateResource.cache
+E:\Projects\github\w10wm\windows10windowManager\obj\Debug\windows10windowManager.csproj.CoreCompileInputs.cache
+E:\Projects\github\w10wm\windows10windowManager\obj\Debug\windows10windowManager.exe
+E:\Projects\github\w10wm\windows10windowManager\obj\Debug\windows10windowManager.pdb
