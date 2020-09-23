@@ -9,11 +9,13 @@ namespace CalculatorLibrary
     {
         public Calculator()
         {
+            /*
             StreamWriter logFile = File.CreateText("calculator.log");
             Trace.Listeners.Add(new TextWriterTraceListener(logFile));
             Trace.AutoFlush = true;
             Trace.WriteLine("Starting Calculator Log");
             Trace.WriteLine(String.Format("Started {0}", System.DateTime.Now.ToString()));
+            */
         }
 
         public double DoOperation(double num1, double num2, string op)
