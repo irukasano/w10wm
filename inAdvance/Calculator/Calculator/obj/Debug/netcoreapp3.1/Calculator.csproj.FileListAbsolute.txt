@@ -11,3 +11,6 @@ E:\Projects\github\w10wm\inAdvance\Calculator\Calculator\obj\Debug\netcoreapp3.1
 E:\Projects\github\w10wm\inAdvance\Calculator\Calculator\obj\Debug\netcoreapp3.1\Calculator.dll
 E:\Projects\github\w10wm\inAdvance\Calculator\Calculator\obj\Debug\netcoreapp3.1\Calculator.pdb
 E:\Projects\github\w10wm\inAdvance\Calculator\Calculator\obj\Debug\netcoreapp3.1\Calculator.genruntimeconfig.cache
+E:\Projects\github\w10wm\inAdvance\Calculator\Calculator\bin\Debug\netcoreapp3.1\CalculatorLibrary.dll
+E:\Projects\github\w10wm\inAdvance\Calculator\Calculator\bin\Debug\netcoreapp3.1\CalculatorLibrary.pdb
+E:\Projects\github\w10wm\inAdvance\Calculator\Calculator\obj\Debug\netcoreapp3.1\Calculator.csproj.CopyComplete

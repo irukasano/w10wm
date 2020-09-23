@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    ".NETCoreApp,Version=v3.1": {}
+    ".NETCoreApp,Version=v3.1": {
+      "CalculatorLibrary/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "compile": {
+          "bin/placeholder/CalculatorLibrary.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CalculatorLibrary.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "CalculatorLibrary/1.0.0": {
+      "type": "project",
+      "path": "../CalculatorLibrary/CalculatorLibrary.csproj",
+      "msbuildProject": "../CalculatorLibrary/CalculatorLibrary.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    ".NETCoreApp,Version=v3.1": []
+    ".NETCoreApp,Version=v3.1": [
+      "CalculatorLibrary >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\sano\\.nuget\\packages\\": {}
@@ -32,7 +51,11 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "projectReferences": {}
+          "projectReferences": {
+            "E:\\Projects\\github\\w10wm\\inAdvance\\Calculator\\CalculatorLibrary\\CalculatorLibrary.csproj": {
+              "projectPath": "E:\\Projects\\github\\w10wm\\inAdvance\\Calculator\\CalculatorLibrary\\CalculatorLibrary.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

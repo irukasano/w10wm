@@ -1,0 +1,9 @@
+E:\Projects\github\w10wm\inAdvance\Calculator\CalculatorLibrary\bin\Debug\netstandard2.0\CalculatorLibrary.deps.json
+E:\Projects\github\w10wm\inAdvance\Calculator\CalculatorLibrary\bin\Debug\netstandard2.0\CalculatorLibrary.dll
+E:\Projects\github\w10wm\inAdvance\Calculator\CalculatorLibrary\bin\Debug\netstandard2.0\CalculatorLibrary.pdb
+E:\Projects\github\w10wm\inAdvance\Calculator\CalculatorLibrary\obj\Debug\netstandard2.0\CalculatorLibrary.csprojAssemblyReference.cache
+E:\Projects\github\w10wm\inAdvance\Calculator\CalculatorLibrary\obj\Debug\netstandard2.0\CalculatorLibrary.AssemblyInfoInputs.cache
+E:\Projects\github\w10wm\inAdvance\Calculator\CalculatorLibrary\obj\Debug\netstandard2.0\CalculatorLibrary.AssemblyInfo.cs
+E:\Projects\github\w10wm\inAdvance\Calculator\CalculatorLibrary\obj\Debug\netstandard2.0\CalculatorLibrary.csproj.CoreCompileInputs.cache
+E:\Projects\github\w10wm\inAdvance\Calculator\CalculatorLibrary\obj\Debug\netstandard2.0\CalculatorLibrary.dll
+E:\Projects\github\w10wm\inAdvance\Calculator\CalculatorLibrary\obj\Debug\netstandard2.0\CalculatorLibrary.pdb
