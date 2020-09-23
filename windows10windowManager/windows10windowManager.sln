@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculatorLibrary", "..\inA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculatorLibraryTests", "..\inAdvance\Calculator\CalculatorLibraryTests\CalculatorLibraryTests.csproj", "{B41FC2FD-3FB5-49C7-AB67-7E56DAF9C4C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotkeyApplication", "..\inAdvance\Hotkey\WindowsFormsApp1\HotkeyApplication.csproj", "{511C7FEF-2C2A-4F83-ADB2-B85C63BFD607}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{B41FC2FD-3FB5-49C7-AB67-7E56DAF9C4C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B41FC2FD-3FB5-49C7-AB67-7E56DAF9C4C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B41FC2FD-3FB5-49C7-AB67-7E56DAF9C4C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{511C7FEF-2C2A-4F83-ADB2-B85C63BFD607}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{511C7FEF-2C2A-4F83-ADB2-B85C63BFD607}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{511C7FEF-2C2A-4F83-ADB2-B85C63BFD607}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{511C7FEF-2C2A-4F83-ADB2-B85C63BFD607}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
