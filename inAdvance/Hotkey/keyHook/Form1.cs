@@ -40,6 +40,13 @@ namespace keyHook
         {
             var key = KeyMapConverter.KeyCodeToKey(e.KeyCode);
             Debug.WriteLine("Keydown KeyCode {0}", key);
+
+            if (e.equalsModifiers(new int[] { (int)OriginalKey.LeftWindows }))
+            {
+                Debug.WriteLine("With LeftWindows");
+            }
+
+            /*
             if ( key == OriginalKey.LeftWindows)
             {
                 interceptKeyboard.callNextHook = false;
@@ -47,6 +54,7 @@ namespace keyHook
             {
                 interceptKeyboard.callNextHook = true;
             }
+            */
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
