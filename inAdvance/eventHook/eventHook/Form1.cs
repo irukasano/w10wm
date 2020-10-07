@@ -22,6 +22,11 @@ namespace eventHook
         private void Form1_Load(object sender, EventArgs e)
         {
             traceProcess = new TraceProcess();
+
+            // 起動中のウィンドウを取得
+            traceProcess.InitializeWindowHandles();
+
+            // イベントをフックしてウィンドウ状態の変更を補足
             traceProcess.Hook();
         }
 
