@@ -34,9 +34,32 @@ namespace eventHook
         const UInt32 WS_MINIMIZE = 0x20000000;
         const UInt32 WS_VISIBLE = 0x10000000;
         const UInt32 WS_DISABLED = 0x08000000;
+        const UInt32 WS_CLIPSIBLINGS = 0x04000000;
         const UInt32 WS_CAPTION = 0x00C00000;
         const UInt32 WS_CLIPCHILDREN = 0x02000000;
         const UInt32 WS_OVERLAPPEDWINDOW = 0x00CF0000;
+        const UInt32 WS_UWP = WS_POPUP | WS_CLIPSIBLINGS | WS_OVERLAPPEDWINDOW;
+
+        // DwmGetWindowAttribute
+        enum DWMWINDOWATTRIBUTE : uint
+        {
+            NCRenderingEnabled = 1,
+            NCRenderingPolicy,
+            TransitionsForceDisabled,
+            AllowNCPaint,
+            CaptionButtonBounds,
+            NonClientRtlLayout,
+            ForceIconicRepresentation,
+            Flip3DPolicy,
+            ExtendedFrameBounds,
+            HasIconicBitmap,
+            DisallowPeek,
+            ExcludedFromPeek,
+            ExceludedFromPeek,
+            Cloak,
+            Cloaked,
+            FreezeRepresentation
+        }
 
         // for GetWindow
         const uint GW_OWNER = 4;
@@ -53,6 +76,9 @@ namespace eventHook
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern UInt32 GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("dwmapi.dll")]
+        static extern int DwmGetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE dwAttribute, out bool pvAttribute, int cbAttribute);
 
         private delegate bool EnumWindowsDelegate(IntPtr hwnd, IntPtr lParam);
 
@@ -72,10 +98,13 @@ namespace eventHook
         {
             var windowLong = GetWindowLong(hwnd, GWL_STYLE);
             var windowTitle = GetCurrentWindowTitle(hwnd);
-            var is_visible = (windowLong & WS_VISIBLE) == WS_VISIBLE;
-            var is_overlappedwindow = (windowLong & WS_OVERLAPPEDWINDOW) == WS_OVERLAPPEDWINDOW;
-            var is_minimized = (windowLong & WS_MINIMIZE) == WS_MINIMIZE;
-            var is_clipchildren = (windowLong & WS_CLIPCHILDREN) == WS_CLIPCHILDREN;
+            var isVisible = (windowLong & WS_VISIBLE) == WS_VISIBLE;
+            var isOverlappedwindow = (windowLong & WS_OVERLAPPEDWINDOW) == WS_OVERLAPPEDWINDOW;
+            var isUwp = (windowLong & WS_UWP) == WS_UWP;
+            //var isMinimized = (windowLong & WS_MINIMIZE) == WS_MINIMIZE;
+            //var isClipchildren = (windowLong & WS_POPUP & WS_CLIPCHILDREN) == (WS_POPUP & WS_CLIPCHILDREN);
+
+            //DwmGetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE.Cloaked, out var isCloaked, Marshal.SizeOf(typeof(bool)));
 
             /*
              * Biscute.exe は以下の状態なので、WS_OVERLAPPEDWINDOW - WS_SYSMENU なのかも
@@ -86,7 +115,10 @@ namespace eventHook
 
             if (!WindowHandles.Contains(hwnd))
             {
-                if (is_visible && is_overlappedwindow && is_clipchildren && !is_minimized && windowTitle != null)
+                //if (isVisible && isOverlappedwindow && isClipchildren && !isMinimized && windowTitle != null)
+                //if (isVisible && isOverlappedwindow  && !isCloaked && windowTitle != null)
+                if (isVisible && isOverlappedwindow && !isUwp &&  windowTitle != null)
+                //if (isVisible && isOverlappedwindow && windowTitle != null)
                 {
                     Debug.WriteLine("Window add: " + windowTitle + " : " + windowLong.ToString("x8"));
                     WindowHandles.Add(hwnd);
@@ -110,8 +142,9 @@ namespace eventHook
             }
             var windowLong = GetWindowLong(hwnd, GWL_STYLE);
             var windowTitle = GetCurrentWindowTitle(hwnd);
-            var is_visible = (windowLong & WS_VISIBLE) == WS_VISIBLE;
-            var is_overlappedwindow = (windowLong & WS_OVERLAPPEDWINDOW) == WS_OVERLAPPEDWINDOW;
+            var isVisible = (windowLong & WS_VISIBLE) == WS_VISIBLE;
+            var isOverlappedwindow = (windowLong & WS_OVERLAPPEDWINDOW) == WS_OVERLAPPEDWINDOW;
+            var isUwp = (windowLong & WS_UWP) == WS_UWP;
 
             //Debug.WriteLine( windowTitle + " : " + windowLong.ToString("x8"));
 
@@ -127,7 +160,7 @@ namespace eventHook
 
             if (! WindowHandles.Contains(hwnd))
             {
-                if (is_visible && is_overlappedwindow && 
+                if (isVisible && isOverlappedwindow && !isUwp &&
                     (eventName == EventName.EVENT_OBJECT_SHOW || 
                     eventName == EventName.EVENT_OBJECT_NAMECHANGE))
                 {
