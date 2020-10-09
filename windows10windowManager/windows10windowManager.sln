@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "keyHook", "..\inAdvance\Hot
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eventHook", "..\inAdvance\eventHook\eventHook\eventHook.csproj", "{F82E3E17-4C21-4C5F-A8D2-C62A0F4A7ED2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "monitorManage", "..\inAdvance\UI\monitorManage\monitorManage.csproj", "{73580A5F-A3B9-41DF-B68A-BA0D4A5D7181}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{F82E3E17-4C21-4C5F-A8D2-C62A0F4A7ED2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F82E3E17-4C21-4C5F-A8D2-C62A0F4A7ED2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F82E3E17-4C21-4C5F-A8D2-C62A0F4A7ED2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73580A5F-A3B9-41DF-B68A-BA0D4A5D7181}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73580A5F-A3B9-41DF-B68A-BA0D4A5D7181}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73580A5F-A3B9-41DF-B68A-BA0D4A5D7181}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73580A5F-A3B9-41DF-B68A-BA0D4A5D7181}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

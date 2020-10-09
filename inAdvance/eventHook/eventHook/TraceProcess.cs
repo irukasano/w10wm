@@ -119,7 +119,7 @@ namespace eventHook
                 //if (isVisible && isOverlappedwindow  && !isCloaked && windowTitle != null)
                 if (isVisible && isOverlappedwindow && !isUwp &&  windowTitle != null)
                 //if (isVisible && isOverlappedwindow && windowTitle != null)
-                {
+                {   
                     Debug.WriteLine("Window add: " + windowTitle + " : " + windowLong.ToString("x8"));
                     WindowHandles.Add(hwnd);
                 }
