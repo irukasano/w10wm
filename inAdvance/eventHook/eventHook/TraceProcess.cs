@@ -86,8 +86,8 @@ namespace eventHook
         //public event WinEventHandler FocusEvent;
         // public event WinEventHandler ResizeEvent;
 
-        protected List<IntPtr> WindowHandles { get; set; } = new List<IntPtr>();
-        protected IntPtr MouseDraggingWindowHandle { get; set; }
+        protected List<WindowInfoWithHandle> WindowHandles { get; set; } = new List<WindowInfoWithHandle>();
+        protected WindowInfoWithHandle MouseDraggingWindowHandle { get; set; }
 
         public void InitializeWindowHandles()
         {
@@ -101,6 +101,8 @@ namespace eventHook
             var isVisible = (windowLong & WS_VISIBLE) == WS_VISIBLE;
             var isOverlappedwindow = (windowLong & WS_OVERLAPPEDWINDOW) == WS_OVERLAPPEDWINDOW;
             var isUwp = (windowLong & WS_UWP) == WS_UWP;
+            var windowInfo = new WindowInfoWithHandle(hwnd);
+
             //var isMinimized = (windowLong & WS_MINIMIZE) == WS_MINIMIZE;
             //var isClipchildren = (windowLong & WS_POPUP & WS_CLIPCHILDREN) == (WS_POPUP & WS_CLIPCHILDREN);
 
@@ -113,7 +115,7 @@ namespace eventHook
 
             //Debug.WriteLine("Window add: " + windowTitle + " : " + windowLong.ToString("x8"));
 
-            if (!WindowHandles.Contains(hwnd))
+            if (!WindowHandles.Contains(windowInfo))
             {
                 //if (isVisible && isOverlappedwindow && isClipchildren && !isMinimized && windowTitle != null)
                 //if (isVisible && isOverlappedwindow  && !isCloaked && windowTitle != null)
@@ -121,7 +123,7 @@ namespace eventHook
                 //if (isVisible && isOverlappedwindow && windowTitle != null)
                 {   
                     Debug.WriteLine("Window add: " + windowTitle + " : " + windowLong.ToString("x8"));
-                    WindowHandles.Add(hwnd);
+                    WindowHandles.Add(windowInfo);
                 }
             }
 
@@ -145,8 +147,7 @@ namespace eventHook
             var isVisible = (windowLong & WS_VISIBLE) == WS_VISIBLE;
             var isOverlappedwindow = (windowLong & WS_OVERLAPPEDWINDOW) == WS_OVERLAPPEDWINDOW;
             var isUwp = (windowLong & WS_UWP) == WS_UWP;
-
-            //Debug.WriteLine( windowTitle + " : " + windowLong.ToString("x8"));
+            var windowInfo = new WindowInfoWithHandle(hwnd);
 
             if ( windowLong == 0)
             {
@@ -158,14 +159,14 @@ namespace eventHook
             }
 
 
-            if (! WindowHandles.Contains(hwnd))
+            if (! WindowHandles.Contains(windowInfo))
             {
                 if (isVisible && isOverlappedwindow && !isUwp &&
                     (eventName == EventName.EVENT_OBJECT_SHOW || 
                     eventName == EventName.EVENT_OBJECT_NAMECHANGE))
                 {
                     Debug.WriteLine("Window created: " + windowTitle + " : " + windowLong.ToString("x8"));
-                    WindowHandles.Add(hwnd);
+                    WindowHandles.Add(windowInfo);
                     /*
                     Debug.WriteLine("---");
                     Debug.WriteLine(windowTitle + ":" + is_visible + ":" + eventName + ":" + windowLong);
@@ -176,41 +177,46 @@ namespace eventHook
 
             } else
             {
+                //Debug.WriteLine( " - " + windowTitle + " : " + eventName + ": " + windowLong.ToString("x8"));
+
                 if (eventName == EventName.EVENT_OBJECT_DESTROY)
                 {
                     // Window がなくなった
                     Debug.WriteLine("Window destroyed: " + windowTitle + " : " + windowLong.ToString("x8"));
-                    WindowHandles.Remove(hwnd);
+                    WindowHandles.Remove(windowInfo);
                 }
                 else if (eventName == EventName.EVENT_OBJECT_HIDE)
                 {
                     // Window が HIDDEN
                     Debug.WriteLine("Window hide: " + windowTitle + " : " + windowLong.ToString("x8"));
-                    WindowHandles.Remove(hwnd);
+                    WindowHandles.Remove(windowInfo);
                 }
                 else if (eventName == EventName.EVENT_SYSTEM_MOVESIZESTART)
                 {
                     // Window がマウスでドラッグ開始
                     Debug.WriteLine("Window mouse drag start: " + windowTitle + " : " + windowLong.ToString("x8"));
-                    MouseDraggingWindowHandle = hwnd;
+                    MouseDraggingWindowHandle = windowInfo;
                 } 
                 else if ( eventName == EventName.EVENT_SYSTEM_MOVESIZEEND)
                 {
                     // Window がマウスでドラッグ終了
-                    Debug.WriteLine("Window mouse drag end: " + windowTitle + " : " + windowLong.ToString("x8"));
-                    MouseDraggingWindowHandle = IntPtr.Zero;
+                    if (MouseDraggingWindowHandle.Equals(windowInfo))
+                    {
+                        Debug.WriteLine("Window mouse drag end: " + windowTitle + " : " + windowLong.ToString("x8"));
+                        MouseDraggingWindowHandle = null;
+                    }
                 }
                 else if ( eventName == EventName.EVENT_OBJECT_LOCATIONCHANGE)
                 {
                     // ショートカットキーだけで場所移動
-                    if (MouseDraggingWindowHandle == IntPtr.Zero)
+                    if (MouseDraggingWindowHandle == null)
                     {
                         Debug.WriteLine("Window location change: " + windowTitle + " : " + windowLong.ToString("x8"));
                     }
                 }
             }
 
-            if (WindowHandles.Contains(hwnd))
+            if (WindowHandles.Contains(windowInfo))
             {
                 // Debug.WriteLine(" - " + eventName + " : " + windowTitle);
 

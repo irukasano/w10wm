@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractTraceProcess.cs" />
+    <Compile Include="WindowInfoWithHandle.cs" />
     <Compile Include="TraceProcess.cs" />
     <Compile Include="EventMap\EventMapConverter.cs" />
     <Compile Include="EventMap\EventMap.cs" />
