@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-using Monitor;
-
 namespace Window
 {
 
@@ -30,16 +28,13 @@ namespace Window
         [DllImport("user32.dll")]
         static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+
         public IntPtr WindowHandle { get; private set; }
         public RECT Position { get; private set; }
 
-        /*
-        public WindowInfoWithHandle(IntPtr hwnd, RECT position)
-        {
-            WindowHandle = hwnd;
-            Position = position;
-        }
-        */
+        public String WindowTitle { get; private set; }
 
         public WindowInfoWithHandle(IntPtr hwnd)
         {
@@ -48,11 +43,25 @@ namespace Window
             RECT rect;
             bool f = GetWindowRect(hwnd, out rect);
             Position = rect;
+
+            WindowTitle = GetCurrentWindowTitle(hwnd);
         }
 
         public bool Equals( WindowInfoWithHandle other)
         {
             return this.WindowHandle == other.WindowHandle;
+        }
+
+        private string GetCurrentWindowTitle(IntPtr hwnd)
+        {
+            const int nChars = 256;
+            StringBuilder Buff = new StringBuilder(nChars);
+
+            if (GetWindowText(hwnd, Buff, nChars) > 0)
+            {
+                return Buff.ToString();
+            }
+            return null;
         }
 
         public bool MovedMonitor( IntPtr hwnd)
@@ -63,5 +72,6 @@ namespace Window
             // return MonitorManager.IsDifferentMonitor(Position, rect);
             return true;
         }
+
     }
 }
