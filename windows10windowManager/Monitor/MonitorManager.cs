@@ -82,5 +82,7 @@ namespace Monitor
             EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, MonitorEnum, IntPtr.Zero);
         }
 
+
+
     }
 }
