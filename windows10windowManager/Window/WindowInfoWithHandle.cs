@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-namespace Window
+namespace windows10windowManager.Window
 {
 
     [StructLayout(LayoutKind.Sequential)]
@@ -25,16 +25,27 @@ namespace Window
 
     public class WindowInfoWithHandle : IWindowInfoWithHandle, IEquatable<WindowInfoWithHandle>
     {
+        // MonitorFromWindow
+        const int MONITOR_DEFAULTTONULL = 0;
+        const int MONITOR_DEFAULTTOPRIMARY = 1;
+        const int MONITOR_DEFAULTTONEAREST = 2;
+
         [DllImport("user32.dll")]
         static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
+        [DllImport("user32.dll")]
+        static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);
+
         public IntPtr WindowHandle { get; private set; }
+
         public RECT Position { get; private set; }
 
         public String WindowTitle { get; private set; }
+
+        public IntPtr MonitorHandle { get; private set; }
 
         public WindowInfoWithHandle(IntPtr hwnd)
         {
@@ -62,6 +73,13 @@ namespace Window
                 return Buff.ToString();
             }
             return null;
+        }
+
+        public IntPtr GetMonitor()
+        {
+            this.MonitorHandle = MonitorFromWindow(this.WindowHandle, MONITOR_DEFAULTTONEAREST);
+
+            return this.MonitorHandle;
         }
 
         public bool MovedMonitor( IntPtr hwnd)

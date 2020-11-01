@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-using Window.EventMap;
+using windows10windowManager.Window.EventMap;
 using System.CodeDom;
 using System.Security.Principal;
 
-namespace Window
+namespace windows10windowManager.Window
 {
-    class TraceProcess : AbstractTraceProcess
+    class TraceWindow : AbstractTraceWindow
     {
         const uint OBJID_WINDOW      = 0x00000000;
         const uint OBJID_SYSMENU = 0xFFFFFFFF;
@@ -96,10 +96,10 @@ namespace Window
         public event EventHandler LocationChangeEvent;
 
 
-        protected List<WindowInfoWithHandle> WindowHandles { get; set; } = new List<WindowInfoWithHandle>();
+        public List<WindowInfoWithHandle> WindowHandles { get; protected set; } = new List<WindowInfoWithHandle>();
         protected WindowInfoWithHandle MouseDraggingWindowHandle { get; set; }
 
-        public TraceProcess()
+        public TraceWindow()
         {
             EnumWindows(EnumerateWindows, IntPtr.Zero);
         }

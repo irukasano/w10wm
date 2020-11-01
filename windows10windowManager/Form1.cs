@@ -8,15 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using Monitor;
-using Window;
+using windows10windowManager.Monitor;
+using windows10windowManager.Window;
 
 namespace windows10windowManager
 {
     public partial class Form1 : Form
     {
         private MonitorManager monitorManager { get; set; }
-        private TraceProcess traceProcess { get; set; }
+        private TraceWindow traceWindow { get; set; }
 
         public Form1()
         {
@@ -25,13 +25,12 @@ namespace windows10windowManager
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            monitorManager = new MonitorManager();
-            //List<MonitorInfoWithHandle> monitors = monitorManager.MonitorInfos;
-
-            traceProcess = new TraceProcess();
+            traceWindow = new TraceWindow();
             // List<WindowInfoWithHandle> windowHandles = TraceProcess.WindowHandles;
 
-            // MonitorManager にWindowHandles を渡し、モニターごとにWindowManagerで管理する
+            monitorManager = new MonitorManager(traceWindow);
+            // List<MonitorInfoWithHandle> monitors = monitorManager.MonitorInfos;
+
 
 
         }
@@ -67,7 +66,7 @@ namespace windows10windowManager
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            traceProcess.UnHook();
+            traceWindow.UnHook();
         }
     }
 }

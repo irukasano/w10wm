@@ -5,7 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-namespace Monitor
+//using Window;
+using windows10windowManager.Window;
+
+namespace windows10windowManager.Monitor
 {
 
     class MonitorManager
@@ -45,9 +48,15 @@ namespace Monitor
 
         public List<MonitorInfoWithHandle> MonitorInfos { get; set; }
 
-        public MonitorManager()
+        public List<WindowManager> WindowManagers { get; set; }
+
+        public MonitorManager(TraceWindow traceWindow)
         {
-            GetMonitors();
+            FindMonitors();
+
+            // 渡された WindowHandles を渡し、モニターごとにWindowManagerで管理する
+            ManageWindowByMonitors(traceWindow.WindowHandles);
+
         }
 
         /// <summary>
@@ -73,16 +82,68 @@ namespace Monitor
         /// Gets the monitors.
         /// </summary>
         /// <returns></returns>
-        public MonitorInfoWithHandle[] GetMonitors()
+        public List<MonitorInfoWithHandle> FindMonitors()
         {
             // New List
             MonitorInfos = new List<MonitorInfoWithHandle>();
 
             // Enumerate monitors
             EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, MonitorEnum, IntPtr.Zero);
+
+            return MonitorInfos;
         }
 
+        /// <summary>
+        /// WindowHandleを各モニターごとに管理する
+        /// </summary>
+        /// <param name="windowHandles"></param>
+        public void ManageWindowByMonitors(List<WindowInfoWithHandle> windowHandles)
+        {
+            WindowManagers.Clear();
 
+            foreach (var monitorInfo in MonitorInfos)
+            {
+                WindowManagers.Add(new WindowManager(monitorInfo.MonitorHandle));
+            }
+
+            foreach (var windowHandle in windowHandles)
+            {
+                IntPtr mh = windowHandle.GetMonitor();
+                WindowManager kwm = new WindowManager(mh);
+
+                if (WindowManagers.Contains(kwm))
+                {
+                    var i = WindowManagers.IndexOf(kwm);
+                    WindowManagers[i].Add(windowHandle);
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// モニター間移動
+        /// </summary>
+        public void MoveMonitor(WindowInfoWithHandle windowInfo)
+        {
+            IntPtr omh = windowInfo.MonitorHandle;
+            IntPtr nmh = windowInfo.GetMonitor();
+
+            WindowManager owm = new WindowManager(omh);
+            WindowManager nwm = new WindowManager(nmh);
+
+            if ( !WindowManagers.Contains(owm) ||
+                !WindowManagers.Contains(nwm))
+            {
+                // TODO ログ出力？ 例外としてプログラム終了？
+                return;
+            }
+
+            var oi = WindowManagers.IndexOf(owm);
+            var ni = WindowManagers.IndexOf(nwm);
+
+            WindowManagers[oi].Remove(windowInfo);
+            WindowManagers[ni].Add(windowInfo);
+        }
 
     }
 }

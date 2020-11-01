@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
 
-namespace Monitor
+namespace windows10windowManager.Monitor
 {
     /// <summary>
     /// Rectangle

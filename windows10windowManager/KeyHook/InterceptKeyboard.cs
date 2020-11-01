@@ -8,9 +8,9 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
 
-using keyHook.KeyMap;
+using windows10windowManager.KeyHook.KeyMap;
 
-namespace keyHook
+namespace windows10windowManager.KeyHook
 {
     class InterceptKeyboard : AbstractInterceptKeyboard
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Window.EventMap
+namespace windows10windowManager.Window.EventMap
 {
     class EventMapConverter
     {

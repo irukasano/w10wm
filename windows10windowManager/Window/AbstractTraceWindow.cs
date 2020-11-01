@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 
-using Window.EventMap;
+using windows10windowManager.Window.EventMap;
 
-namespace Window
+namespace windows10windowManager.Window
 {
-    class AbstractTraceProcess
+    class AbstractTraceWindow
     {
         const int WINEVENT_OUTOFCONTEXT = 0;
         const int WINEVENT_SKIPOWNTHREAD = 1;

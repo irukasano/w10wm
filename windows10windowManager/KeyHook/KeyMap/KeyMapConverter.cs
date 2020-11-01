@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace keyHook.KeyMap
+namespace windows10windowManager.KeyHook.KeyMap
 {
     public class KeyMapConverter
     {

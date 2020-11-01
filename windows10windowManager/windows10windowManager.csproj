@@ -63,8 +63,8 @@
     <Compile Include="Monitor\MonitorManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Window\AbstractTraceProcess.cs" />
-    <Compile Include="Window\TraceProcess.cs" />
+    <Compile Include="Window\AbstractTraceWindow.cs" />
+    <Compile Include="Window\TraceWindow.cs" />
     <Compile Include="Window\WindowInfoWithHandle.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

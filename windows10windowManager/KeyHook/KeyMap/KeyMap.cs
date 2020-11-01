@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace keyHook.KeyMap
+namespace windows10windowManager.KeyHook.KeyMap
 {
     public enum OriginalKey
     {

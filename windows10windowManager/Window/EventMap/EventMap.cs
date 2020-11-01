@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Window.EventMap
+namespace windows10windowManager.Window.EventMap
 {
     public enum EventName
     {
