@@ -31,13 +31,16 @@ namespace windows10windowManager.Window
         const int MONITOR_DEFAULTTONEAREST = 2;
 
         [DllImport("user32.dll")]
-        static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
+        static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
         [DllImport("user32.dll")]
-        static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);
+        static extern IntPtr MonitorFromWindow(IntPtr hWnd, uint dwFlags);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr SendMessage(IntPtr hWnd, uint wMsg, UIntPtr wParam, IntPtr lParam);
 
         public IntPtr WindowHandle { get; private set; }
 
@@ -63,16 +66,29 @@ namespace windows10windowManager.Window
             return this.WindowHandle == other.WindowHandle;
         }
 
-        private string GetCurrentWindowTitle(IntPtr hwnd)
+        private string GetCurrentWindowTitle(IntPtr hWnd)
         {
             const int nChars = 256;
             StringBuilder Buff = new StringBuilder(nChars);
 
-            if (GetWindowText(hwnd, Buff, nChars) > 0)
+            if (GetWindowText(hWnd, Buff, nChars) > 0)
             {
                 return Buff.ToString();
             }
             return null;
+        }
+
+        public void WindowClose()
+        {
+            if (! WindowHandle.Equals(IntPtr.Zero))
+            {
+                SendMessage(this.WindowHandle,
+                    /* wMsg = WM_SYSCOMMAND */ 0x0112,
+                    /* wParam = */ new UIntPtr(0x0000F060),
+                    /* lParam = */ IntPtr.Zero
+                );
+                //WindowHandle = IntPtr.Zero;
+            }
         }
 
         public IntPtr GetMonitor()
@@ -82,11 +98,11 @@ namespace windows10windowManager.Window
             return this.MonitorHandle;
         }
 
-        public bool MovedMonitor( IntPtr hwnd)
+        public bool MovedMonitor( IntPtr hWnd)
         {
             // TODO たぶんMonitorManager あたりで判定する必要がある？
             RECT rect;
-            bool f = GetWindowRect(hwnd, out rect);
+            bool f = GetWindowRect(hWnd, out rect);
             // return MonitorManager.IsDifferentMonitor(Position, rect);
             return true;
         }
