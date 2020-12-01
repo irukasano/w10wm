@@ -52,13 +52,13 @@ namespace windows10windowManager.Window
 
         public WindowInfoWithHandle(IntPtr hwnd)
         {
-            WindowHandle = hwnd;
+            this.WindowHandle = hwnd;
 
             RECT rect;
             bool f = GetWindowRect(hwnd, out rect);
-            Position = rect;
+            this.Position = rect;
 
-            WindowTitle = GetCurrentWindowTitle(hwnd);
+            this.WindowTitle = GetCurrentWindowTitle(hwnd);
         }
 
         public bool Equals( WindowInfoWithHandle other)
@@ -89,6 +89,52 @@ namespace windows10windowManager.Window
                 );
                 //WindowHandle = IntPtr.Zero;
             }
+        }
+
+        /* 
+         * RECT を元に X,Y,Width,Height を求める処理
+         */
+        public int CalcPositionX(RECT position)
+        {
+            return position.left;
+        }
+
+        public int CalcPositionY(RECT position)
+        {
+            return position.top;
+        }
+
+        public int CalcPositionWidth(RECT position)
+        {
+            return position.right - position.left;
+        }
+
+        public int CalcPositionHeight(RECT position)
+        {
+            return position.bottom - position.top;
+        }
+
+        /*
+         * このウィンドウの位置情報を戻す
+         */
+        public int GetPositionX()
+        {
+            return CalcPositionX(this.Position);
+        }
+
+        public int GetPositionY()
+        {
+            return CalcPositionY(this.Position);
+        }
+
+        public int GetPositionWidth()
+        {
+            return CalcPositionWidth(this.Position);
+        }
+
+        public int GetPositionHeight()
+        {
+            return CalcPositionHeight(this.Position);
         }
 
         public IntPtr GetMonitor()
