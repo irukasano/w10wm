@@ -16,18 +16,44 @@ using System.Diagnostics;
 
 namespace windows10windowManager
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         private MonitorManager monitorManager { get; set; }
         private TraceWindow traceWindow { get; set; }
         private InterceptKeyboard interceptKeyboard { get; set; }
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
+
+            this.InitializeTaskTray();
+
+            this.InitializeHooks();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void InitializeTaskTray()
+        {
+            ShowInTaskbar = false;
+
+            // メニュー項目を作成します。
+            var menuItem = new ToolStripMenuItem();
+            menuItem.Text = "&Exit";
+            menuItem.Click += new EventHandler(Exit_Click);
+
+            // メニューを作成します。
+            var menu = new ContextMenuStrip();
+            menu.Items.Add(menuItem);
+
+            // アイコンを作成します。
+            // アイコンファイルは32x32の24bit Bitmap
+            var icon = new NotifyIcon();
+            icon.Icon = new Icon("..\\..\\favicon.ico");
+            icon.Visible = true;
+            icon.Text = "w10wm";
+            icon.ContextMenuStrip = menu;
+        }
+
+        private void InitializeHooks()
         {
             this.traceWindow = new TraceWindow();
             this.traceWindow.ShowEvent += TraceWindow_ShowEvent;
@@ -40,6 +66,13 @@ namespace windows10windowManager
             this.interceptKeyboard.KeyDownEvent += InterceptKeyboard_KeyDownEvent;
             this.interceptKeyboard.KeyUpEvent += InterceptKeyboard_KeyUpEvent;
             this.interceptKeyboard.Hook();
+        }
+
+        private void Exit_Click(object sender, EventArgs e)
+        {
+            this.traceWindow.UnHook();
+            this.interceptKeyboard.UnHook();
+            Application.Exit();
         }
 
         private void InterceptKeyboard_KeyUpEvent(object sender, InterceptKeyboard.OriginalKeyEventArg e)
@@ -114,10 +147,5 @@ namespace windows10windowManager
 
 
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            this.traceWindow.UnHook();
-            this.interceptKeyboard.UnHook();
-        }
     }
 }

@@ -16,7 +16,9 @@ namespace windows10windowManager
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            //Application.Run(new MainForm());
+            var f = new MainForm();
+            Application.Run();
         }
     }
 }
