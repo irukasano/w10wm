@@ -26,6 +26,17 @@ namespace windows10windowManager.KeyHook
                 Modifiers = modifiers.ToArray();
             }
 
+            /**
+             * <summary>
+             * 指定されたキーコード、修飾キーが押されたかを判別する
+             * </summary>
+             */
+            public bool equals(OriginalKey key, int[] modifiers)
+            {
+                var originalKey = KeyMapConverter.KeyCodeToKey(this.KeyCode);
+                return (key == originalKey && this.equalsModifiers(modifiers));
+            }
+
             public bool equalsModifiers(int[] modifiers)
             {
                 if (modifiers.Length != Modifiers.Length)
@@ -102,7 +113,7 @@ namespace windows10windowManager.KeyHook
                 }
             }
 
-            if (!callNextHook)
+            if (! this.callNextHook)
             {
                 return new IntPtr(1);
             }

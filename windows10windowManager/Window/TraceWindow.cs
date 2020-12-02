@@ -46,7 +46,7 @@ namespace windows10windowManager.Window
 
             public OriginalWinEventArg(WindowInfoWithHandle windowInfo)
             {
-                WindowInfo = windowInfo;
+                this.WindowInfo = windowInfo;
             }
         }
 
@@ -96,7 +96,7 @@ namespace windows10windowManager.Window
         public event EventHandler LocationChangeEvent;
 
 
-        public List<WindowInfoWithHandle> WindowHandles { get; protected set; } = new List<WindowInfoWithHandle>();
+        public List<WindowInfoWithHandle> WindowInfos { get; protected set; } = new List<WindowInfoWithHandle>();
         protected WindowInfoWithHandle MouseDraggingWindowHandle { get; set; }
 
         public TraceWindow()
@@ -126,15 +126,15 @@ namespace windows10windowManager.Window
 
             //Debug.WriteLine("Window add: " + windowTitle + " : " + windowLong.ToString("x8"));
 
-            if (!WindowHandles.Contains(windowInfo))
+            if (!this.WindowInfos.Contains(windowInfo))
             {
                 //if (isVisible && isOverlappedwindow && isClipchildren && !isMinimized && windowTitle != null)
                 //if (isVisible && isOverlappedwindow  && !isCloaked && windowTitle != null)
                 if (isVisible && isOverlappedwindow && !isUwp &&  windowTitle != null)
                 //if (isVisible && isOverlappedwindow && windowTitle != null)
-                {   
+                {
                     //Debug.WriteLine("Window add: " + windowTitle + " : " + windowLong.ToString("x8"));
-                    WindowHandles.Add(windowInfo);
+                    this.WindowInfos.Add(windowInfo);
                     OnAddEvent(windowInfo);
                 }
             }
@@ -171,14 +171,14 @@ namespace windows10windowManager.Window
             }
 
 
-            if (! WindowHandles.Contains(windowInfo))
+            if (! this.WindowInfos.Contains(windowInfo))
             {
                 if (isVisible && isOverlappedwindow && !isUwp &&
                     (eventName == EventName.EVENT_OBJECT_SHOW || 
                     eventName == EventName.EVENT_OBJECT_NAMECHANGE))
                 {
                     //Debug.WriteLine("Window created: " + windowTitle + " : " + windowLong.ToString("x8"));
-                    WindowHandles.Add(windowInfo);
+                    this.WindowInfos.Add(windowInfo);
                     OnAddEvent(windowInfo);
                     OnShowEvent(windowInfo);
                     /*
@@ -197,7 +197,7 @@ namespace windows10windowManager.Window
                 {
                     // Window がなくなった
                     //Debug.WriteLine("Window destroyed: " + windowTitle + " : " + windowLong.ToString("x8"));
-                    WindowHandles.Remove(windowInfo);
+                    this.WindowInfos.Remove(windowInfo);
                     OnRemoveEvent(windowInfo);
                     OnDestroyEvent(windowInfo);
                 }
@@ -205,7 +205,7 @@ namespace windows10windowManager.Window
                 {
                     // Window が HIDDEN
                     //Debug.WriteLine("Window hide: " + windowTitle + " : " + windowLong.ToString("x8"));
-                    WindowHandles.Remove(windowInfo);
+                    this.WindowInfos.Remove(windowInfo);
                     OnRemoveEvent(windowInfo);
                     OnHideEvent(windowInfo);
                 }
@@ -237,7 +237,7 @@ namespace windows10windowManager.Window
                 }
             }
 
-            if (WindowHandles.Contains(windowInfo))
+            if (this.WindowInfos.Contains(windowInfo))
             {
                 // Debug.WriteLine(" - " + eventName + " : " + windowTitle);
 

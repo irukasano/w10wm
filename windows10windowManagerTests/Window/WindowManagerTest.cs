@@ -295,24 +295,6 @@ namespace windows10windowManagerTests.Window
             this.CloseSampleApplications(wm);
         }
 
-        [TestMethod]
-        public void Test_ActivateWindow()
-        {
-            var wm = new WindowManager(IntPtr.Zero);
-
-            wm.Add(this.LaunchSampleApplication());
-            var windowInfoWithHandle = this.LaunchSampleApplication();
-            wm.Add(windowInfoWithHandle);
-            wm.Add(this.LaunchSampleApplication());
-
-            wm.ActivateWindow(windowInfoWithHandle);
-            var activeHWnd = GetForegroundWindow();
-
-            Assert.AreEqual(activeHWnd, windowInfoWithHandle.WindowHandle);
-
-            this.CloseSampleApplications(wm);
-        }
-
 
 
         protected WindowInfoWithHandle LaunchSampleApplication(

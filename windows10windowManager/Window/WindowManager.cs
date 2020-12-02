@@ -20,8 +20,15 @@ namespace windows10windowManager.Window
 
         protected int CurrentWindowInfoIndex { get; set; }
 
-        [DllImport("user32")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
+        /**
+         * <summary>
+         * 1: m: 全画面
+         * 2: t: タイル(bug.nのような)
+         * 3: w: 四分割
+         * 4: f: MDI的な感じ
+         * </summary>
+         */
+        protected int WindowArrangementMode { get; set; } = 0;
 
         [DllImport("user32")]
         private static extern int MoveWindow(IntPtr hwnd, int x, int y,
@@ -65,16 +72,24 @@ namespace windows10windowManager.Window
             return WindowInfos;
         }
 
-        // カレントウィンドウを取得する
+        /**
+         * <summary>
+         * カレントウィンドウを取得する
+         * </summary> 
+         */
         public WindowInfoWithHandle GetCurrentWindow()
         {
-            return WindowInfos.ElementAt(CurrentWindowInfoIndex);
+            return WindowInfos.ElementAt(this.CurrentWindowInfoIndex);
         }
 
-        // カレントウィンドウの WindowInfos 内のインデックスを取得する
+        /**
+         * <summary>
+         * カレントウィンドウの WindowInfos 内のインデックスを取得する
+         * </summary>
+         */
         public int GetCurrentWindowIndex()
         {
-            return CurrentWindowInfoIndex;
+            return this.CurrentWindowInfoIndex;
         }
 
         public void SetCurrentWindowIndex(int windowIndex)
@@ -82,8 +97,25 @@ namespace windows10windowManager.Window
             this.CurrentWindowInfoIndex = windowIndex;
         }
 
-        /*
-         * フォーカスするウィンドウを変更する
+        public void SetWindowArrangementMode(int mode)
+        {
+            this.WindowArrangementMode = mode;
+        }
+
+        /**
+         * <summary>
+         * 現在の WindowArrangementMode に基づいてウィンドウを整列しなおす
+         * </summary>
+         */
+        public void ArrangeWindows()
+        {
+            //TODO
+        }
+
+        /**
+         * <summary>
+         * フォーカスするウィンドウをひとつ前に変更する
+         * </summary>
          */
         public WindowInfoWithHandle MoveCurrentFocusPrevious()
         {
@@ -97,6 +129,11 @@ namespace windows10windowManager.Window
             return this.GetCurrentWindow();
         }
 
+        /**
+         * <summary>
+         * フォーカスするウィンドウをひとつ後に変更する
+         * </summary>
+         */
         public WindowInfoWithHandle MoveCurrentFocusNext()
         {
             // リストの最後なら、現在のウィンドウを戻す
@@ -109,21 +146,32 @@ namespace windows10windowManager.Window
             return this.GetCurrentWindow();
         }
 
-
+        /**
+         * <summary>
+         * フォーカスするウィンドウを先頭に変更する
+         * </summary>
+         */
         public WindowInfoWithHandle MoveCurrentFocusTop()
         {
             this.CurrentWindowInfoIndex = 0;
             return this.GetCurrentWindow();
         }
 
+        /**
+         * <summary>
+         * フォーカスするウィンドウを最後に変更する
+         * </summary>
+         */
         public WindowInfoWithHandle MoveCurrentFocusBottom()
         {
             this.CurrentWindowInfoIndex = this.WindowInfos.Count() - 1;
             return this.GetCurrentWindow();
         }
 
-        /*a
-         * アクティヴウィンドウの位置を移動する
+        /**
+         * <summary>
+         * アクティヴウィンドウの位置をひとつ前に移動する
+         * </summary>
          */
         public void SetWindowPrevious()
         {
@@ -142,6 +190,11 @@ namespace windows10windowManager.Window
             }
         }
 
+        /**
+         * <summary>
+         * アクティヴウィンドウの位置をひとつ後に移動する
+         * </summary>
+         */
         public void SetWindowNext()
         {
             var currentIndex = this.CurrentWindowInfoIndex;
@@ -159,6 +212,11 @@ namespace windows10windowManager.Window
             }
         }
 
+        /**
+         * <summary>
+         * アクティヴウィンドウの位置を先頭に移動する
+         * </summary>
+         */
         public void SetWindowTop()
         {
             var currentIndex = this.CurrentWindowInfoIndex;
@@ -172,6 +230,11 @@ namespace windows10windowManager.Window
             }
         }
 
+        /**
+         * <summary>
+         * アクティヴウィンドウの位置を最後に移動する
+         * </summary>
+         */
         public void SetWindowBottom()
         {
             var currentIndex = this.CurrentWindowInfoIndex;
@@ -192,20 +255,19 @@ namespace windows10windowManager.Window
             list[oldIndex] = aux;
         }
 
-        /*
-         * ウィンドウをアクティヴにする
-         */
-        public void ActivateWindow(WindowInfoWithHandle windowInfoWithHandle)
-        {
-            SetForegroundWindow(windowInfoWithHandle.WindowHandle);
-        }
-
-        /*
+        /**
+         * <summary>
          * src と dest のウィンドウの位置を入れ替える
+         * </summary>
          */
         public void ChangeWindowPosition(WindowInfoWithHandle srcWindowInfoWithHandle, 
             WindowInfoWithHandle destWindowInfoWithHandle)
         {
+            if ( this.WindowArrangementMode == 0 )
+            {
+                return;
+            }
+
             RECT srcPosotion = srcWindowInfoWithHandle.Position;
 
             MoveWindow(srcWindowInfoWithHandle.WindowHandle,

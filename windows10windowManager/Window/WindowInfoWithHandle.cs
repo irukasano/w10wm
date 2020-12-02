@@ -42,6 +42,10 @@ namespace windows10windowManager.Window
         [DllImport("user32.dll")]
         public static extern IntPtr SendMessage(IntPtr hWnd, uint wMsg, UIntPtr wParam, IntPtr lParam);
 
+        [DllImport("user32")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+
         public IntPtr WindowHandle { get; private set; }
 
         public RECT Position { get; private set; }
@@ -90,6 +94,17 @@ namespace windows10windowManager.Window
                 //WindowHandle = IntPtr.Zero;
             }
         }
+
+        /**
+         * <summary>
+         * ウィンドウをアクティヴにする
+         * </summary>
+         */
+        public void ActivateWindow()
+        {
+            SetForegroundWindow(this.WindowHandle);
+        }
+
 
         /* 
          * RECT を元に X,Y,Width,Height を求める処理
