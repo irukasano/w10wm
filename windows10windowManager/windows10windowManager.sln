@@ -19,7 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eventHook", "..\inAdvance\e
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "monitorManage", "..\inAdvance\UI\monitorManage\monitorManage.csproj", "{73580A5F-A3B9-41DF-B68A-BA0D4A5D7181}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "windows10windowManagerTests", "..\windows10windowManagerTests\windows10windowManagerTests.csproj", "{AE886431-3F14-4C0F-A08D-CB796F55F6A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "windows10windowManagerTests", "..\windows10windowManagerTests\windows10windowManagerTests.csproj", "{AE886431-3F14-4C0F-A08D-CB796F55F6A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransparentForm", "..\inAdvance\UI\TransparentForm\TransparentForm.csproj", "{1869E2EF-90FD-41AC-8640-783F6110AD3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{AE886431-3F14-4C0F-A08D-CB796F55F6A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE886431-3F14-4C0F-A08D-CB796F55F6A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE886431-3F14-4C0F-A08D-CB796F55F6A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1869E2EF-90FD-41AC-8640-783F6110AD3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1869E2EF-90FD-41AC-8640-783F6110AD3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1869E2EF-90FD-41AC-8640-783F6110AD3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1869E2EF-90FD-41AC-8640-783F6110AD3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
