@@ -7,12 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+//using System.Diagnostics;
 
 using windows10windowManager.Monitor;
 using windows10windowManager.Window;
 using windows10windowManager.KeyHook;
 using windows10windowManager.KeyHook.KeyMap;
-using System.Diagnostics;
+using windows10windowManager.Util;
 
 namespace windows10windowManager
 {
@@ -26,9 +27,9 @@ namespace windows10windowManager
         {
             InitializeComponent();
 
-            this.InitializeTaskTray();
-
             this.InitializeHooks();
+
+            this.InitializeTaskTray();
         }
 
         private void InitializeTaskTray()
@@ -55,17 +56,18 @@ namespace windows10windowManager
 
         private void InitializeHooks()
         {
-            this.traceWindow = new TraceWindow();
-            this.traceWindow.ShowEvent += TraceWindow_ShowEvent;
-            this.traceWindow.HideEvent += TraceWindow_HideEvent;
-            this.traceWindow.Hook();
-
-            this.monitorManager = new MonitorManager(this.traceWindow);
-
             this.interceptKeyboard = new InterceptKeyboard();
             this.interceptKeyboard.KeyDownEvent += InterceptKeyboard_KeyDownEvent;
             this.interceptKeyboard.KeyUpEvent += InterceptKeyboard_KeyUpEvent;
             this.interceptKeyboard.Hook();
+
+            this.traceWindow = new TraceWindow();
+            this.traceWindow.ShowEvent += TraceWindow_ShowEvent;
+            this.traceWindow.HideEvent += TraceWindow_HideEvent;
+            this.traceWindow.LocationChangeEvent += TraceWindow_LocationChangeEvent;
+            this.traceWindow.Hook();
+
+            this.monitorManager = new MonitorManager(this.traceWindow);
         }
 
         private void Exit_Click(object sender, EventArgs e)
@@ -92,37 +94,37 @@ namespace windows10windowManager
 
             if (e.equals(OriginalKey.J, modifierLeftWindows))
             {
-                Debug.WriteLine("With LeftWindows + J");
+                Logger.WriteLine("With LeftWindows + J");
                 this.MoveCurrentFocusPrevious();
                 this.interceptKeyboard.callNextHook = false;
             }
             else if (e.equals(OriginalKey.K, modifierLeftWindows))
             {
-                Debug.WriteLine("With LeftWindows + K");
+                Logger.WriteLine("With LeftWindows + K");
                 this.MoveCurrentFocusNext();
                 this.interceptKeyboard.callNextHook = false;
             }
             else if (e.equals(OriginalKey.F1, modifierLeftWindows))
             {
-                Debug.WriteLine("With LeftWindows + F1");
+                Logger.WriteLine("With LeftWindows + F1");
                 this.ActivateMonitorN(0);
                 this.interceptKeyboard.callNextHook = false;
             }
             else if (e.equals(OriginalKey.F2, modifierLeftWindows))
             {
-                Debug.WriteLine("With LeftWindows + F2");
+                Logger.WriteLine("With LeftWindows + F2");
                 this.ActivateMonitorN(1);
                 this.interceptKeyboard.callNextHook = false;
             }
             else if (e.equals(OriginalKey.F3, modifierLeftWindows))
             {
-                Debug.WriteLine("With LeftWindows + F3");
+                Logger.WriteLine("With LeftWindows + F3");
                 this.ActivateMonitorN(2);
                 this.interceptKeyboard.callNextHook = false;
             }
             else
             {
-                Debug.WriteLine("Else key");
+                Logger.WriteLine("Else key");
             }
         }
 
@@ -135,7 +137,7 @@ namespace windows10windowManager
          */
         private void TraceWindow_ShowEvent(object sender, TraceWindow.OriginalWinEventArg w)
         {
-            Debug.WriteLine("Window Show : " + w.WindowInfo.WindowTitle);
+            Logger.DebugWindowInfo("Window Show", w.WindowInfo);
             var windowManager = this.monitorManager.AddWindowInfo(w.WindowInfo);
             windowManager.ArrangeWindows();
         }
@@ -149,11 +151,41 @@ namespace windows10windowManager
          */
         private void TraceWindow_HideEvent(object sender, TraceWindow.OriginalWinEventArg w)
         {
-            Debug.WriteLine("Window Show : " + w.WindowInfo.WindowTitle);
+            Logger.DebugWindowInfo("Window Hide", w.WindowInfo);
             var windowManager = this.monitorManager.RemoveWindowInfo(w.WindowInfo);
             windowManager.ArrangeWindows();
         }
 
+        /**
+         * <summary>
+         * ウィンドウ移動イベントが発生したら
+         * 該当モニターがモニター移動したかどうかを判断し
+         * 移動していたら以下を行う
+         * * 移動前モニターの整列しなおし、移動前WindowManagerからの削除
+         * * 移動後モニターの整列しなおし、移動後WindowManagerへの追加
+         * </summary>
+         */
+        private void TraceWindow_LocationChangeEvent(object sender, TraceWindow.OriginalWinEventArg w)
+        {
+            Logger.DebugWindowInfo("Window LocationChange", w.WindowInfo);
+            if (w.WindowInfo.MovedMonitor())
+            {
+                Logger.DebugWindowInfo("Window MonitorChange", w.WindowInfo);
+                var beforeMovedMonitorHandle = w.WindowInfo.GetMonitorHandle();
+                var beforeMovedWindowManager = this.monitorManager.FindWindowManagerByMonitorHandle(beforeMovedMonitorHandle);
+                if ( beforeMovedWindowManager != null)
+                {
+                    Logger.DebugWindowInfo("Remove From BeforeMovedWindowManager", w.WindowInfo);
+                    beforeMovedWindowManager.Remove(w.WindowInfo);
+                    beforeMovedWindowManager.ArrangeWindows();
+                }
+                w.WindowInfo.ComputeMonitorHandle();
+                Logger.DebugWindowInfo("Add To NewWindowManager", w.WindowInfo);
+                var windowManager = this.monitorManager.AddWindowInfo(w.WindowInfo);
+                this.monitorManager.SetCurrentWindowManagerIndexByMonitorHandle(w.WindowInfo.MonitorHandle);
+                windowManager.ArrangeWindows();
+            }
+        }
 
         /**
          * <summary>
@@ -197,12 +229,12 @@ namespace windows10windowManager
 
         /**
          * <summary>
-         * モニター１のカレントウィンドウをアクティヴにする
+         * モニターNのカレントウィンドウをアクティヴにする
          * </summary>
          */
         private void ActivateMonitorN(int monitorNumber)
         {
-            Debug.WriteLine($"Change Monitor : {monitorNumber}");
+            Logger.WriteLine($"Change Monitor : {monitorNumber}");
             var windowManager = this.monitorManager.GetMonitorNWindowManager(monitorNumber);
             if (windowManager is null)
             {

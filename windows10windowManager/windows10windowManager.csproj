@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Util\Logger.cs" />
     <Compile Include="Window\WindowManager.cs" />
     <Compile Include="Window\EventMap\EventMap.cs" />
     <Compile Include="Window\EventMap\EventMapConverter.cs" />

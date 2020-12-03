@@ -14,7 +14,7 @@ namespace windows10windowManager.KeyHook
 {
     class InterceptKeyboard : AbstractInterceptKeyboard
     {
-        #region InputEvent
+        #region OriginalKeyEventArg
         public class OriginalKeyEventArg : EventArgs
         {
             public int KeyCode { get; }
@@ -45,7 +45,7 @@ namespace windows10windowManager.KeyHook
                 }
                 for (int i = 0; i < modifiers.Length; i++)
                 {
-                    if (! Modifiers.Contains(modifiers[i]))
+                    if (!Modifiers.Contains(modifiers[i]))
                     {
                         return false;
                     }
@@ -54,13 +54,19 @@ namespace windows10windowManager.KeyHook
             }
 
         }
+        #endregion
+
+        #region Delegate
         public delegate void KeyEventHandler(object sender, OriginalKeyEventArg e);
         public event KeyEventHandler KeyDownEvent;
         public event KeyEventHandler KeyUpEvent;
+        #endregion
 
+        #region Fields
         public bool callNextHook { get; set; } = true;
 
         protected List<int> Modifiers { get; set; } = new List<int>();
+        #endregion
 
         protected void OnKeyDownEvent(int keyCode)
         {
@@ -70,7 +76,6 @@ namespace windows10windowManager.KeyHook
         {
             KeyUpEvent?.Invoke(this, new OriginalKeyEventArg(keyCode, Modifiers));
         }
-        #endregion
 
         public override IntPtr HookProcedure(int nCode, IntPtr wParam, IntPtr lParam)
         {
@@ -83,7 +88,8 @@ namespace windows10windowManager.KeyHook
                     if (!Modifiers.Contains(vkCode))
                     {
                         Modifiers.Add(vkCode);
-                    } else
+                    }
+                    else
                     {
                         // KeyDown 時にすでに同じ Modifier が存在していた場合
                         // ある Modifier を二重に押していることになる
@@ -113,7 +119,7 @@ namespace windows10windowManager.KeyHook
                 }
             }
 
-            if (! this.callNextHook)
+            if (!this.callNextHook)
             {
                 return new IntPtr(1);
             }
@@ -133,8 +139,15 @@ namespace windows10windowManager.KeyHook
                 key == OriginalKey.LeftAlt ||
                 key == OriginalKey.RightAlt);
         }
-    }
 
+        public override void UnHook()
+        {
+            this.Modifiers.Clear();
+            base.UnHook();
+        }
+
+    }
 }
+
 
 

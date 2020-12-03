@@ -142,7 +142,7 @@ namespace windows10windowManager.Window
             return true;
         }
 
-        public override void HookProcedure(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
+        public override void HookProcedure(IntPtr hWinEventHook, uint eventType, IntPtr hWnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
         {
             var eventName = EventMapConverter.CodeToName((int)eventType);
 
@@ -154,9 +154,9 @@ namespace windows10windowManager.Window
             {
                 return;
             }
-            var windowInfo = new WindowInfoWithHandle(hwnd);
-            var windowLong = GetWindowLong(hwnd, GWL_STYLE);
-            var windowTitle = windowInfo.WindowTitle;
+            var needleWindowInfo = new WindowInfoWithHandle(hWnd);
+            var windowLong = GetWindowLong(hWnd, GWL_STYLE);
+            var windowTitle = needleWindowInfo.WindowTitle;
             var isVisible = (windowLong & WS_VISIBLE) == WS_VISIBLE;
             var isOverlappedwindow = (windowLong & WS_OVERLAPPEDWINDOW) == WS_OVERLAPPEDWINDOW;
             var isUwp = (windowLong & WS_UWP) == WS_UWP;
@@ -171,16 +171,16 @@ namespace windows10windowManager.Window
             }
 
 
-            if (! this.WindowInfos.Contains(windowInfo))
+            if (! this.WindowInfos.Contains(needleWindowInfo))
             {
                 if (isVisible && isOverlappedwindow && !isUwp &&
                     (eventName == EventName.EVENT_OBJECT_SHOW || 
                     eventName == EventName.EVENT_OBJECT_NAMECHANGE))
                 {
                     //Debug.WriteLine("Window created: " + windowTitle + " : " + windowLong.ToString("x8"));
-                    this.WindowInfos.Add(windowInfo);
-                    OnAddEvent(windowInfo);
-                    OnShowEvent(windowInfo);
+                    this.WindowInfos.Add(needleWindowInfo);
+                    OnAddEvent(needleWindowInfo);
+                    OnShowEvent(needleWindowInfo);
                     /*
                     Debug.WriteLine("---");
                     Debug.WriteLine(windowTitle + ":" + is_visible + ":" + eventName + ":" + windowLong);
@@ -192,6 +192,8 @@ namespace windows10windowManager.Window
             } else
             {
                 //Debug.WriteLine( " - " + windowTitle + " : " + eventName + ": " + windowLong.ToString("x8"));
+                var windowInfo = this.WindowInfos.Find(
+                    (WindowInfoWithHandle wi) => { return wi.WindowHandle == needleWindowInfo.WindowHandle; });
 
                 if (eventName == EventName.EVENT_OBJECT_DESTROY)
                 {
@@ -224,6 +226,7 @@ namespace windows10windowManager.Window
                         //Debug.WriteLine("Window mouse drag end: " + windowTitle + " : " + windowLong.ToString("x8"));
                         MouseDraggingWindowHandle = null;
                         OnMouseDragEndEvent(windowInfo);
+                        OnLocationChangeEvent(windowInfo);
                     }
                 }
                 else if ( eventName == EventName.EVENT_OBJECT_LOCATIONCHANGE)
@@ -237,7 +240,7 @@ namespace windows10windowManager.Window
                 }
             }
 
-            if (this.WindowInfos.Contains(windowInfo))
+            if (this.WindowInfos.Contains(needleWindowInfo))
             {
                 // Debug.WriteLine(" - " + eventName + " : " + windowTitle);
 
@@ -248,7 +251,7 @@ namespace windows10windowManager.Window
             Debug.WriteLine("hWinEventHook:" + hWinEventHook);
             Debug.WriteLine("eventType:"+eventName);
             Debug.WriteLine("hwnd:" + hwnd);
-            Debug.WriteLine("title:" + GetCurrentWindowTitle(hwnd));
+            Debug.WriteLine("title:" + GetCurrentWindowTitle(hwnd));0
             Debug.WriteLine("idObject:" + idObject);
             Debug.WriteLine("idChild:" + idChild);
             Debug.WriteLine("dwEventThread:" + dwEventThread);

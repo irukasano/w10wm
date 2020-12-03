@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
 using windows10windowManager.Window;
+using windows10windowManager.Util;
 
 namespace windows10windowManager.Window
 {
@@ -93,7 +94,9 @@ namespace windows10windowManager.Window
             {
                 return null;
             }
-            return WindowInfos.ElementAt(this.CurrentWindowInfoIndex);
+            var windowInfoWithHandle = WindowInfos.ElementAt(this.CurrentWindowInfoIndex);
+            Logger.DebugWindowInfo("WindowManager.GetCurrentWindow", windowInfoWithHandle);
+            return windowInfoWithHandle;
         }
 
         /**

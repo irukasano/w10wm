@@ -80,7 +80,7 @@ namespace windows10windowManager.KeyHook
             }
         }
 
-        public void UnHook()
+        public virtual void UnHook()
         {
             UnhookWindowsHookEx(hookId);
             hookId = IntPtr.Zero;

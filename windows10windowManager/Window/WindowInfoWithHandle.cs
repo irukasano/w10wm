@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
+using windows10windowManager.Util;
+
 namespace windows10windowManager.Window
 {
 
@@ -54,15 +56,17 @@ namespace windows10windowManager.Window
 
         public IntPtr MonitorHandle { get; private set; }
 
-        public WindowInfoWithHandle(IntPtr hwnd)
+        public WindowInfoWithHandle(IntPtr hWnd)
         {
-            this.WindowHandle = hwnd;
+            this.WindowHandle = hWnd;
 
             RECT rect;
-            bool f = GetWindowRect(hwnd, out rect);
+            bool f = GetWindowRect(hWnd, out rect);
             this.Position = rect;
 
-            this.WindowTitle = GetCurrentWindowTitle(hwnd);
+            this.WindowTitle = GetCurrentWindowTitle(hWnd);
+
+            this.ComputeMonitorHandle();
         }
 
         public bool Equals( WindowInfoWithHandle other)
@@ -152,20 +156,29 @@ namespace windows10windowManager.Window
             return CalcPositionHeight(this.Position);
         }
 
-        public IntPtr GetMonitorHandle()
+        public IntPtr ComputeMonitorHandle()
         {
             this.MonitorHandle = MonitorFromWindow(this.WindowHandle, MONITOR_DEFAULTTONEAREST);
 
             return this.MonitorHandle;
         }
 
-        public bool MovedMonitor( IntPtr hWnd)
+        public IntPtr GetMonitorHandle()
         {
-            // TODO たぶんMonitorManager あたりで判定する必要がある？
-            RECT rect;
-            bool f = GetWindowRect(hWnd, out rect);
-            // return MonitorManager.IsDifferentMonitor(Position, rect);
-            return true;
+            return this.MonitorHandle;
+        }
+
+        /**
+         * <summary>
+         * このウィンドウがモニターを移動したかを判定する
+         * </summary>
+         */
+        public bool MovedMonitor()
+        {
+            var beforeMovedMonitorHandle = this.MonitorHandle;
+            var currentMonitorHandle = MonitorFromWindow(this.WindowHandle, MONITOR_DEFAULTTONEAREST);
+
+            return beforeMovedMonitorHandle != currentMonitorHandle;
         }
 
     }

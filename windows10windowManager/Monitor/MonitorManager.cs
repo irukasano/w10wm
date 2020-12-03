@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
-using System.Diagnostics;
+//using System.Diagnostics;
 
 using windows10windowManager.Window;
+using windows10windowManager.Util;
 
 namespace windows10windowManager.Monitor
 {
@@ -83,7 +84,7 @@ namespace windows10windowManager.Monitor
             {
                 var monitorHandle = monitorInfo.MonitorHandle;
                 var monitorName = new string(monitorInfo.MonitorInfo.szDevice).TrimEnd('\0');
-                Debug.WriteLine($"Add WindowManager of Monitor : {monitorName} ({monitorHandle})");
+                Logger.WriteLine($"Add WindowManager of Monitor : {monitorName} ({monitorHandle})");
                 this.WindowManagers.Add(new WindowManager(monitorInfo.MonitorHandle));
             }
 
@@ -115,7 +116,19 @@ namespace windows10windowManager.Monitor
 
         public void SetCurrentWindowManagerIndex(int windowManagerIndex)
         {
+            Logger.WriteLine($"MonitorManager.SetCurrentWindowManagerIndex = {windowManagerIndex}");
             this.CurrentWindowManagerIndex = windowManagerIndex;
+        }
+
+        /**
+         * <summary>
+         * 指定されたモニターハンドルをカレントウィンドウにする
+         * </summary>
+         */
+        public void SetCurrentWindowManagerIndexByMonitorHandle(IntPtr monitorHandle)
+        {
+            var wm = this.FindWindowManagerByMonitorHandle(monitorHandle);
+            this.SetCurrentWindowManagerIndex(this.WindowManagers.IndexOf(wm));
         }
 
         /**
@@ -133,12 +146,17 @@ namespace windows10windowManager.Monitor
             var monitorInfo = this.MonitorInfos.ElementAt(monitorNumber);
             var monitorHandle = monitorInfo.MonitorHandle;
             var monitorName = new string(monitorInfo.MonitorInfo.szDevice).TrimEnd('\0');
-            Debug.WriteLine($"Get Monitor : {monitorName} ({monitorHandle}) by {monitorNumber}");
+            Logger.WriteLine($"Get Monitor : {monitorName} ({monitorHandle}) by {monitorNumber}");
             this.CurrentWindowManagerIndex = monitorNumber;
             return this.FindWindowManagerByMonitorHandle(monitorInfo.MonitorHandle);
         }
 
-        private WindowManager FindWindowManagerByMonitorHandle(IntPtr monitorHandle)
+        /**
+         * <summary>
+         * 指定したモニターハンドルに紐付くWindowManagerを戻す
+         * </summary>
+         */
+        public WindowManager FindWindowManagerByMonitorHandle(IntPtr monitorHandle)
         {
             return this.WindowManagers.Find(
                 (WindowManager wm) => { return wm.MonitorHandle == monitorHandle; });
@@ -158,6 +176,8 @@ namespace windows10windowManager.Monitor
             {
                 return this.WindowManagers.ElementAt(0);
             }
+            Logger.DebugWindowManager("windowManager of MonitorManager.AddWindowInfo", targetWindowManager);
+            Logger.DebugWindowInfo("windowInfo of MonitorManager.AddWindowInfo", windowInfoWithHandle);
             targetWindowManager.Add(windowInfoWithHandle);
             return targetWindowManager;
         }
@@ -176,8 +196,23 @@ namespace windows10windowManager.Monitor
             {
                 return this.WindowManagers.ElementAt(0);
             }
+            Logger.DebugWindowManager("windowManager of MonitorManager.RemoveWindowInfo", targetWindowManager);
+            Logger.DebugWindowInfo("windowInfo of MonitorManager.RemoveWindowInfo", windowInfoWithHandle);
             targetWindowManager.Remove(windowInfoWithHandle);
             return targetWindowManager;
+        }
+
+        /**
+         * <summary>
+         * 現在のアクティヴディスプレイをハイライト表示する
+         * </summary>
+         */
+        public void HighlightCurrentMonitor()
+        {
+            var currentWindowManager = this.GetCurrentMonitorWindowManager();
+            var currentMonitorInfo = this.MonitorInfos.Find(
+                (MonitorInfoWithHandle mi) => { return mi.MonitorHandle == currentWindowManager.MonitorHandle; });
+            currentMonitorInfo.MonitorInfo.
         }
 
         /// <summary>
