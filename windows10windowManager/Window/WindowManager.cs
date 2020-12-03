@@ -49,15 +49,25 @@ namespace windows10windowManager.Window
         // ウィンドウリストに追加する
         public void Add(WindowInfoWithHandle windowInfo)
         {
-            WindowInfos.Add(windowInfo);
+            this.WindowInfos.Add(windowInfo);
+
+            // 追加したらこれをカレントウィンドウにする
+            this.CurrentWindowInfoIndex = this.WindowInfos.Count - 1;
         }
 
         // ウィンドウリストから削除する
         public void Remove(WindowInfoWithHandle windowInfo)
         {
-            if (WindowInfos.Contains(windowInfo))
+            if (this.WindowInfos.Contains(windowInfo))
             {
-                WindowInfos.Remove(windowInfo);
+                this.WindowInfos.Remove(windowInfo);
+
+                // 削除したら一つ上をカレントウィンドウにする
+                // 0 なら 0 のまま
+                if (this.CurrentWindowInfoIndex > 0)
+                {
+                    this.CurrentWindowInfoIndex -= 1;
+                }
             }
         }
 
@@ -79,6 +89,10 @@ namespace windows10windowManager.Window
          */
         public WindowInfoWithHandle GetCurrentWindow()
         {
+            if ( this.WindowInfos.Count <= this.CurrentWindowInfoIndex)
+            {
+                return null;
+            }
             return WindowInfos.ElementAt(this.CurrentWindowInfoIndex);
         }
 

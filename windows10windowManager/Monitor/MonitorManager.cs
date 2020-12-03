@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
-//using Window;
 using windows10windowManager.Window;
 
 namespace windows10windowManager.Monitor
@@ -41,17 +41,6 @@ namespace windows10windowManager.Monitor
             this.ManageWindowByMonitors(traceWindow.WindowInfos);
         }
 
-        public bool MonitorEnum(IntPtr hMonitor, IntPtr hdcMonitor, ref RECT lprcMonitor, IntPtr dwData)
-        {
-            var mi = new MONITORINFO();
-            mi.size = (uint)Marshal.SizeOf(mi);
-            GetMonitorInfo(hMonitor, ref mi);
-
-            // Add to monitor info
-            MonitorInfos.Add(new MonitorInfoWithHandle(hMonitor, mi));
-            return true;
-        }
-
         /**
          * <summary>
          * 現在の環境の全てのモニターを取得し MonitorInfos に保持する
@@ -64,9 +53,20 @@ namespace windows10windowManager.Monitor
             this.MonitorInfos = new List<MonitorInfoWithHandle>();
 
             // Enumerate monitors
-            EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, this.MonitorEnum, IntPtr.Zero);
+            EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, this.FindMonitorEnum, IntPtr.Zero);
 
             return this.MonitorInfos;
+        }
+
+        public bool FindMonitorEnum(IntPtr hMonitor, IntPtr hdcMonitor, ref RECT lprcMonitor, IntPtr dwData)
+        {
+            var mi = new MONITORINFO();
+            mi.size = (uint)Marshal.SizeOf(mi);
+            GetMonitorInfo(hMonitor, ref mi);
+
+            // Add to monitor info
+            MonitorInfos.Add(new MonitorInfoWithHandle(hMonitor, mi));
+            return true;
         }
 
         /**
@@ -81,6 +81,9 @@ namespace windows10windowManager.Monitor
 
             foreach (var monitorInfo in MonitorInfos)
             {
+                var monitorHandle = monitorInfo.MonitorHandle;
+                var monitorName = new string(monitorInfo.MonitorInfo.szDevice).TrimEnd('\0');
+                Debug.WriteLine($"Add WindowManager of Monitor : {monitorName} ({monitorHandle})");
                 this.WindowManagers.Add(new WindowManager(monitorInfo.MonitorHandle));
             }
 
@@ -117,24 +120,46 @@ namespace windows10windowManager.Monitor
 
         /**
          * <summary>
+         * this.WindowManagers のうち、指定された monitorNumber のモニター用に管理している
+         * WindowManager を戻す
+         * </summary>
+         */
+        public WindowManager GetMonitorNWindowManager(int monitorNumber)
+        {
+            if (this.MonitorInfos.Count < monitorNumber + 1)
+            {
+                return null;
+            }
+            var monitorInfo = this.MonitorInfos.ElementAt(monitorNumber);
+            var monitorHandle = monitorInfo.MonitorHandle;
+            var monitorName = new string(monitorInfo.MonitorInfo.szDevice).TrimEnd('\0');
+            Debug.WriteLine($"Get Monitor : {monitorName} ({monitorHandle}) by {monitorNumber}");
+            this.CurrentWindowManagerIndex = monitorNumber;
+            return this.FindWindowManagerByMonitorHandle(monitorInfo.MonitorHandle);
+        }
+
+        private WindowManager FindWindowManagerByMonitorHandle(IntPtr monitorHandle)
+        {
+            return this.WindowManagers.Find(
+                (WindowManager wm) => { return wm.MonitorHandle == monitorHandle; });
+        }
+
+        /**
+         * <summary>
          * WindowInfoWithHandle をモニターのWindowManagerに追加する
          * </summary>
          */
         public WindowManager AddWindowInfo(WindowInfoWithHandle windowInfoWithHandle)
         {
-            IntPtr mh = windowInfoWithHandle.GetMonitor();
-            WindowManager kwm = new WindowManager(mh);
-
             // このウィンドウのモニターのウィンドウを管理する WindowManager が存在すれば
             // これに追加して管理させる
-            if (this.WindowManagers.Contains(kwm))
+            var targetWindowManager = this.FindWindowManagerByMonitorHandle(windowInfoWithHandle.GetMonitorHandle());
+            if ( targetWindowManager is null)
             {
-                var i = WindowManagers.IndexOf(kwm);
-                this.WindowManagers[i].Add(windowInfoWithHandle);
-                return this.WindowManagers[i];
+                return this.WindowManagers.ElementAt(0);
             }
-
-            return this.WindowManagers[0];
+            targetWindowManager.Add(windowInfoWithHandle);
+            return targetWindowManager;
         }
 
         /**
@@ -144,19 +169,15 @@ namespace windows10windowManager.Monitor
          */
         public WindowManager RemoveWindowInfo(WindowInfoWithHandle windowInfoWithHandle)
         {
-            IntPtr mh = windowInfoWithHandle.GetMonitor();
-            WindowManager kwm = new WindowManager(mh);
-
             // このウィンドウのモニターのウィンドウを管理する WindowManager が存在すれば
             // これに追加して管理させる
-            if (this.WindowManagers.Contains(kwm))
+            var targetWindowManager = this.FindWindowManagerByMonitorHandle(windowInfoWithHandle.GetMonitorHandle());
+            if (targetWindowManager is null)
             {
-                var i = WindowManagers.IndexOf(kwm);
-                this.WindowManagers[i].Remove(windowInfoWithHandle);
-                return this.WindowManagers[i];
+                return this.WindowManagers.ElementAt(0);
             }
-
-            return this.WindowManagers[0];
+            targetWindowManager.Remove(windowInfoWithHandle);
+            return targetWindowManager;
         }
 
         /// <summary>

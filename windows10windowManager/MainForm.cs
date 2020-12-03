@@ -88,18 +88,36 @@ namespace windows10windowManager
         private void InterceptKeyboard_KeyDownEvent(object sender, InterceptKeyboard.OriginalKeyEventArg e)
         {
             this.interceptKeyboard.callNextHook = true;
+            int[] modifierLeftWindows = new int[] { (int)OriginalKey.LeftWindows };
 
-
-            if (e.equals(OriginalKey.J, new int[] { (int)OriginalKey.LeftWindows }))
+            if (e.equals(OriginalKey.J, modifierLeftWindows))
             {
                 Debug.WriteLine("With LeftWindows + J");
-                this.monitorManager.GetCurrentMonitorWindowManager().MoveCurrentFocusPrevious().ActivateWindow();
+                this.MoveCurrentFocusPrevious();
                 this.interceptKeyboard.callNextHook = false;
             }
-            else if (e.equals(OriginalKey.K, new int[] { (int)OriginalKey.LeftWindows }))
+            else if (e.equals(OriginalKey.K, modifierLeftWindows))
             {
                 Debug.WriteLine("With LeftWindows + K");
-                this.monitorManager.GetCurrentMonitorWindowManager().MoveCurrentFocusNext().ActivateWindow();
+                this.MoveCurrentFocusNext();
+                this.interceptKeyboard.callNextHook = false;
+            }
+            else if (e.equals(OriginalKey.F1, modifierLeftWindows))
+            {
+                Debug.WriteLine("With LeftWindows + F1");
+                this.ActivateMonitorN(0);
+                this.interceptKeyboard.callNextHook = false;
+            }
+            else if (e.equals(OriginalKey.F2, modifierLeftWindows))
+            {
+                Debug.WriteLine("With LeftWindows + F2");
+                this.ActivateMonitorN(1);
+                this.interceptKeyboard.callNextHook = false;
+            }
+            else if (e.equals(OriginalKey.F3, modifierLeftWindows))
+            {
+                Debug.WriteLine("With LeftWindows + F3");
+                this.ActivateMonitorN(2);
                 this.interceptKeyboard.callNextHook = false;
             }
             else
@@ -134,6 +152,68 @@ namespace windows10windowManager
             Debug.WriteLine("Window Show : " + w.WindowInfo.WindowTitle);
             var windowManager = this.monitorManager.RemoveWindowInfo(w.WindowInfo);
             windowManager.ArrangeWindows();
+        }
+
+
+        /**
+         * <summary>
+         * ひとつ上のウィンドウをアクティヴにする
+         * </summary>
+         */
+        private void MoveCurrentFocusPrevious()
+        {
+            var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
+            if (windowManager is null)
+            {
+                return;
+            }
+            var windowInfo = windowManager.MoveCurrentFocusPrevious();
+            if (windowInfo is null)
+            {
+                return;
+            }
+            windowInfo.ActivateWindow();
+        }
+
+        /**
+         * <summary>
+         * ひとつ後ろのウィンドウをアクティヴにする
+         * </summary>
+         */
+        private void MoveCurrentFocusNext()
+        {
+            var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
+            if (windowManager is null)
+            {
+                return;
+            }
+            var windowInfo = windowManager.MoveCurrentFocusNext();
+            if (windowInfo is null)
+            {
+                return;
+            }
+            windowInfo.ActivateWindow();
+        }
+
+        /**
+         * <summary>
+         * モニター１のカレントウィンドウをアクティヴにする
+         * </summary>
+         */
+        private void ActivateMonitorN(int monitorNumber)
+        {
+            Debug.WriteLine($"Change Monitor : {monitorNumber}");
+            var windowManager = this.monitorManager.GetMonitorNWindowManager(monitorNumber);
+            if (windowManager is null)
+            {
+                return;
+            }
+            var windowInfo = windowManager.GetCurrentWindow();
+            if ( windowInfo is null)
+            {
+                return;
+            }
+            windowInfo.ActivateWindow();
         }
 
         /**

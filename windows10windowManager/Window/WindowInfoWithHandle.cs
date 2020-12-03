@@ -152,7 +152,7 @@ namespace windows10windowManager.Window
             return CalcPositionHeight(this.Position);
         }
 
-        public IntPtr GetMonitor()
+        public IntPtr GetMonitorHandle()
         {
             this.MonitorHandle = MonitorFromWindow(this.WindowHandle, MONITOR_DEFAULTTONEAREST);
 

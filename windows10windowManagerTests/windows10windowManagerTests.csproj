@@ -17,4 +17,8 @@
 	<ProjectReference Include="..\windows10windowManager\windows10windowManager.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Monitor\" />
+  </ItemGroup>
+
 </Project>
