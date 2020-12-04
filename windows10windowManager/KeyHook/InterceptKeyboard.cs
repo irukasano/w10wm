@@ -100,6 +100,7 @@ namespace windows10windowManager.KeyHook
                 else
                 {
                     OnKeyDownEvent(vkCode);
+                    Modifiers.Clear();
                 }
             }
             else if (nCode >= 0 && (wParam == (IntPtr)WM_KEYUP || wParam == (IntPtr)WM_SYSKEYUP))
@@ -116,6 +117,7 @@ namespace windows10windowManager.KeyHook
                 else
                 {
                     OnKeyUpEvent(vkCode);
+                    Modifiers.Clear();
                 }
             }
 

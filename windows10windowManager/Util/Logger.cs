@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 
 using windows10windowManager.Window;
+using windows10windowManager.Monitor;
 
 namespace windows10windowManager.Util
 {
@@ -40,6 +41,19 @@ namespace windows10windowManager.Util
         {
             var monitorHandle = windowManager.MonitorHandle;
             var m = message + $" : hMonitor={monitorHandle}";
+            Logger.WriteLine(m);
+        }
+
+        public static void DebugMonitor(string message, MonitorInfoWithHandle monitorInfoWithHandle)
+        {
+            var deviceName = new string(monitorInfoWithHandle.MonitorInfo.szDevice).TrimEnd('\0');
+            var monitorHandle = monitorInfoWithHandle.MonitorHandle;
+            var monitorRect = monitorInfoWithHandle.MonitorInfo.monitor;
+            var top = monitorRect.top;
+            var bottom = monitorRect.bottom;
+            var left = monitorRect.left;
+            var right = monitorRect.right;
+            var m = message + $" : {deviceName} (top={top},bottom={bottom},left={left},right={right}) ( hMonitor={monitorHandle} )";
             Logger.WriteLine(m);
         }
 

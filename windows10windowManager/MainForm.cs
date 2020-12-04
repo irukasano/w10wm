@@ -104,6 +104,12 @@ namespace windows10windowManager
                 this.MoveCurrentFocusNext();
                 this.interceptKeyboard.callNextHook = false;
             }
+            else if (e.equals(OriginalKey.I, modifierLeftWindows))
+            {
+                Logger.WriteLine("With LeftWindows + I");
+                this.HighlightActiveMonitor();
+                this.interceptKeyboard.callNextHook = false;
+            }
             else if (e.equals(OriginalKey.F1, modifierLeftWindows))
             {
                 Logger.WriteLine("With LeftWindows + F1");
@@ -246,6 +252,17 @@ namespace windows10windowManager
                 return;
             }
             windowInfo.ActivateWindow();
+        }
+
+        /**
+         * <summary>
+         * アクティヴモニターをハイライト表示する
+         * </summary>
+         */
+        public void HighlightActiveMonitor()
+        {
+            Logger.WriteLine("Highlight Monitor");
+            this.monitorManager.HighlightCurrentMonitor();
         }
 
         /**

@@ -144,9 +144,7 @@ namespace windows10windowManager.Monitor
                 return null;
             }
             var monitorInfo = this.MonitorInfos.ElementAt(monitorNumber);
-            var monitorHandle = monitorInfo.MonitorHandle;
-            var monitorName = new string(monitorInfo.MonitorInfo.szDevice).TrimEnd('\0');
-            Logger.WriteLine($"Get Monitor : {monitorName} ({monitorHandle}) by {monitorNumber}");
+            Logger.DebugMonitor($"Get Monitor number={monitorNumber}", monitorInfo);
             this.CurrentWindowManagerIndex = monitorNumber;
             return this.FindWindowManagerByMonitorHandle(monitorInfo.MonitorHandle);
         }
@@ -212,7 +210,11 @@ namespace windows10windowManager.Monitor
             var currentWindowManager = this.GetCurrentMonitorWindowManager();
             var currentMonitorInfo = this.MonitorInfos.Find(
                 (MonitorInfoWithHandle mi) => { return mi.MonitorHandle == currentWindowManager.MonitorHandle; });
-            currentMonitorInfo.MonitorInfo.
+            //currentMonitorInfo.MonitorInfo.
+
+            Logger.DebugMonitor("Hightlight", currentMonitorInfo);
+            MonitorInformationForm monitorInformationForm = new MonitorInformationForm(currentMonitorInfo);
+            monitorInformationForm.Show();
         }
 
         /// <summary>

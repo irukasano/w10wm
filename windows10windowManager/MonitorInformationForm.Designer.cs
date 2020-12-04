@@ -33,14 +33,15 @@ namespace windows10windowManager
             // 
             // MonitorInformationForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Highlight;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1733, 900);
+            this.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.Name = "MonitorInformationForm";
             this.Opacity = 0.8D;
             this.Text = "Form1";
-            this.Load += new System.EventHandler(this.MonitorInformationForm_Load);
+            this.Shown += new System.EventHandler(this.MonitorInformationForm_Shown);
             this.ResumeLayout(false);
 
         }
