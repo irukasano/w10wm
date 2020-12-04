@@ -134,10 +134,10 @@ namespace windows10windowManager.Monitor
         /**
          * <summary>
          * this.WindowManagers のうち、指定された monitorNumber のモニター用に管理している
-         * WindowManager を戻す
+         * WindowManager を戻してこのモニターをアクティヴにする
          * </summary>
          */
-        public WindowManager GetMonitorNWindowManager(int monitorNumber)
+        public WindowManager ActivateMonitorNWindowManager(int monitorNumber)
         {
             if (this.MonitorInfos.Count < monitorNumber + 1)
             {

@@ -35,6 +35,27 @@ namespace windows10windowManager
             this.Left = monitorRect.left;
             this.Width = monitorRect.right - monitorRect.left;
             this.Height = monitorRect.bottom - monitorRect.top;
+
+            /*
+            // 指定のモニター情報を表示する
+            var crlf = "\r\n";
+            var deviceName = new string(monitorInfoWithHandle.MonitorInfo.szDevice).TrimEnd('\0');
+            var monitorHandle = monitorInfoWithHandle.MonitorHandle;
+            var top = monitorRect.top;
+            var bottom = monitorRect.bottom;
+            var left = monitorRect.left;
+            var right = monitorRect.right;
+            var workRect = monitorInfoWithHandle.MonitorInfo.work;
+            var workTop = workRect.top;
+            var workBottom = workRect.bottom;
+            var workLeft = workRect.left;
+            var workRight = workRect.right;
+
+            this.MonitorInformationLabel.Text = $"DeviceName={deviceName}{crlf}" +
+                $"Handle={monitorHandle}{crlf}" +
+                $"MonitorRect=top:{top}/bottom:{bottom}/left:{left}/right:{right}{crlf}" +
+                $"WorkRect=top:{workTop}/bottom:{workBottom}/left:{workLeft}/right:{workRight}{crlf}";
+            */
         }
 
         private void MonitorInformationForm_Shown(object sender, EventArgs e)

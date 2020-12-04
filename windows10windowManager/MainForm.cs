@@ -241,7 +241,7 @@ namespace windows10windowManager
         private void ActivateMonitorN(int monitorNumber)
         {
             Logger.WriteLine($"Change Monitor : {monitorNumber}");
-            var windowManager = this.monitorManager.GetMonitorNWindowManager(monitorNumber);
+            var windowManager = this.monitorManager.ActivateMonitorNWindowManager(monitorNumber);
             if (windowManager is null)
             {
                 return;
@@ -252,6 +252,7 @@ namespace windows10windowManager
                 return;
             }
             windowInfo.ActivateWindow();
+            this.HighlightActiveMonitor();
         }
 
         /**
