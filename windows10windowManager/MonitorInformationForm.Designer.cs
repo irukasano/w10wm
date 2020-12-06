@@ -37,24 +37,27 @@ namespace windows10windowManager
             this.MonitorInformationLabel.AutoSize = true;
             this.MonitorInformationLabel.Font = new System.Drawing.Font("MS UI Gothic", 16.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.MonitorInformationLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.MonitorInformationLabel.Location = new System.Drawing.Point(61, 56);
+            this.MonitorInformationLabel.Location = new System.Drawing.Point(28, 28);
+            this.MonitorInformationLabel.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.MonitorInformationLabel.Name = "MonitorInformationLabel";
-            this.MonitorInformationLabel.Size = new System.Drawing.Size(454, 43);
+            this.MonitorInformationLabel.Size = new System.Drawing.Size(232, 22);
             this.MonitorInformationLabel.TabIndex = 0;
             this.MonitorInformationLabel.Text = "MonitorInformationLabel";
             this.MonitorInformationLabel.Visible = false;
             // 
             // MonitorInformationForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Highlight;
-            this.ClientSize = new System.Drawing.Size(1733, 900);
+            this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.MonitorInformationLabel);
-            this.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.Name = "MonitorInformationForm";
             this.Opacity = 0.8D;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "MonitorInformationForm";
+            this.TopMost = true;
+            this.Load += new System.EventHandler(this.MonitorInformationForm_Load);
             this.Shown += new System.EventHandler(this.MonitorInformationForm_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();

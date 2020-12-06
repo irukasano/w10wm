@@ -90,47 +90,45 @@ namespace windows10windowManager
         private void InterceptKeyboard_KeyDownEvent(object sender, InterceptKeyboard.OriginalKeyEventArg e)
         {
             this.interceptKeyboard.callNextHook = true;
+            Logger.WriteLine("KEY INPUT : " + e.ToString());
+
             int[] modifierLeftWindows = new int[] { (int)OriginalKey.LeftWindows };
 
-            if (e.equals(OriginalKey.J, modifierLeftWindows))
+            if (e.Equals(OriginalKey.J, modifierLeftWindows))
             {
                 Logger.WriteLine("With LeftWindows + J");
                 this.MoveCurrentFocusPrevious();
                 this.interceptKeyboard.callNextHook = false;
             }
-            else if (e.equals(OriginalKey.K, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.K, modifierLeftWindows))
             {
                 Logger.WriteLine("With LeftWindows + K");
                 this.MoveCurrentFocusNext();
                 this.interceptKeyboard.callNextHook = false;
             }
-            else if (e.equals(OriginalKey.I, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.I, modifierLeftWindows))
             {
                 Logger.WriteLine("With LeftWindows + I");
                 this.HighlightActiveMonitor();
                 this.interceptKeyboard.callNextHook = false;
             }
-            else if (e.equals(OriginalKey.F1, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.F1, modifierLeftWindows))
             {
                 Logger.WriteLine("With LeftWindows + F1");
                 this.ActivateMonitorN(0);
                 this.interceptKeyboard.callNextHook = false;
             }
-            else if (e.equals(OriginalKey.F2, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.F2, modifierLeftWindows))
             {
                 Logger.WriteLine("With LeftWindows + F2");
                 this.ActivateMonitorN(1);
                 this.interceptKeyboard.callNextHook = false;
             }
-            else if (e.equals(OriginalKey.F3, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.F3, modifierLeftWindows))
             {
                 Logger.WriteLine("With LeftWindows + F3");
                 this.ActivateMonitorN(2);
                 this.interceptKeyboard.callNextHook = false;
-            }
-            else
-            {
-                Logger.WriteLine("Else key");
             }
         }
 

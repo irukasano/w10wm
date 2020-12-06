@@ -15,6 +15,8 @@ namespace windows10windowManager
 {
     public partial class MonitorInformationForm : Form
     {
+        protected MonitorInfoWithHandle MonitorInfo { get; private set; }
+
         public MonitorInformationForm(MonitorInfoWithHandle monitorInfoWithHandle)
         {
             InitializeComponent();
@@ -26,15 +28,23 @@ namespace windows10windowManager
             var hilightColorArgb = System.Drawing.SystemColors.Highlight.ToArgb();
             var backColorArgb = hilightColorArgb | 666666;
             this.BackColor = System.Drawing.Color.FromArgb(backColorArgb);
+
+            this.MonitorInfo = monitorInfoWithHandle;
+
+        }
+        private void MonitorInformationForm_Load(object sender, EventArgs e)
+        {
             this.Opacity = 0.8D;
 
             // 指定のモニターで最大化表示する
-            var monitorRect = monitorInfoWithHandle.MonitorInfo.monitor;
+            var monitorRect = this.MonitorInfo.MonitorRect;
 
             this.Top = monitorRect.top;
             this.Left = monitorRect.left;
             this.Width = monitorRect.right - monitorRect.left;
             this.Height = monitorRect.bottom - monitorRect.top;
+
+            this.Location = new Point(monitorRect.left, monitorRect.top);
 
             /*
             // 指定のモニター情報を表示する
@@ -65,10 +75,11 @@ namespace windows10windowManager
                 //フォームの不透明度を変更する
                 this.Opacity = 0.05 * i;
                 //一時停止
-                System.Threading.Thread.Sleep(50);
+                System.Threading.Thread.Sleep(30);
             }
 
             this.Close();
         }
+
     }
 }

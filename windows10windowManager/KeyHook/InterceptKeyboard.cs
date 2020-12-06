@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 
 using windows10windowManager.KeyHook.KeyMap;
+using windows10windowManager.Util;
 
 namespace windows10windowManager.KeyHook
 {
@@ -22,8 +23,8 @@ namespace windows10windowManager.KeyHook
 
             public OriginalKeyEventArg(int keyCode, List<int> modifiers)
             {
-                KeyCode = keyCode;
-                Modifiers = modifiers.ToArray();
+                this.KeyCode = keyCode;
+                this.Modifiers = modifiers.ToArray();
             }
 
             /**
@@ -31,13 +32,13 @@ namespace windows10windowManager.KeyHook
              * 指定されたキーコード、修飾キーが押されたかを判別する
              * </summary>
              */
-            public bool equals(OriginalKey key, int[] modifiers)
+            public bool Equals(OriginalKey key, int[] modifiers)
             {
                 var originalKey = KeyMapConverter.KeyCodeToKey(this.KeyCode);
-                return (key == originalKey && this.equalsModifiers(modifiers));
+                return (key == originalKey && this.EqualsModifiers(modifiers));
             }
 
-            public bool equalsModifiers(int[] modifiers)
+            public bool EqualsModifiers(int[] modifiers)
             {
                 if (modifiers.Length != Modifiers.Length)
                 {
@@ -45,12 +46,35 @@ namespace windows10windowManager.KeyHook
                 }
                 for (int i = 0; i < modifiers.Length; i++)
                 {
-                    if (!Modifiers.Contains(modifiers[i]))
+                    if (!this.Modifiers.Contains(modifiers[i]))
                     {
                         return false;
                     }
                 }
                 return true;
+            }
+
+            /**
+             * <summary>
+             * 現在のキーイベントを文字列として戻す
+             * </summary>
+             */
+            override public string ToString()
+            {
+                var key = KeyMapConverter.KeyCodeToKey(this.KeyCode);
+                var modifiers = "";
+                if ( this.Modifiers.Length == 0)
+                {
+                    return $"{key}";
+                }
+
+                for (int i = 0; i < this.Modifiers.Length; i++)
+                {
+                    var mk = KeyMapConverter.KeyCodeToKey(this.Modifiers[i]);
+                    modifiers += mk + " ";
+                }
+
+                return $"{modifiers}+ {key}";
             }
 
         }
@@ -79,45 +103,55 @@ namespace windows10windowManager.KeyHook
 
         public override IntPtr HookProcedure(int nCode, IntPtr wParam, IntPtr lParam)
         {
+            var eventKeyDown = (wParam == (IntPtr)WM_KEYDOWN) ? "KeyDown " : "";
+            var eventSysKeyDown = (wParam == (IntPtr)WM_SYSKEYDOWN) ? "SysKeyDown " : "";
+            var eventKeyUp = (wParam == (IntPtr)WM_KEYUP) ? "KeyUp " : "";
+            var eventSysKeyUp = (wParam == (IntPtr)WM_SYSKEYUP) ? "SysKeyUp " : "";
+            var wkb = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT));
+            var wvkCode = (int)wkb.vkCode;
+            var vk = KeyMapConverter.KeyCodeToKey(wvkCode);
+
+            Logger.WriteLine($"{nCode} : {vk} : {eventKeyDown}{eventSysKeyDown}{eventKeyUp}{eventSysKeyUp}");
+
             if (nCode >= 0 && (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN))
             {
                 var kb = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT));
                 var vkCode = (int)kb.vkCode;
-                if (isModifier(vkCode))
+                if (this.isModifier(vkCode))
                 {
-                    if (!Modifiers.Contains(vkCode))
+                    if (! this.Modifiers.Contains(vkCode))
                     {
-                        Modifiers.Add(vkCode);
+                        this.Modifiers.Add(vkCode);
                     }
                     else
                     {
                         // KeyDown 時にすでに同じ Modifier が存在していた場合
                         // ある Modifier を二重に押していることになる
                         // なにか問題が発生しているときなので、いったん削除する
-                        Modifiers.Remove(vkCode);
+                        this.Modifiers.Remove(vkCode);
                     }
                 }
                 else
                 {
-                    OnKeyDownEvent(vkCode);
-                    Modifiers.Clear();
+                    this.OnKeyDownEvent(vkCode);
+                    //Modifiers.Clear();
                 }
             }
             else if (nCode >= 0 && (wParam == (IntPtr)WM_KEYUP || wParam == (IntPtr)WM_SYSKEYUP))
             {
                 var kb = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT));
                 var vkCode = (int)kb.vkCode;
-                if (isModifier(vkCode))
+                if (this.isModifier(vkCode))
                 {
-                    if (Modifiers.Contains(vkCode))
+                    if (this.Modifiers.Contains(vkCode))
                     {
-                        Modifiers.Remove(vkCode);
+                        this.Modifiers.Remove(vkCode);
                     }
+                    //Modifiers.Clear();
                 }
                 else
                 {
-                    OnKeyUpEvent(vkCode);
-                    Modifiers.Clear();
+                    this.OnKeyUpEvent(vkCode);
                 }
             }
 

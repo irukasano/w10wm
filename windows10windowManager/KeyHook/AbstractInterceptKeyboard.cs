@@ -67,14 +67,14 @@ namespace windows10windowManager.KeyHook
 
         public void Hook()
         {
-            if (hookId == IntPtr.Zero)
+            if (this.hookId == IntPtr.Zero)
             {
                 proc = HookProcedure;
                 using (var curProcess = Process.GetCurrentProcess())
                 {
                     using (ProcessModule curModule = curProcess.MainModule)
                     {
-                        hookId = SetWindowsHookEx(WH_KEYBOARD_LL, proc, GetModuleHandle(curModule.ModuleName), 0);
+                        this.hookId = SetWindowsHookEx(WH_KEYBOARD_LL, proc, GetModuleHandle(curModule.ModuleName), 0);
                     }
                 }
             }
@@ -82,8 +82,9 @@ namespace windows10windowManager.KeyHook
 
         public virtual void UnHook()
         {
-            UnhookWindowsHookEx(hookId);
-            hookId = IntPtr.Zero;
+            var r = UnhookWindowsHookEx(this.hookId);
+            Debug.WriteLine($"UnHookWindowsHookEx = {r}");
+            this.hookId = IntPtr.Zero;
         }
 
         public virtual IntPtr HookProcedure(int nCode, IntPtr wParam, IntPtr lParam)

@@ -68,6 +68,9 @@ namespace windows10windowManager.Monitor
     public interface IMonitorInfoWithHandle
     {
         IntPtr MonitorHandle { get; }
+
+        RECT MonitorRect { get; }
+
         MONITORINFO MonitorInfo { get; }
     }
     #endregion
@@ -91,6 +94,13 @@ namespace windows10windowManager.Monitor
 
         /**
          * <summary>
+         * Gets the monitor rect
+         * </summary>
+         */
+        public RECT MonitorRect { get; private set; }
+
+        /**
+         * <summary>
          * Gets the monitor information.
          * </summary>
          * <value>
@@ -106,10 +116,11 @@ namespace windows10windowManager.Monitor
          * <param name="monitorHandle">The monitor handle.</param>
          * <param name="monitorInfo">The monitor information.</param>
          */
-        public MonitorInfoWithHandle(IntPtr monitorHandle, MONITORINFO monitorInfo)
+        public MonitorInfoWithHandle(IntPtr monitorHandle, RECT monitorRect, MONITORINFO monitorInfo)
         {
-            MonitorHandle = monitorHandle;
-            MonitorInfo = monitorInfo;
+            this.MonitorHandle = monitorHandle;
+            this.MonitorRect = monitorRect;
+            this.MonitorInfo = monitorInfo;
         }
 
         public bool Equals(MonitorInfoWithHandle other)

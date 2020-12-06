@@ -48,7 +48,7 @@ namespace windows10windowManager.Util
         {
             var deviceName = new string(monitorInfoWithHandle.MonitorInfo.szDevice).TrimEnd('\0');
             var monitorHandle = monitorInfoWithHandle.MonitorHandle;
-            var monitorRect = monitorInfoWithHandle.MonitorInfo.monitor;
+            var monitorRect = monitorInfoWithHandle.MonitorRect;
             var top = monitorRect.top;
             var bottom = monitorRect.bottom;
             var left = monitorRect.left;

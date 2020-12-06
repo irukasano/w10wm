@@ -66,7 +66,7 @@ namespace windows10windowManager.Monitor
             GetMonitorInfo(hMonitor, ref mi);
 
             // Add to monitor info
-            MonitorInfos.Add(new MonitorInfoWithHandle(hMonitor, mi));
+            MonitorInfos.Add(new MonitorInfoWithHandle(hMonitor, lprcMonitor, mi));
             return true;
         }
 
