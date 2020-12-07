@@ -10,6 +10,8 @@ using windows10windowManager.Window.EventMap;
 using System.CodeDom;
 using System.Security.Principal;
 
+using windows10windowManager.Util;
+
 namespace windows10windowManager.Window
 {
     class TraceWindow : AbstractTraceWindow
@@ -38,6 +40,7 @@ namespace windows10windowManager.Window
         const UInt32 WS_CAPTION = 0x00C00000;
         const UInt32 WS_CLIPCHILDREN = 0x02000000;
         const UInt32 WS_OVERLAPPEDWINDOW = 0x00CF0000;
+        const UInt32 WS_TYPE_VSCODE = 0x00C70000;
         const UInt32 WS_UWP = WS_POPUP | WS_CLIPSIBLINGS | WS_OVERLAPPEDWINDOW;
 
         public class OriginalWinEventArg : EventArgs
@@ -112,6 +115,7 @@ namespace windows10windowManager.Window
             var windowTitle = windowInfo.WindowTitle;
             var isVisible = (windowLong & WS_VISIBLE) == WS_VISIBLE;
             var isOverlappedwindow = (windowLong & WS_OVERLAPPEDWINDOW) == WS_OVERLAPPEDWINDOW;
+            var isTypeVscode = (windowLong & WS_TYPE_VSCODE) == WS_TYPE_VSCODE;
             var isUwp = (windowLong & WS_UWP) == WS_UWP;
 
             //var isMinimized = (windowLong & WS_MINIMIZE) == WS_MINIMIZE;
@@ -120,20 +124,33 @@ namespace windows10windowManager.Window
             //DwmGetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE.Cloaked, out var isCloaked, Marshal.SizeOf(typeof(bool)));
 
             /*
-             * Biscute.exe は以下の状態なので、WS_OVERLAPPEDWINDOW - WS_SYSMENU なのかも
-             * Window add: ********* : 15c70000
+             * * Biscute.exe
+             * TraceWindows.EnumerateWindows : (1) 受信箱 | **** | ProtonMail : 14030000
+             * 
+             * * Microsoft Code
+             * README.md - Visual Studio Code : 14c70000
+             * 
+             * * Chrome
+             * ***** - Chromium : 16cf0000
+             * 
+             * * Edge
+             * **** - Microsoft? Edge : 17cf0000
+             * 
+             * * AS/R
+             * w10wm - Asr : 14cf4000
              */
 
-            //Debug.WriteLine("Window add: " + windowTitle + " : " + windowLong.ToString("x8"));
+            var windowLongString = windowLong.ToString("x8");
+            Logger.WriteLine($"TraceWindows.EnumerateWindows : {windowTitle} : {windowLongString}");
 
             if (!this.WindowInfos.Contains(windowInfo))
             {
                 //if (isVisible && isOverlappedwindow && isClipchildren && !isMinimized && windowTitle != null)
                 //if (isVisible && isOverlappedwindow  && !isCloaked && windowTitle != null)
-                if (isVisible && isOverlappedwindow && !isUwp &&  windowTitle != null)
+                if (isVisible && ( isOverlappedwindow || isTypeVscode )  && !isUwp &&  windowTitle != null)
                 //if (isVisible && isOverlappedwindow && windowTitle != null)
                 {
-                    //Debug.WriteLine("Window add: " + windowTitle + " : " + windowLong.ToString("x8"));
+                    Logger.WriteLine("TraceWindows.EnumerateWindows ADD:  : {windowTitle} : {windowLongString}");
                     this.WindowInfos.Add(windowInfo);
                     OnAddEvent(windowInfo);
                 }
@@ -159,6 +176,7 @@ namespace windows10windowManager.Window
             var windowTitle = needleWindowInfo.WindowTitle;
             var isVisible = (windowLong & WS_VISIBLE) == WS_VISIBLE;
             var isOverlappedwindow = (windowLong & WS_OVERLAPPEDWINDOW) == WS_OVERLAPPEDWINDOW;
+            var isTypeVscode = (windowLong & WS_TYPE_VSCODE) == WS_TYPE_VSCODE;
             var isUwp = (windowLong & WS_UWP) == WS_UWP;
 
             if ( windowLong == 0)
@@ -173,7 +191,7 @@ namespace windows10windowManager.Window
 
             if (! this.WindowInfos.Contains(needleWindowInfo))
             {
-                if (isVisible && isOverlappedwindow && !isUwp &&
+                if (isVisible && ( isOverlappedwindow || isTypeVscode) && !isUwp &&
                     (eventName == EventName.EVENT_OBJECT_SHOW || 
                     eventName == EventName.EVENT_OBJECT_NAMECHANGE))
                 {
