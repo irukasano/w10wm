@@ -108,11 +108,32 @@ namespace windows10windowManager.Window
         }
 
 
-        private bool EnumerateWindows(IntPtr hwnd, IntPtr lParam)
+        private bool EnumerateWindows(IntPtr hWnd, IntPtr lParam)
         {
-            var windowInfo = new WindowInfoWithHandle(hwnd);
-            var windowLong = GetWindowLong(hwnd, GWL_STYLE);
+            var windowInfo = new WindowInfoWithHandle(hWnd);
+            var windowLong = GetWindowLong(hWnd, GWL_STYLE);
             var windowTitle = windowInfo.WindowTitle;
+
+            if (!this.WindowInfos.Contains(windowInfo))
+            {
+                if ( this.IsValidWindow(hWnd, windowLong, windowTitle))
+                {
+                    Logger.WriteLine("TraceWindows.EnumerateWindows ADD:  : {windowTitle} : {windowLongString}");
+                    this.WindowInfos.Add(windowInfo);
+                    OnAddEvent(windowInfo);
+                }
+            }
+
+            return true;
+        }
+
+        /**
+         * <summary>
+         * 対象のウィンドウが本アプリケーションの管理下に置かれるべきウィンドウかどうか判定する
+         * </summary>
+         */
+        protected bool IsValidWindow(IntPtr hWnd, UInt32 windowLong, string windowTitle)
+        {
             var isVisible = (windowLong & WS_VISIBLE) == WS_VISIBLE;
             var isOverlappedwindow = (windowLong & WS_OVERLAPPEDWINDOW) == WS_OVERLAPPEDWINDOW;
             var isTypeVscode = (windowLong & WS_TYPE_VSCODE) == WS_TYPE_VSCODE;
@@ -120,7 +141,6 @@ namespace windows10windowManager.Window
 
             //var isMinimized = (windowLong & WS_MINIMIZE) == WS_MINIMIZE;
             //var isClipchildren = (windowLong & WS_POPUP & WS_CLIPCHILDREN) == (WS_POPUP & WS_CLIPCHILDREN);
-
             //DwmGetWindowAttribute(hwnd, DWMWINDOWATTRIBUTE.Cloaked, out var isCloaked, Marshal.SizeOf(typeof(bool)));
 
             /*
@@ -141,22 +161,12 @@ namespace windows10windowManager.Window
              */
 
             var windowLongString = windowLong.ToString("x8");
-            Logger.WriteLine($"TraceWindows.EnumerateWindows : {windowTitle} : {windowLongString}");
+            Logger.WriteLine($"TraceWindows.IsValidWindow : ({hWnd}){windowTitle} : {windowLongString}");
 
-            if (!this.WindowInfos.Contains(windowInfo))
-            {
-                //if (isVisible && isOverlappedwindow && isClipchildren && !isMinimized && windowTitle != null)
-                //if (isVisible && isOverlappedwindow  && !isCloaked && windowTitle != null)
-                if (isVisible && ( isOverlappedwindow || isTypeVscode )  && !isUwp &&  windowTitle != null)
-                //if (isVisible && isOverlappedwindow && windowTitle != null)
-                {
-                    Logger.WriteLine("TraceWindows.EnumerateWindows ADD:  : {windowTitle} : {windowLongString}");
-                    this.WindowInfos.Add(windowInfo);
-                    OnAddEvent(windowInfo);
-                }
-            }
-
-            return true;
+            return (isVisible && 
+                (isOverlappedwindow || isTypeVscode) && 
+                !isUwp && 
+                windowTitle != null);
         }
 
         public override void HookProcedure(IntPtr hWinEventHook, uint eventType, IntPtr hWnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
@@ -173,50 +183,38 @@ namespace windows10windowManager.Window
             }
             var needleWindowInfo = new WindowInfoWithHandle(hWnd);
             var windowLong = GetWindowLong(hWnd, GWL_STYLE);
+            var windowLongString = windowLong.ToString("x8");
             var windowTitle = needleWindowInfo.WindowTitle;
-            var isVisible = (windowLong & WS_VISIBLE) == WS_VISIBLE;
-            var isOverlappedwindow = (windowLong & WS_OVERLAPPEDWINDOW) == WS_OVERLAPPEDWINDOW;
-            var isTypeVscode = (windowLong & WS_TYPE_VSCODE) == WS_TYPE_VSCODE;
-            var isUwp = (windowLong & WS_UWP) == WS_UWP;
 
-            if ( windowLong == 0)
+            if ( windowLong == 0 ||
+                ((windowLong & WS_POPUP) == WS_POPUP) ||
+                ((windowLong & WS_CHILD) == WS_CHILD) ||
+                ((windowLong & WS_VISIBLE) != WS_VISIBLE))
             {
                 return;
             }
-            if ((windowLong & WS_CHILD) == WS_CHILD)
-            {
-                return;
-            }
-
 
             if (! this.WindowInfos.Contains(needleWindowInfo))
             {
-                if (isVisible && ( isOverlappedwindow || isTypeVscode) && !isUwp &&
+                if (this.IsValidWindow(hWnd, windowLong, windowTitle) &&
                     (eventName == EventName.EVENT_OBJECT_SHOW || 
                     eventName == EventName.EVENT_OBJECT_NAMECHANGE))
                 {
-                    //Debug.WriteLine("Window created: " + windowTitle + " : " + windowLong.ToString("x8"));
+                    Logger.WriteLine($"TraceWindows.HookProcedure OnAdd : ({hWnd}){windowTitle} : {windowLongString}");
                     this.WindowInfos.Add(needleWindowInfo);
                     OnAddEvent(needleWindowInfo);
                     OnShowEvent(needleWindowInfo);
-                    /*
-                    Debug.WriteLine("---");
-                    Debug.WriteLine(windowTitle + ":" + is_visible + ":" + eventName + ":" + windowLong);
-                    Debug.WriteLine("WS_VISIBLE = " + ((windowLong & WS_VISIBLE) == WS_VISIBLE));
-                    Debug.WriteLine("WS_OVERLAPPEDWINDOW = " + ((windowLong & WS_OVERLAPPEDWINDOW) == WS_OVERLAPPEDWINDOW));
-                    */
                 }
 
             } else
             {
-                //Debug.WriteLine( " - " + windowTitle + " : " + eventName + ": " + windowLong.ToString("x8"));
                 var windowInfo = this.WindowInfos.Find(
                     (WindowInfoWithHandle wi) => { return wi.WindowHandle == needleWindowInfo.WindowHandle; });
 
                 if (eventName == EventName.EVENT_OBJECT_DESTROY)
                 {
                     // Window がなくなった
-                    //Debug.WriteLine("Window destroyed: " + windowTitle + " : " + windowLong.ToString("x8"));
+                    Logger.WriteLine($"TraceWindows.HookProcedure OnDestroy : ({hWnd}){windowTitle} : {windowLongString}");
                     this.WindowInfos.Remove(windowInfo);
                     OnRemoveEvent(windowInfo);
                     OnDestroyEvent(windowInfo);
@@ -224,7 +222,7 @@ namespace windows10windowManager.Window
                 else if (eventName == EventName.EVENT_OBJECT_HIDE)
                 {
                     // Window が HIDDEN
-                    //Debug.WriteLine("Window hide: " + windowTitle + " : " + windowLong.ToString("x8"));
+                    Logger.WriteLine($"TraceWindows.HookProcedure OnHide : ({hWnd}){windowTitle} : {windowLongString}");
                     this.WindowInfos.Remove(windowInfo);
                     OnRemoveEvent(windowInfo);
                     OnHideEvent(windowInfo);
@@ -232,7 +230,7 @@ namespace windows10windowManager.Window
                 else if (eventName == EventName.EVENT_SYSTEM_MOVESIZESTART)
                 {
                     // Window がマウスでドラッグ開始
-                    //Debug.WriteLine("Window mouse drag start: " + windowTitle + " : " + windowLong.ToString("x8"));
+                    Logger.WriteLine($"TraceWindows.HookProcedure OnMouseDragStart : ({hWnd}){windowTitle} : {windowLongString}");
                     MouseDraggingWindowHandle = windowInfo;
                     OnMouseDragStartEvent(windowInfo);
                 } 
@@ -241,7 +239,7 @@ namespace windows10windowManager.Window
                     // Window がマウスでドラッグ終了
                     if (MouseDraggingWindowHandle.Equals(windowInfo))
                     {
-                        //Debug.WriteLine("Window mouse drag end: " + windowTitle + " : " + windowLong.ToString("x8"));
+                        Logger.WriteLine($"TraceWindows.HookProcedure OnMouseDragEnd : ({hWnd}){windowTitle} : {windowLongString}");
                         MouseDraggingWindowHandle = null;
                         OnMouseDragEndEvent(windowInfo);
                         OnLocationChangeEvent(windowInfo);
@@ -252,19 +250,19 @@ namespace windows10windowManager.Window
                     // ショートカットキーだけで場所移動
                     if (MouseDraggingWindowHandle == null)
                     {
-                        //Debug.WriteLine("Window location change: " + windowTitle + " : " + windowLong.ToString("x8"));
+                        Logger.WriteLine($"TraceWindows.HookProcedure OnLocationChange : ({hWnd}){windowTitle} : {windowLongString}");
                         OnLocationChangeEvent(windowInfo);
                     }
                 }
             }
 
+            /*
             if (this.WindowInfos.Contains(needleWindowInfo))
             {
                 // Debug.WriteLine(" - " + eventName + " : " + windowTitle);
 
             }
 
-            /*
             Debug.WriteLine("----");
             Debug.WriteLine("hWinEventHook:" + hWinEventHook);
             Debug.WriteLine("eventType:"+eventName);

@@ -203,13 +203,15 @@ namespace windows10windowManager.Monitor
         {
             // このウィンドウのモニターのウィンドウを管理する WindowManager が存在すれば
             // これに追加して管理させる
-            var targetWindowManager = this.FindWindowManagerByMonitorHandle(windowInfoWithHandle.GetMonitorHandle());
+            var monitorHandle = windowInfoWithHandle.GetMonitorHandle();
+            var targetWindowManager = this.FindWindowManagerByMonitorHandle(monitorHandle);
             if ( targetWindowManager is null)
             {
                 return this.WindowManagers.ElementAt(0);
             }
             Logger.DebugWindowManager("windowManager of MonitorManager.AddWindowInfo", targetWindowManager);
             Logger.DebugWindowInfo("windowInfo of MonitorManager.AddWindowInfo", windowInfoWithHandle);
+            this.SetCurrentWindowManagerIndexByMonitorHandle(monitorHandle);
             targetWindowManager.Add(windowInfoWithHandle);
             return targetWindowManager;
         }
