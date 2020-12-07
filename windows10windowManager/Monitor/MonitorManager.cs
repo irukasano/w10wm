@@ -106,7 +106,7 @@ namespace windows10windowManager.Monitor
 
         /**
          * <summary>
-         * カレントウィンドウの WindowInfos 内のインデックスを取得する
+         * アクティヴモニターの WindowManager のインデックスを戻す
          * </summary>
          */
         public int GetCurrentWindowManagerIndex()
@@ -122,7 +122,41 @@ namespace windows10windowManager.Monitor
 
         /**
          * <summary>
-         * 指定されたモニターハンドルをカレントウィンドウにする
+         * 現在のモニターのひとつ前のモニターのWindowManagerを戻す
+         * </summary>
+         */
+        public WindowManager MoveCurrentFocusPrevious()
+        {
+            var previousWindowManagerIndex = this.GetCurrentWindowManagerIndex() - 1;
+            if (previousWindowManagerIndex < 0)
+            {
+                previousWindowManagerIndex = this.WindowManagers.Count - 1;
+            }
+            Logger.WriteLine($"MoveCurrentFocusPrevious = {previousWindowManagerIndex}");
+            this.SetCurrentWindowManagerIndex(previousWindowManagerIndex);
+            return this.GetCurrentMonitorWindowManager();
+        }
+
+        /**
+         * <summary>
+         * 現在のモニターのひとつ後ろのモニターのWindowManagerを戻す
+         * </summary>
+         */
+        public WindowManager MoveCurrentFocusNext()
+        {
+            var nextWindowManagerIndex = this.GetCurrentWindowManagerIndex() + 1;
+            if (nextWindowManagerIndex >= this.WindowManagers.Count )
+            {
+                nextWindowManagerIndex = 0;
+            }
+            Logger.WriteLine($"MoveCurrentFocusNext = {nextWindowManagerIndex}");
+            this.SetCurrentWindowManagerIndex(nextWindowManagerIndex);
+            return this.GetCurrentMonitorWindowManager();
+        }
+
+        /**
+         * <summary>
+         * 指定されたモニターハンドルをカレントウィンドウマネージャーにする
          * </summary>
          */
         public void SetCurrentWindowManagerIndexByMonitorHandle(IntPtr monitorHandle)

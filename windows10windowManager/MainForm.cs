@@ -99,9 +99,19 @@ namespace windows10windowManager
                 this.MoveCurrentFocusNext();
                 return false;
             }
-            else if (e.Equals(OriginalKey.I, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.C, modifierLeftWindows))
             {
                 this.HighlightActiveMonitor();
+                return false;
+            }
+            else if (e.Equals(OriginalKey.Period, modifierLeftWindows))
+            {
+                this.MoveCurrentFocusPreviousMonitor();
+                return false;
+            }
+            else if (e.Equals(OriginalKey.Comma, modifierLeftWindows))
+            {
+                this.MoveCurrentFocusNextMonitor();
                 return false;
             }
             else if (e.Equals(OriginalKey.F1, modifierLeftWindows))
@@ -188,17 +198,17 @@ namespace windows10windowManager
          */
         private void MoveCurrentFocusPrevious()
         {
+            Logger.WriteLine("MoveCurrentFocusPrevious");
             var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
             if (windowManager is null)
             {
                 return;
             }
             var windowInfo = windowManager.MoveCurrentFocusPrevious();
-            if (windowInfo is null)
+            if (windowInfo != null)
             {
-                return;
+                windowInfo.ActivateWindow();
             }
-            windowInfo.ActivateWindow();
         }
 
         /**
@@ -208,18 +218,53 @@ namespace windows10windowManager
          */
         private void MoveCurrentFocusNext()
         {
+            Logger.WriteLine("MoveCurrentFocusNext");
             var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
             if (windowManager is null)
             {
                 return;
             }
             var windowInfo = windowManager.MoveCurrentFocusNext();
-            if (windowInfo is null)
+            if (windowInfo != null)
             {
-                return;
+                windowInfo.ActivateWindow();
             }
-            windowInfo.ActivateWindow();
         }
+
+        /**
+         * <summary>
+         * ひとつ前のモニターをアクティヴにする
+         * </summary>
+         */
+        private void MoveCurrentFocusPreviousMonitor()
+        {
+            Logger.WriteLine("MoveCurrentFocusPreviousMonitor");
+            var windowManager = this.monitorManager.MoveCurrentFocusPrevious();
+            var windowInfo = windowManager.GetCurrentWindow();
+            if (windowInfo != null)
+            {
+                windowInfo.ActivateWindow();
+            }
+            this.HighlightActiveMonitor();
+        }
+
+        /**
+         * <summary>
+         * ひとつ後ろのモニターをアクティヴにする
+         * </summary>
+         */
+        private void MoveCurrentFocusNextMonitor()
+        {
+            Logger.WriteLine("MoveCurrentFocusNextMonitor");
+            var windowManager = this.monitorManager.MoveCurrentFocusNext();
+            var windowInfo = windowManager.GetCurrentWindow();
+            if (windowInfo != null)
+            {
+                windowInfo.ActivateWindow();
+            }
+            this.HighlightActiveMonitor();
+        }
+
 
         /**
          * <summary>
@@ -228,18 +273,17 @@ namespace windows10windowManager
          */
         private void ActivateMonitorN(int monitorNumber)
         {
-            Logger.WriteLine($"Change Monitor : {monitorNumber}");
+            Logger.WriteLine($"ActivateMonitorN : {monitorNumber}");
             var windowManager = this.monitorManager.ActivateMonitorNWindowManager(monitorNumber);
             if (windowManager is null)
             {
                 return;
             }
             var windowInfo = windowManager.GetCurrentWindow();
-            if ( windowInfo is null)
+            if ( windowInfo != null)
             {
-                return;
+                windowInfo.ActivateWindow();
             }
-            windowInfo.ActivateWindow();
             this.HighlightActiveMonitor();
         }
 

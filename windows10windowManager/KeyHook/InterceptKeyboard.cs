@@ -131,16 +131,18 @@ namespace windows10windowManager.KeyHook
                 return new IntPtr(1);
             }
 
+            var kb = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT));
+            var vkCode = (int)kb.vkCode;
+            /*
             var eventKeyDown = (wParam == (IntPtr)WM_KEYDOWN) ? "KeyDown " : "";
             var eventSysKeyDown = (wParam == (IntPtr)WM_SYSKEYDOWN) ? "SysKeyDown " : "";
             var eventKeyUp = (wParam == (IntPtr)WM_KEYUP) ? "KeyUp " : "";
             var eventSysKeyUp = (wParam == (IntPtr)WM_SYSKEYUP) ? "SysKeyUp " : "";
-            var kb = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT));
-            var vkCode = (int)kb.vkCode;
             var vk = KeyMapConverter.KeyCodeToKey(vkCode);
 
             Logger.WriteLine("InterceptKeyboard.HookProcedure = " +
                 $"{vk} : {eventKeyDown}{eventSysKeyDown}{eventKeyUp}{eventSysKeyUp}");
+            */
 
             if ( this.isModifier(vkCode))
             {
