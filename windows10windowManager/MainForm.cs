@@ -58,7 +58,7 @@ namespace windows10windowManager
         {
             this.interceptKeyboard = new InterceptKeyboard();
             this.interceptKeyboard.KeyDownEvent += InterceptKeyboard_KeyDownEvent;
-            this.interceptKeyboard.KeyUpEvent += InterceptKeyboard_KeyUpEvent;
+            //this.interceptKeyboard.KeyUpEvent += InterceptKeyboard_KeyUpEvent;
             this.interceptKeyboard.Hook();
 
             this.traceWindow = new TraceWindow();
@@ -77,10 +77,6 @@ namespace windows10windowManager
             Application.Exit();
         }
 
-        private bool InterceptKeyboard_KeyUpEvent(object sender, InterceptKeyboard.OriginalKeyEventArg e)
-        {
-            return true;
-        }
 
         /**
          * <summary>
@@ -254,7 +250,6 @@ namespace windows10windowManager
          */
         public void HighlightActiveMonitor()
         {
-            Logger.WriteLine("Highlight Monitor");
             this.monitorManager.HighlightCurrentMonitor();
         }
 

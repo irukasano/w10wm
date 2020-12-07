@@ -62,19 +62,22 @@ namespace windows10windowManager.KeyHook
             override public string ToString()
             {
                 var key = KeyMapConverter.KeyCodeToKey(this.KeyCode);
-                var modifiers = "";
                 if ( this.Modifiers.Length == 0)
                 {
                     return $"{key}";
                 }
 
+                /*
+                var modifiers = "";
                 for (int i = 0; i < this.Modifiers.Length; i++)
                 {
                     var mk = KeyMapConverter.KeyCodeToKey(this.Modifiers[i]);
                     modifiers += mk + " ";
                 }
+                */
+                var modifiers = string.Join(" + ", this.Modifiers.Select(x => KeyMapConverter.KeyCodeToKey(x)));
 
-                return $"{modifiers}+ {key}";
+                return $"{modifiers} + {key}";
             }
 
         }
@@ -121,40 +124,47 @@ namespace windows10windowManager.KeyHook
 
         public override IntPtr HookProcedure(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            if (nCode != 0 || ! (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_KEYUP))
+            if (nCode != 0 ||
+                ! (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN || 
+                    wParam == (IntPtr)WM_KEYUP || wParam == (IntPtr)WM_SYSKEYUP))
             {
                 return new IntPtr(1);
             }
 
             var eventKeyDown = (wParam == (IntPtr)WM_KEYDOWN) ? "KeyDown " : "";
+            var eventSysKeyDown = (wParam == (IntPtr)WM_SYSKEYDOWN) ? "SysKeyDown " : "";
             var eventKeyUp = (wParam == (IntPtr)WM_KEYUP) ? "KeyUp " : "";
+            var eventSysKeyUp = (wParam == (IntPtr)WM_SYSKEYUP) ? "SysKeyUp " : "";
             var kb = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT));
             var vkCode = (int)kb.vkCode;
             var vk = KeyMapConverter.KeyCodeToKey(vkCode);
 
-            Logger.WriteLine($"InterceptKeyboard.HookProcedure = {vk} : {eventKeyDown}{eventKeyUp}");
+            Logger.WriteLine("InterceptKeyboard.HookProcedure = " +
+                $"{vk} : {eventKeyDown}{eventSysKeyDown}{eventKeyUp}{eventSysKeyUp}");
 
             if ( this.isModifier(vkCode))
             {
                 return base.HookProcedure(nCode, wParam, lParam);
             }
 
-            var pressedModifiers = this.WhichModifiersPressed((int)kb.flags);
 
-            if (wParam == (IntPtr)WM_KEYDOWN)
+            if (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN)
             {
+                var pressedModifiers = this.WhichModifiersPressed((int)kb.flags);
                 if ( ! this.OnKeyDownEvent(vkCode, pressedModifiers))
                 {
                     return new IntPtr(1);
                 }
-            } else if (wParam == (IntPtr)WM_KEYUP)
+            } 
+            // キーアップ時のmodifier判定はキーダウン時とは違うはずなので保留
+            /*else if (wParam == (IntPtr)WM_KEYUP || wParam == (IntPtr)WM_SYSKEYUP)
             {
                 if ( ! this.OnKeyUpEvent(vkCode, pressedModifiers))
                 {
                     return new IntPtr(1);
                 }
 
-            }
+            }*/
 
             return base.HookProcedure(nCode, wParam, lParam);
         }
@@ -182,10 +192,14 @@ namespace windows10windowManager.KeyHook
 
             }
 
-            if ((flags & 0x20) == 0x20)
+            //Logger.WriteLine($"InterceptKeyboard.WhichModifierPressed.flags = {flags}");
+
+            // ALT は左右の判定ができないので左ALTが押されたものとする
+            // flags の値は、キーダウン時は 32(0x20)、キーアップ時は160(0xA0)
+            if ( ( flags & 0x20) == 0x20)
             {
                 pressedModifiers.Add(KeyMapConverter.KeyToCode(OriginalKey.LeftAlt));
-                pressedModifiers.Add(KeyMapConverter.KeyToCode(OriginalKey.RightAlt));
+                //pressedModifiers.Add(KeyMapConverter.KeyToCode(OriginalKey.RightAlt));
             }
 
             return pressedModifiers;
