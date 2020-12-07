@@ -77,9 +77,9 @@ namespace windows10windowManager
             Application.Exit();
         }
 
-        private void InterceptKeyboard_KeyUpEvent(object sender, InterceptKeyboard.OriginalKeyEventArg e)
+        private bool InterceptKeyboard_KeyUpEvent(object sender, InterceptKeyboard.OriginalKeyEventArg e)
         {
-
+            return true;
         }
 
         /**
@@ -87,49 +87,43 @@ namespace windows10windowManager
          * ホットキーの定義
          * </summary>
          */
-        private void InterceptKeyboard_KeyDownEvent(object sender, InterceptKeyboard.OriginalKeyEventArg e)
+        private bool InterceptKeyboard_KeyDownEvent(object sender, InterceptKeyboard.OriginalKeyEventArg e)
         {
-            this.interceptKeyboard.callNextHook = true;
-            Logger.WriteLine("KEY INPUT : " + e.ToString());
+            Logger.WriteLine("InterceptKeyboard_KeyDownEvent : " + e.ToString());
 
             int[] modifierLeftWindows = new int[] { (int)OriginalKey.LeftWindows };
 
             if (e.Equals(OriginalKey.J, modifierLeftWindows))
             {
-                Logger.WriteLine("With LeftWindows + J");
                 this.MoveCurrentFocusPrevious();
-                this.interceptKeyboard.callNextHook = false;
+                return false;
             }
             else if (e.Equals(OriginalKey.K, modifierLeftWindows))
             {
-                Logger.WriteLine("With LeftWindows + K");
                 this.MoveCurrentFocusNext();
-                this.interceptKeyboard.callNextHook = false;
+                return false;
             }
             else if (e.Equals(OriginalKey.I, modifierLeftWindows))
             {
-                Logger.WriteLine("With LeftWindows + I");
                 this.HighlightActiveMonitor();
-                this.interceptKeyboard.callNextHook = false;
+                return false;
             }
             else if (e.Equals(OriginalKey.F1, modifierLeftWindows))
             {
-                Logger.WriteLine("With LeftWindows + F1");
                 this.ActivateMonitorN(0);
-                this.interceptKeyboard.callNextHook = false;
+                return false;
             }
             else if (e.Equals(OriginalKey.F2, modifierLeftWindows))
             {
-                Logger.WriteLine("With LeftWindows + F2");
                 this.ActivateMonitorN(1);
-                this.interceptKeyboard.callNextHook = false;
+                return false;
             }
             else if (e.Equals(OriginalKey.F3, modifierLeftWindows))
             {
-                Logger.WriteLine("With LeftWindows + F3");
                 this.ActivateMonitorN(2);
-                this.interceptKeyboard.callNextHook = false;
+                return false;
             }
+            return true;
         }
 
 

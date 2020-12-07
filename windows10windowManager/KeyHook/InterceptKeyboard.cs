@@ -81,17 +81,18 @@ namespace windows10windowManager.KeyHook
         #endregion
 
         #region Delegate
-        public delegate void KeyEventHandler(object sender, OriginalKeyEventArg e);
+        public delegate bool KeyEventHandler(object sender, OriginalKeyEventArg e);
         public event KeyEventHandler KeyDownEvent;
         public event KeyEventHandler KeyUpEvent;
         #endregion
 
         #region Fields
-        public bool callNextHook { get; set; } = true;
+        // public bool callNextHook { get; set; } = true;
 
-        protected List<int> Modifiers { get; set; } = new List<int>();
+        // protected List<int> Modifiers { get; set; } = new List<int>();
         #endregion
 
+        /*
         protected void OnKeyDownEvent(int keyCode)
         {
             KeyDownEvent?.Invoke(this, new OriginalKeyEventArg(keyCode, Modifiers));
@@ -100,7 +101,97 @@ namespace windows10windowManager.KeyHook
         {
             KeyUpEvent?.Invoke(this, new OriginalKeyEventArg(keyCode, Modifiers));
         }
+        */
+        protected bool OnKeyDownEvent(int keyCode, List<int> modifiers)
+        {
+            return (bool)(KeyDownEvent?.Invoke(this, new OriginalKeyEventArg(keyCode, modifiers)));
 
+        }
+        protected bool OnKeyUpEvent(int keyCode, List<int> modifiers)
+        {
+            return (bool)(KeyUpEvent?.Invoke(this, new OriginalKeyEventArg(keyCode, modifiers)));
+        }
+
+
+        public override void UnHook()
+        {
+            //this.Modifiers.Clear();
+            base.UnHook();
+        }
+
+        public override IntPtr HookProcedure(int nCode, IntPtr wParam, IntPtr lParam)
+        {
+            if (nCode != 0 || ! (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_KEYUP))
+            {
+                return new IntPtr(1);
+            }
+
+            var eventKeyDown = (wParam == (IntPtr)WM_KEYDOWN) ? "KeyDown " : "";
+            var eventKeyUp = (wParam == (IntPtr)WM_KEYUP) ? "KeyUp " : "";
+            var kb = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT));
+            var vkCode = (int)kb.vkCode;
+            var vk = KeyMapConverter.KeyCodeToKey(vkCode);
+
+            Logger.WriteLine($"InterceptKeyboard.HookProcedure = {vk} : {eventKeyDown}{eventKeyUp}");
+
+            if ( this.isModifier(vkCode))
+            {
+                return base.HookProcedure(nCode, wParam, lParam);
+            }
+
+            var pressedModifiers = this.WhichModifiersPressed((int)kb.flags);
+
+            if (wParam == (IntPtr)WM_KEYDOWN)
+            {
+                if ( ! this.OnKeyDownEvent(vkCode, pressedModifiers))
+                {
+                    return new IntPtr(1);
+                }
+            } else if (wParam == (IntPtr)WM_KEYUP)
+            {
+                if ( ! this.OnKeyUpEvent(vkCode, pressedModifiers))
+                {
+                    return new IntPtr(1);
+                }
+
+            }
+
+            return base.HookProcedure(nCode, wParam, lParam);
+        }
+
+        public List<int> WhichModifiersPressed(int flags)
+        {
+            List<int> pressedModifiers = new List<int>();
+
+            int[] modifierKeys = {
+                KeyMapConverter.KeyToCode(OriginalKey.LeftWindows),
+                KeyMapConverter.KeyToCode(OriginalKey.RightWindows),
+                KeyMapConverter.KeyToCode(OriginalKey.LeftCtrl),
+                KeyMapConverter.KeyToCode(OriginalKey.RightCtrl),
+                KeyMapConverter.KeyToCode(OriginalKey.LeftShift),
+                KeyMapConverter.KeyToCode(OriginalKey.RightShift),
+            };
+
+            for (int i = 0; i < modifierKeys.Length; i++)
+            {
+                var mk = modifierKeys[i];
+                if (GetAsyncKeyState(mk) < 0)
+                {
+                    pressedModifiers.Add(mk);
+                }
+
+            }
+
+            if ((flags & 0x20) == 0x20)
+            {
+                pressedModifiers.Add(KeyMapConverter.KeyToCode(OriginalKey.LeftAlt));
+                pressedModifiers.Add(KeyMapConverter.KeyToCode(OriginalKey.RightAlt));
+            }
+
+            return pressedModifiers;
+        }
+
+        /*
         public override IntPtr HookProcedure(int nCode, IntPtr wParam, IntPtr lParam)
         {
             var eventKeyDown = (wParam == (IntPtr)WM_KEYDOWN) ? "KeyDown " : "";
@@ -134,7 +225,6 @@ namespace windows10windowManager.KeyHook
                 else
                 {
                     this.OnKeyDownEvent(vkCode);
-                    //Modifiers.Clear();
                 }
             }
             else if (nCode >= 0 && (wParam == (IntPtr)WM_KEYUP || wParam == (IntPtr)WM_SYSKEYUP))
@@ -147,7 +237,6 @@ namespace windows10windowManager.KeyHook
                     {
                         this.Modifiers.Remove(vkCode);
                     }
-                    //Modifiers.Clear();
                 }
                 else
                 {
@@ -162,6 +251,7 @@ namespace windows10windowManager.KeyHook
 
             return base.HookProcedure(nCode, wParam, lParam);
         }
+        */
 
         protected bool isModifier(int keyCode)
         {
@@ -174,12 +264,6 @@ namespace windows10windowManager.KeyHook
                 key == OriginalKey.RightShift ||
                 key == OriginalKey.LeftAlt ||
                 key == OriginalKey.RightAlt);
-        }
-
-        public override void UnHook()
-        {
-            this.Modifiers.Clear();
-            base.UnHook();
         }
 
     }

@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
 
+using windows10windowManager.Util;
+
 namespace windows10windowManager.KeyHook
 {
     abstract class AbstractInterceptKeyboard
@@ -54,6 +56,9 @@ namespace windows10windowManager.KeyHook
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr GetModuleHandle(string lpModuleName);
+
+        [DllImport("user32.dll")]
+        protected static extern short GetAsyncKeyState(int vKey);
         #endregion
 
         #region Delegate
@@ -75,6 +80,7 @@ namespace windows10windowManager.KeyHook
                     using (ProcessModule curModule = curProcess.MainModule)
                     {
                         this.hookId = SetWindowsHookEx(WH_KEYBOARD_LL, proc, GetModuleHandle(curModule.ModuleName), 0);
+                        Logger.WriteLine($"AbstractInterceptKeyboard.SetHookWindowsHookEx = {hookId}");
                     }
                 }
             }
@@ -83,7 +89,7 @@ namespace windows10windowManager.KeyHook
         public virtual void UnHook()
         {
             var r = UnhookWindowsHookEx(this.hookId);
-            Debug.WriteLine($"UnHookWindowsHookEx = {r}");
+            Logger.WriteLine($"AbstractInterceptKeyboard.UnHookWindowsHookEx = {r}");
             this.hookId = IntPtr.Zero;
         }
 
