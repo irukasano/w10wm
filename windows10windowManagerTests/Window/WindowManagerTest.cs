@@ -45,10 +45,9 @@ namespace windows10windowManagerTests.Window
         {
             var wm = new WindowManager(IntPtr.Zero);
 
+            wm.Add(this.LaunchSampleApplication());
             var windowInfoWithHandle = this.LaunchSampleApplication();
             wm.Add(windowInfoWithHandle);
-
-            wm.Add(this.LaunchSampleApplication());
 
             Assert.IsTrue(wm.GetCurrentWindow().Equals(windowInfoWithHandle));
 
