@@ -13,9 +13,5 @@ namespace windows10windowManager.Window
 
         }
 
-        public override WindowRect GetWindowRectOf(int windowIndex)
-        {
-            return base.GetWindowRectOf(windowIndex);
-        }
     }
 }

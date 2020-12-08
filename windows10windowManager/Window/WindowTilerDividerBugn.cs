@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace windows10windowManager.Window
 {
-    public class WindowTilerFourDivided : WindowTilerDivider
+    public class WindowTilerDividerBugn : WindowTilerDivider
     {
     }
 }

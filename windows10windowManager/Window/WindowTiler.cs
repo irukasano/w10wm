@@ -13,7 +13,7 @@ namespace windows10windowManager.Window
      */
     public enum WindowTilingType : ushort
     {
-        Divider = 1,
+        Bugn = 1,
         FourDivided = 2,
         Maximize = 4,
         Mdi = 8 
@@ -27,11 +27,14 @@ namespace windows10windowManager.Window
         {
             switch ( windowTilingType)
             {
-                case WindowTilingType.Divider:
-                    this.windowTiler = new WindowTilerDivider();
+                case WindowTilingType.Bugn:
+                    this.windowTiler = new WindowTilerDividerBugn();
                     break;
                 case WindowTilingType.FourDivided:
-                    this.windowTiler = new WindowTilerFourDivided();
+                    this.windowTiler = new WindowTilerDivider();
+                    var wt = (WindowTilerDivider)this.windowTiler;
+                    wt.columnCount = 2;
+                    wt.rowCount = 2;
                     break;
                 case WindowTilingType.Maximize:
                     this.windowTiler = new WindowTilerMaximize();

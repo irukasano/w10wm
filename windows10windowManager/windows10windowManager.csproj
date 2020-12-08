@@ -57,7 +57,7 @@
     <Compile Include="Window\AbstractWindowTiler.cs" />
     <Compile Include="Window\WindowTiler.cs" />
     <Compile Include="Window\WindowTilerMaximize.cs" />
-    <Compile Include="Window\WindowTilerFourDivided.cs" />
+    <Compile Include="Window\WindowTilerDividerBugn.cs" />
     <Compile Include="Window\WindowTilerMdi.cs" />
     <Compile Include="Window\WindowTilerDivider.cs" />
     <Compile Include="Window\WindowManager.cs" />
