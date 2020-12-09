@@ -17,7 +17,7 @@ namespace windows10windowManagerTests.Window
             windowTiler.columnCount = 3;
             windowTiler.rowCount = 4;
             windowTiler.CalcuratePosition(0, 0, 1000, 0, 2000);
-            Assert.IsTrue(new WindowRect(0, 0, 0, 0).Equals(windowTiler.GetWindowRectOf(0)));
+            Assert.IsTrue(windowTiler.defaultWindowRect.Equals(windowTiler.GetWindowRectOf(0)));
         }
 
         [TestMethod]

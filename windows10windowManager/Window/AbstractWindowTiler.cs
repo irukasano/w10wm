@@ -40,6 +40,8 @@ namespace windows10windowManager.Window
     {
         protected List<WindowRect> windowRects = new List<WindowRect>();
 
+        public WindowRect defaultWindowRect = new WindowRect(0, 500, 0 ,500);
+
         /**
          * <summary>
          * 指定された  モニターサイズの中で windowCount (ウィンドウの数) で整列した場合の位置を求める
@@ -58,18 +60,21 @@ namespace windows10windowManager.Window
          */
         public WindowRect GetWindowRectOf(int windowIndex)
         {
+            if ( this.windowRects.Count == 0)
+            {
+                return this.defaultWindowRect;
+            }
             if ( windowIndex < 0 )
             {
-                if ( this.windowRects.Count > 0)
-                {
-                    return this.windowRects.ElementAt(0);
-                } 
-                return new WindowRect(0, 0, 0, 0);
+                // インデックスが負の数の場合は 0 番目を戻す
+                return this.windowRects.ElementAt(0);
             }
             if ( windowIndex < this.windowRects.Count)
             {
+                // 範囲内のインデックスが指定された場合
                 return this.windowRects.ElementAt(windowIndex);
             }
+            // 範囲外の場合は最後のものを戻す
             var maxWindowRectIndex = this.windowRects.Count - 1;
             return this.windowRects.ElementAt(maxWindowRectIndex);
         }
