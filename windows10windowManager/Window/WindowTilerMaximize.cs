@@ -10,7 +10,12 @@ namespace windows10windowManager.Window
     {
         public override void CalcuratePosition(int windowCount, int monitorTop, int monitorBottom, int monitorLeft, int monitorRight)
         {
-
+            this.windowRects.Add(new WindowRect(
+                /* top     = */ monitorTop,
+                /* bottom  = */ monitorBottom,
+                /* left    = */ monitorLeft,
+                /* right   = */ monitorRight
+            ));
         }
 
     }
