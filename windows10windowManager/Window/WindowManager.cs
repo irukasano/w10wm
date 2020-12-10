@@ -170,26 +170,34 @@ namespace windows10windowManager.Window
                 {
                     var asIsWindowRect = windowInfoWithHandle.GetOriginalWindowRect();
 
-                    this.MoveWindow( windowHandle,asIsWindowRect);
+                    this.MoveWindow( windowHandle, asIsWindowRect);
                     continue;
                 }
 
                 if (! toBeWindowRect.Equals(currentWindowRect))
                 {
-                    this.MoveWindow( windowHandle,toBeWindowRect);
+                    this.MoveWindow( windowHandle, toBeWindowRect);
                 }
             }
         }
 
         public void MoveWindow( IntPtr hWnd, WindowRect windowRect)
         {
+            var windowRectString = windowRect.ToString();
+            Logger.WriteLine($"WindowManager.MoveWindow : hWnd={hWnd} To {windowRectString}");
+
             // 最大化、最小化Windowの場合は元のウィンドウにする
             if ( IsZoomed(hWnd) || IsIconic(hWnd))
             {
                 ShowWindow(hWnd, /* SW_RESTORE = */ 9);
             }
 
-            this.MoveWindow(hWnd, windowRect);
+            MoveWindow(hWnd, 
+                windowRect.GetX(),
+                windowRect.GetY(),
+                windowRect.GetWidth(),
+                windowRect.GetHeight(),
+                /* bRepaint = */1);
         }
 
         /**

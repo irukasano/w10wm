@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using windows10windowManager.Util;
+
 namespace windows10windowManager.Window
 {
     /**
@@ -26,6 +28,8 @@ namespace windows10windowManager.Window
 
         public WindowTiler(WindowTilingType windowTilingType, int windowCount, Monitor.RECT monitorRect)
         {
+            Logger.WriteLine($"WindowTiler(WindowTilingType={windowTilingType}, int={windowCount}");
+
             switch ( windowTilingType)
             {
                 case WindowTilingType.None:

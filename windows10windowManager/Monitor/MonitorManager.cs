@@ -109,6 +109,8 @@ namespace windows10windowManager.Monitor
                     /* monitorRect = */ monitorInfoWithHandle.monitorInfo.work);
                 windowManager.ArrangeWindows(windowTiler);
             }
+
+            this.SetCurrentWindowManagerIndex(0);
         }
 
         /**

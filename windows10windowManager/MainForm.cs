@@ -78,6 +78,35 @@ namespace windows10windowManager
             Application.Exit();
         }
 
+        private void FToolStripMenuItemTile4Window_Click(object sender, EventArgs e)
+        {
+            this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.FourDivided;
+            this.ArrangeWindows();
+        }
+
+        private void FToolStripMenuItemTileBugn_Click(object sender, EventArgs e)
+        {
+            this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.Bugn;
+            this.ArrangeWindows();
+        }
+
+        private void FToolStripMenuItemTileMdi_Click(object sender, EventArgs e)
+        {
+            this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.Mdi;
+            this.ArrangeWindows();
+        }
+
+        private void FToolStripMenuItemTileFullMonitor_Click(object sender, EventArgs e)
+        {
+            this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.Maximize;
+            this.ArrangeWindows();
+        }
+
+        private void FToolStripMenuItemTileNone_Click(object sender, EventArgs e)
+        {
+            this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.None;
+            this.ArrangeWindows();
+        }
 
         /**
          * <summary>
@@ -167,34 +196,15 @@ namespace windows10windowManager
                 this.ActivateMonitorN(2);
                 return false;
             }
-            else if (e.Equals(OriginalKey.F, modifierLWindows))
+            else if (e.Equals(OriginalKey.P, modifierLWindows))
             {
-                this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.Maximize;
-                this.ArrangeWindows();
-                return false;
-            }
-            else if (e.Equals(OriginalKey.G, modifierLWindows))
-            {
-                this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.FourDivided;
-                this.ArrangeWindows();
-                return false;
-            }
-            else if (e.Equals(OriginalKey.T, modifierLWindows))
-            {
-                this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.Bugn;
-                this.ArrangeWindows();
-                return false;
-            }
-            else if (e.Equals(OriginalKey.R, modifierLWindows))
-            {
-                this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.Mdi;
-                this.ArrangeWindows();
-                return false;
-            }
-            else if (e.Equals(OriginalKey.N, modifierLWindows))
-            {
-                this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.None;
-                this.ArrangeWindows();
+                // 右クリックメニューを表示する
+                var monitorInfo = this.monitorManager.GetCurrentMonitor();
+                System.Drawing.Point p = new System.Drawing.Point();
+                p.X = monitorInfo.monitorRect.left;
+                p.Y = monitorInfo.monitorRect.top;
+                this.contextMenuStrip1.Show(p);
+                this.contextMenuStrip1.Focus();
                 return false;
             }
 

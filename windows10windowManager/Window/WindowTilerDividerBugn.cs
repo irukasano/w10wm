@@ -78,7 +78,8 @@ namespace windows10windowManager.Window
                     /* right   = */ windowRight
                 );
 
-                Logger.WriteLine(newWindowRect.ToString());
+                var newWindowRectString = newWindowRect.ToString();
+                Logger.WriteLine($"WindowTilerDividerBugn.CalcuratePosition : {newWindowRectString}");
 
                 this.windowRects.Add(newWindowRect);
 
