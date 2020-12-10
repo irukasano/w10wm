@@ -74,6 +74,7 @@ namespace windows10windowManager
         {
             this.traceWindow.UnHook();
             this.interceptKeyboard.UnHook();
+            Logger.Close();
             Application.Exit();
         }
 
@@ -91,12 +92,17 @@ namespace windows10windowManager
 
             if (e.Equals(OriginalKey.J, modifierLeftWindows))
             {
-                this.MoveCurrentFocusPrevious();
+                this.MoveCurrentFocusNext();
                 return false;
             }
             else if (e.Equals(OriginalKey.K, modifierLeftWindows))
             {
-                this.MoveCurrentFocusNext();
+                this.MoveCurrentFocusPrevious();
+                return false;
+            }
+            else if (e.Equals(OriginalKey.X, modifierLeftWindows))
+            {
+                this.CloseCurrentWindow();
                 return false;
             }
             else if (e.Equals(OriginalKey.C, modifierLeftWindows))
@@ -208,16 +214,41 @@ namespace windows10windowManager
                 Logger.DebugWindowInfo("Window MonitorChange", w.WindowInfo);
                 var beforeMovedMonitorHandle = w.WindowInfo.GetMonitorHandle();
                 var beforeMovedWindowManager = this.monitorManager.FindWindowManagerByMonitorHandle(beforeMovedMonitorHandle);
-                if ( beforeMovedWindowManager != null)
-                {
-                    Logger.DebugWindowInfo("Remove From BeforeMovedWindowManager", w.WindowInfo);
-                    beforeMovedWindowManager.Remove(w.WindowInfo);
-                    this.ArrangeWindows();
-                }
+
+                Logger.DebugWindowInfo("Remove From BeforeMovedWindowManager", w.WindowInfo);
+                beforeMovedWindowManager.Remove(w.WindowInfo);
+                this.ArrangeWindows();
+
                 w.WindowInfo.ComputeMonitorHandle();
                 Logger.DebugWindowInfo("Add To NewWindowManager", w.WindowInfo);
                 var windowManager = this.monitorManager.AddWindowInfo(w.WindowInfo);
                 this.monitorManager.SetCurrentWindowManagerIndexByMonitorHandle(w.WindowInfo.monitorHandle);
+                this.ArrangeWindows();
+
+                // TODO フォーカスが移動先のモニターに移動してしまうが、元のモニターのほうがよいような気もする
+
+                this.HighlightActiveMonitor();
+            }
+        }
+
+        /**
+         * <summary>
+         * 現在のウィンドウを閉じる
+         * </summary>
+         */
+        private void CloseCurrentWindow()
+        {
+            Logger.WriteLine("CloseCurrentWindow");
+            var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
+            if (windowManager is null)
+            {
+                return;
+            }
+            var windowInfo = windowManager.MoveCurrentFocusPrevious();
+            if (windowInfo != null)
+            {
+                windowManager.Remove(windowInfo);
+                windowInfo.WindowClose();
                 this.ArrangeWindows();
             }
         }

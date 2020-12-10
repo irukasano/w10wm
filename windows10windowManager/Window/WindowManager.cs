@@ -13,6 +13,8 @@ namespace windows10windowManager.Window
 {
     public class WindowManager : IEquatable<WindowManager>
     {
+
+        #region Field
         public IntPtr monitorHandle { get; private set; }
 
         // このモニター内で管理しているウィンドウ情報
@@ -21,12 +23,22 @@ namespace windows10windowManager.Window
 
         protected int currentWindowInfoIndex { get; set; }
 
-        public WindowTilingType windowTilingType;
+        public WindowTilingType windowTilingType = WindowTilingType.Bugn;
+        #endregion
 
-
+        #region WinApi
         [DllImport("user32")]
         private static extern int MoveWindow(IntPtr hwnd, int x, int y,
             int nWidth, int nHeight, int bRepaint);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool IsZoomed(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        #endregion
 
         public WindowManager(IntPtr monitorHandle)
         {
@@ -126,25 +138,31 @@ namespace windows10windowManager.Window
                 {
                     var asIsWindowRect = windowInfoWithHandle.GetOriginalWindowRect();
 
-                    MoveWindow( windowHandle,
-                        asIsWindowRect.GetX(),
-                        asIsWindowRect.GetY(),
-                        asIsWindowRect.GetWidth(),
-                        asIsWindowRect.GetHeight(),
-                        /* bRepaint = */ 1);
+                    this.MoveWindow( windowHandle,asIsWindowRect);
                     continue;
                 }
 
                 if (! toBeWindowRect.Equals(currentWindowRect))
                 {
-                    MoveWindow( windowHandle,
-                        toBeWindowRect.GetX(),
-                        toBeWindowRect.GetY(),
-                        toBeWindowRect.GetWidth(),
-                        toBeWindowRect.GetHeight(),
-                        /* bRepaint = */ 1);
+                    this.MoveWindow( windowHandle,toBeWindowRect);
                 }
             }
+        }
+
+        public void MoveWindow( IntPtr hWnd, WindowRect windowRect)
+        {
+            // 最大化Windowの場合は元のウィンドウにする
+            if ( IsZoomed(hWnd))
+            {
+                ShowWindow(hWnd, /* SW_RESTORE = */ 9);
+            }
+
+            MoveWindow(hWnd,
+                windowRect.GetX(),
+                windowRect.GetY(),
+                windowRect.GetWidth(),
+                windowRect.GetHeight(),
+                /* bRepaint = */ 1);
         }
 
         /**
@@ -306,19 +324,9 @@ namespace windows10windowManager.Window
             WindowRect srcWindowRect = srcWindowInfoWithHandle.GetCurrentWindowRect();
             WindowRect destWindowRect = destWindowInfoWithHandle.GetCurrentWindowRect();
 
-            MoveWindow(srcWindowInfoWithHandle.windowHandle,
-                destWindowRect.GetX(),
-                destWindowRect.GetY(),
-                destWindowRect.GetWidth(),
-                destWindowRect.GetHeight(),
-                /* bRepaint = */ 1);
+            this.MoveWindow(srcWindowInfoWithHandle.windowHandle, destWindowRect);
 
-            MoveWindow(destWindowInfoWithHandle.windowHandle,
-                srcWindowRect.GetX(),
-                srcWindowRect.GetY(),
-                srcWindowRect.GetWidth(),
-                srcWindowRect.GetHeight(),
-                /* bRepaint = */ 1);
+            this.MoveWindow(destWindowInfoWithHandle.windowHandle, srcWindowRect);
         }
 
     }

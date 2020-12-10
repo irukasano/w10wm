@@ -97,6 +97,18 @@ namespace windows10windowManager.Monitor
             {
                 this.AddWindowInfo(windowInfoWithHandle);
             }
+
+            // 全画面を初期状態で整列する
+            foreach ( var windowManager in this.windowManagers)
+            {
+                var monitorHandle = windowManager.monitorHandle;
+                var monitorInfoWithHandle = this.FindMonitorInfoByMonitorHandle(monitorHandle);
+                var windowTiler = new WindowTiler(
+                    /* windowTilingType =  */ windowManager.windowTilingType,
+                    /* windowCount =  */ windowManager.WindowCount(),
+                    /* monitorRect = */ monitorInfoWithHandle.monitorInfo.work);
+                windowManager.ArrangeWindows(windowTiler);
+            }
         }
 
         /**

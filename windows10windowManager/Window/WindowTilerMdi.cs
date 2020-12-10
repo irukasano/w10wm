@@ -15,14 +15,14 @@ namespace windows10windowManager.Window
          * MDI形式のウィンドウのモニター横幅に対する割合
          * </summary>
          */
-        public double percentOfMonitorWidth = 0.3;
+        public double percentOfMonitorWidth = 0.6;
 
         /**
          * <summary>
          * MDI形式のウィンドウのモニター縦長に対する割合
          * </summary>
          */
-        public double percentOfMonitorHeight = 0.4;
+        public double percentOfMonitorHeight = 0.6;
 
         /**
          * <summary>
@@ -30,8 +30,8 @@ namespace windows10windowManager.Window
          * 指定された分だけTop/Leftの位置をずらす
          * </summary>
          */
-        public int shiftWidthToNextWindow = 20;
-        public int shiftHeightToNextWindow = 20;
+        public int shiftWidthToNextWindow = 50;
+        public int shiftHeightToNextWindow = 50;
 
         /**
          * <summary>

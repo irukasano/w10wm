@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using windows10windowManager.Util;
+
 namespace windows10windowManager
 {
     static class Program
@@ -14,6 +16,7 @@ namespace windows10windowManager
         [STAThread]
         static void Main()
         {
+            Util.Logger.Initialize();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new MainForm());

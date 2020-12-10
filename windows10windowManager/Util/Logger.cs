@@ -5,13 +5,43 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
+using NLog;
+using NLog.Config;
+using NLog.Targets;
+
+
 using windows10windowManager.Window;
 using windows10windowManager.Monitor;
 
 namespace windows10windowManager.Util
 {
-    class Logger
+    public class Logger
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
+        /**
+         * <summary>
+         * Nlogを初期化する
+         * </summary>
+         */
+        public static void Initialize()
+        {
+            var conf = new LoggingConfiguration();
+
+            var file = new FileTarget("file");
+            file.Encoding = System.Text.Encoding.GetEncoding("utf-8");
+            file.Layout = "${longdate} [${threadid:padding=2}] [${uppercase:${level:padding=-5}}] ${message}${exception:format=ToString}";
+            file.FileName = "${basedir}/logs/w10wm.log";
+            file.ArchiveNumbering = ArchiveNumberingMode.Rolling;
+            file.ArchiveFileName = "${basedir}/logs/archives/w10wm.log.{#}";
+            file.ArchiveEvery = FileArchivePeriod.Day;
+            file.MaxArchiveFiles = 7;
+            conf.AddTarget(file);
+            conf.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, file));
+
+            LogManager.Configuration = conf;
+        }
+
         /**
          * <summary>
          * ログ出力
@@ -20,7 +50,20 @@ namespace windows10windowManager.Util
         public static void WriteLine(string message)
         {
             DateTime now = DateTime.Now;
-            Debug.WriteLine($"{now} : {message}");
+            var line = $"{now} : {message}";
+
+            Debug.WriteLine(line);
+            Logger.logger.Debug(message);
+        }
+
+        /**
+         * <summary>
+         * ログ出力を停止
+         * </summary>
+         */
+        public static void Close()
+        {
+            NLog.LogManager.Shutdown();
         }
 
         /**
