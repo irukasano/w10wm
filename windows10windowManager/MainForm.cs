@@ -211,7 +211,7 @@ namespace windows10windowManager
         private void TraceWindow_ShowEvent(object sender, TraceWindow.OriginalWinEventArg w)
         {
             Logger.DebugWindowInfo("Window Show", w.WindowInfo);
-            var windowManager = this.monitorManager.AddWindowInfo(w.WindowInfo);
+            var windowManager = this.monitorManager.PushWindowInfo(w.WindowInfo);
             this.ArrangeWindows();
         }
 
@@ -238,7 +238,7 @@ namespace windows10windowManager
          * * 移動後モニターの整列しなおし、移動後WindowManagerへの追加
          * </summary>
          */
-        private void TraceWindow_LocationChangeEvent(object sender, TraceWindow.OriginalWinEventArg w)
+        private void TraceWindow_LocationChangFeEvent(object sender, TraceWindow.OriginalWinEventArg w)
         {
             Logger.DebugWindowInfo("Window LocationChange", w.WindowInfo);
             if (w.WindowInfo.MovedMonitor())
@@ -253,7 +253,7 @@ namespace windows10windowManager
 
                 w.WindowInfo.ComputeMonitorHandle();
                 Logger.DebugWindowInfo("Add To NewWindowManager", w.WindowInfo);
-                var windowManager = this.monitorManager.AddWindowInfo(w.WindowInfo);
+                var windowManager = this.monitorManager.PushWindowInfo(w.WindowInfo);
                 this.monitorManager.SetCurrentWindowManagerIndexByMonitorHandle(w.WindowInfo.monitorHandle);
                 this.ArrangeWindows();
 
@@ -279,9 +279,7 @@ namespace windows10windowManager
             var windowInfo = windowManager.GetCurrentWindow();
             if (windowInfo != null)
             {
-                windowManager.Remove(windowInfo);
                 windowInfo.WindowClose();
-                this.ArrangeWindows();
             }
         }
 

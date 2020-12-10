@@ -52,6 +52,16 @@ namespace windows10windowManager.Window
             return windowInfos.Count();
         }
 
+        // ウィンドウリストの先頭に追加する
+        public void Push(WindowInfoWithHandle windowInfo)
+        {
+            this.windowInfos.Insert(0, windowInfo);
+
+            // 追加したらこれをカレントウィンドウにする
+            this.currentWindowInfoIndex = 0;
+        }
+
+
         // ウィンドウリストに追加する
         public void Add(WindowInfoWithHandle windowInfo)
         {

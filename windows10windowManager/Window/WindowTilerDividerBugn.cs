@@ -22,7 +22,7 @@ namespace windows10windowManager.Window
          * 右側列に縦に並べる最大ウィンドウ数
          * </summary>
          */
-        public int maxCountOfWindowOfRightColumn = 6;
+        public int maxCountOfWindowOfRightColumn = 4;
 
         /**
          * <summary>

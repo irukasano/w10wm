@@ -95,7 +95,7 @@ namespace windows10windowManager.Monitor
 
             foreach (var windowInfoWithHandle in windowInfoWithHandles)
             {
-                this.AddWindowInfo(windowInfoWithHandle);
+                this.PushWindowInfo(windowInfoWithHandle);
             }
 
             // 全画面を初期状態で整列する
@@ -231,6 +231,28 @@ namespace windows10windowManager.Monitor
         {
             return this.monitorInfos.Find(
                 (MonitorInfoWithHandle mi) => { return mi.monitorHandle == monitorHandle; });
+        }
+
+        /**
+         * <summary>
+         * WindowInfoWithHandle をモニターのWindowManagerの先頭に追加する
+         * </summary>
+         */
+        public WindowManager PushWindowInfo(WindowInfoWithHandle windowInfoWithHandle)
+        {
+            // このウィンドウのモニターのウィンドウを管理する WindowManager が存在すれば
+            // これに追加して管理させる
+            var monitorHandle = windowInfoWithHandle.GetMonitorHandle();
+            var targetWindowManager = this.FindWindowManagerByMonitorHandle(monitorHandle);
+            if (targetWindowManager is null)
+            {
+                return this.GetCurrentMonitorWindowManager();
+            }
+            Logger.DebugWindowManager("windowManager of MonitorManager.InsertWindowInfo", targetWindowManager);
+            Logger.DebugWindowInfo("windowInfo of MonitorManager.InsertWindowInfo", windowInfoWithHandle);
+            this.SetCurrentWindowManagerIndexByMonitorHandle(monitorHandle);
+            targetWindowManager.Push(windowInfoWithHandle);
+            return targetWindowManager;
         }
 
         /**
