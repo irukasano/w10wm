@@ -16,6 +16,7 @@ namespace windows10windowManager.Window
 {
     class TraceWindow : AbstractTraceWindow
     {
+        #region Constraint
         const uint OBJID_WINDOW      = 0x00000000;
         const uint OBJID_SYSMENU = 0xFFFFFFFF;
         const uint OBJID_TITLEBAR = 0xFFFFFFFE;
@@ -28,20 +29,7 @@ namespace windows10windowManager.Window
         const uint OBJID_CURSOR = 0xFFFFFFF7;
         const uint OBJID_ALERT = 0xFFFFFFF6;
         const uint OBJID_SOUND = 0xFFFFFFF5;
-
-        // for GetWindowLong
-        const int GWL_STYLE = (-16);
-        const UInt32 WS_POPUP = 0x80000000;
-        const UInt32 WS_CHILD = 0x40000000;
-        const UInt32 WS_MINIMIZE = 0x20000000;
-        const UInt32 WS_VISIBLE = 0x10000000;
-        const UInt32 WS_DISABLED = 0x08000000;
-        const UInt32 WS_CLIPSIBLINGS = 0x04000000;
-        const UInt32 WS_CAPTION = 0x00C00000;
-        const UInt32 WS_CLIPCHILDREN = 0x02000000;
-        const UInt32 WS_OVERLAPPEDWINDOW = 0x00CF0000;
-        const UInt32 WS_TYPE_VSCODE = 0x00C70000;
-        const UInt32 WS_UWP = WS_POPUP | WS_CLIPSIBLINGS | WS_OVERLAPPEDWINDOW;
+        #endregion
 
         public class OriginalWinEventArg : EventArgs
         {
@@ -53,6 +41,7 @@ namespace windows10windowManager.Window
             }
         }
 
+        #region WinApi
         // DwmGetWindowAttribute
         enum DWMWINDOWATTRIBUTE : uint
         {
@@ -83,11 +72,27 @@ namespace windows10windowManager.Window
         [DllImport("user32.dll", SetLastError = true)]
         static extern UInt32 GetWindowLong(IntPtr hWnd, int nIndex);
 
+        // for GetWindowLong
+        const int GWL_STYLE = (-16);
+        const UInt32 WS_POPUP = 0x80000000;
+        const UInt32 WS_CHILD = 0x40000000;
+        const UInt32 WS_MINIMIZE = 0x20000000;
+        const UInt32 WS_VISIBLE = 0x10000000;
+        const UInt32 WS_DISABLED = 0x08000000;
+        const UInt32 WS_CLIPSIBLINGS = 0x04000000;
+        const UInt32 WS_CAPTION = 0x00C00000;
+        const UInt32 WS_CLIPCHILDREN = 0x02000000;
+        const UInt32 WS_OVERLAPPEDWINDOW = 0x00CF0000;
+        const UInt32 WS_TYPE_VSCODE = 0x00C70000;
+        const UInt32 WS_UWP = WS_POPUP | WS_CLIPSIBLINGS | WS_OVERLAPPEDWINDOW;
+
         [DllImport("dwmapi.dll")]
         static extern int DwmGetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE dwAttribute, out bool pvAttribute, int cbAttribute);
 
         private delegate bool EnumWindowsDelegate(IntPtr hwnd, IntPtr lParam);
+        #endregion
 
+        #region Delegate
         public delegate void EventHandler(object sender, OriginalWinEventArg w);
         public event EventHandler AddEvent;
         public event EventHandler RemoveEvent;
@@ -97,16 +102,17 @@ namespace windows10windowManager.Window
         public event EventHandler MouseDragStartEvent;
         public event EventHandler MouseDragEndEvent;
         public event EventHandler LocationChangeEvent;
+        #endregion
 
-
+        #region Field
         public List<WindowInfoWithHandle> WindowInfos { get; protected set; } = new List<WindowInfoWithHandle>();
         protected WindowInfoWithHandle MouseDraggingWindowHandle { get; set; }
+        #endregion
 
         public TraceWindow()
         {
             EnumWindows(EnumerateWindows, IntPtr.Zero);
         }
-
 
         private bool EnumerateWindows(IntPtr hWnd, IntPtr lParam)
         {
@@ -188,8 +194,7 @@ namespace windows10windowManager.Window
 
             if ( windowLong == 0 ||
                 ((windowLong & WS_POPUP) == WS_POPUP) ||
-                ((windowLong & WS_CHILD) == WS_CHILD) ||
-                ((windowLong & WS_VISIBLE) != WS_VISIBLE))
+                ((windowLong & WS_CHILD) == WS_CHILD))
             {
                 return;
             }

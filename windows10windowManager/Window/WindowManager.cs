@@ -37,6 +37,10 @@ namespace windows10windowManager.Window
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool IsIconic(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         #endregion
 
@@ -131,6 +135,24 @@ namespace windows10windowManager.Window
 
         /**
          * <summary>
+         * すでに表示されていないウィンドウをWindowInfosから削除する
+         * </summary>
+         */
+        public void RemoveInvisibleWindows()
+        {
+            for (int i = 0; i < this.windowInfos.Count; i++)
+            {
+                var windowInfoWithHandle = this.windowInfos[i];
+                if (! windowInfoWithHandle.IsValid())
+                {
+                    this.Remove(windowInfoWithHandle);
+                }
+            }
+
+        }
+
+        /**
+         * <summary>
          * windowTiler で取得できる位置情報に基づいてウィンドウの位置を移動する
          * </summary>
          */
@@ -161,18 +183,13 @@ namespace windows10windowManager.Window
 
         public void MoveWindow( IntPtr hWnd, WindowRect windowRect)
         {
-            // 最大化Windowの場合は元のウィンドウにする
-            if ( IsZoomed(hWnd))
+            // 最大化、最小化Windowの場合は元のウィンドウにする
+            if ( IsZoomed(hWnd) || IsIconic(hWnd))
             {
                 ShowWindow(hWnd, /* SW_RESTORE = */ 9);
             }
 
-            MoveWindow(hWnd,
-                windowRect.GetX(),
-                windowRect.GetY(),
-                windowRect.GetWidth(),
-                windowRect.GetHeight(),
-                /* bRepaint = */ 1);
+            this.MoveWindow(hWnd, windowRect);
         }
 
         /**

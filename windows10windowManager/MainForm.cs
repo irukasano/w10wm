@@ -238,7 +238,7 @@ namespace windows10windowManager
          * * 移動後モニターの整列しなおし、移動後WindowManagerへの追加
          * </summary>
          */
-        private void TraceWindow_LocationChangFeEvent(object sender, TraceWindow.OriginalWinEventArg w)
+        private void TraceWindow_LocationChangeEvent(object sender, TraceWindow.OriginalWinEventArg w)
         {
             Logger.DebugWindowInfo("Window LocationChange", w.WindowInfo);
             if (w.WindowInfo.MovedMonitor())
@@ -520,6 +520,7 @@ namespace windows10windowManager
         public void ArrangeWindows()
         {
             var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
+            windowManager.RemoveInvisibleWindows();
             var monitorInfoWithHandle = this.monitorManager.GetCurrentMonitor();
             var windowTiler = new WindowTiler(
                 /* windowTilingType =  */ windowManager.windowTilingType,

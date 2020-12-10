@@ -43,6 +43,10 @@ namespace windows10windowManager.Window
         static extern IntPtr MonitorFromWindow(IntPtr hWnd, uint dwFlags);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool IsWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
         public static extern IntPtr SendMessage(IntPtr hWnd, uint wMsg, UIntPtr wParam, IntPtr lParam);
 
         [DllImport("user32")]
@@ -143,6 +147,16 @@ namespace windows10windowManager.Window
         {
             var rect = this.position;
             return new WindowRect(rect.top, rect.bottom, rect.left, rect.right);
+        }
+
+        /**
+         * <summary>
+         * このWindowInfoWithHandleが有効か（ウィンドウが存在するか）戻す
+         * </summary>
+         */
+        public bool IsValid()
+        {
+            return (bool)IsWindow(this.windowHandle);
         }
 
         /**
