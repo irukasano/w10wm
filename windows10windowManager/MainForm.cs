@@ -102,6 +102,16 @@ namespace windows10windowManager
                 this.MoveCurrentFocusPrevious();
                 return false;
             }
+            else if (e.Equals(OriginalKey.U, modifierLWindows))
+            {
+                this.MoveCurrentFocusTop();
+                return false;
+            }
+            else if (e.Equals(OriginalKey.M, modifierLWindows))
+            {
+                this.MoveCurrentFocusBottom();
+                return false;
+            }
             else if (e.Equals(OriginalKey.J, modifierLShiftLWindows) || e.Equals(OriginalKey.J, modifierRShiftLWindows))
             {
                 this.SetWindowNext();
@@ -110,6 +120,16 @@ namespace windows10windowManager
             else if (e.Equals(OriginalKey.K, modifierLShiftLWindows) || e.Equals(OriginalKey.K, modifierRShiftLWindows))
             {
                 this.SetWindowPrevious();
+                return false;
+            }
+            else if (e.Equals(OriginalKey.U, modifierLShiftLWindows) || e.Equals(OriginalKey.U, modifierRShiftLWindows))
+            {
+                this.SetWindowTop();
+                return false;
+            }
+            else if (e.Equals(OriginalKey.M, modifierLShiftLWindows) || e.Equals(OriginalKey.M, modifierRShiftLWindows))
+            {
+                this.SetWindowBottom();
                 return false;
             }
             else if (e.Equals(OriginalKey.X, modifierLWindows))
@@ -256,7 +276,7 @@ namespace windows10windowManager
             {
                 return;
             }
-            var windowInfo = windowManager.MoveCurrentFocusPrevious();
+            var windowInfo = windowManager.GetCurrentWindow();
             if (windowInfo != null)
             {
                 windowManager.Remove(windowInfo);
@@ -307,6 +327,46 @@ namespace windows10windowManager
 
         /**
          * <summary>
+         * 一番上のウィンドウをアクティヴにする
+         * </summary>
+         */
+        private void MoveCurrentFocusTop()
+        {
+            Logger.WriteLine("MoveCurrentFocusTop");
+            var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
+            if (windowManager is null)
+            {
+                return;
+            }
+            var windowInfo = windowManager.MoveCurrentFocusTop();
+            if (windowInfo != null)
+            {
+                windowInfo.ActivateWindow();
+            }
+        }
+
+        /**
+         * <summary>
+         * 一番下のウィンドウをアクティヴにする
+         * </summary>
+         */
+        private void MoveCurrentFocusBottom()
+        {
+            Logger.WriteLine("MoveCurrentFocusBottom");
+            var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
+            if (windowManager is null)
+            {
+                return;
+            }
+            var windowInfo = windowManager.MoveCurrentFocusBottom();
+            if (windowInfo != null)
+            {
+                windowInfo.ActivateWindow();
+            }
+        }
+
+        /**
+         * <summary>
          * 現在のウィンドウをひとつ上に移動する
          * </summary>
          */
@@ -340,6 +400,48 @@ namespace windows10windowManager
                 return;
             }
             var windowInfo = windowManager.SetWindowNext();
+            if (windowInfo != null)
+            {
+                this.ArrangeWindows();
+                windowInfo.ActivateWindow();
+            }
+        }
+
+        /**
+         * <summary>
+         * 一番上のウィンドウをひとつ下に移動する
+         * </summary>
+         */
+        private void SetWindowTop()
+        {
+            Logger.WriteLine("SetWindowTop");
+            var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
+            if (windowManager is null)
+            {
+                return;
+            }
+            var windowInfo = windowManager.SetWindowTop();
+            if (windowInfo != null)
+            {
+                this.ArrangeWindows();
+                windowInfo.ActivateWindow();
+            }
+        }
+
+        /**
+         * <summary>
+         * 一番上のウィンドウをひとつ下に移動する
+         * </summary>
+         */
+        private void SetWindowBottom()
+        {
+            Logger.WriteLine("SetWindowBottom");
+            var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
+            if (windowManager is null)
+            {
+                return;
+            }
+            var windowInfo = windowManager.SetWindowBottom();
             if (windowInfo != null)
             {
                 this.ArrangeWindows();
