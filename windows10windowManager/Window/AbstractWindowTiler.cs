@@ -8,10 +8,12 @@ namespace windows10windowManager.Window
 {
     public class WindowRect : IEquatable<WindowRect>
     {
+        #region Field
         public int left;
         public int top;
         public int right;
         public int bottom;
+        #endregion
 
         public WindowRect(int top, int bottom, int left, int right)
         {
@@ -30,6 +32,41 @@ namespace windows10windowManager.Window
             ;
         }
 
+        public WindowRect Clone()
+        {
+            return (WindowRect)MemberwiseClone();
+        }
+
+        public int GetX()
+        {
+            return this.left;
+        }
+
+        public int GetY()
+        {
+            return this.top;
+        }
+
+        /**
+         * <summary>
+         * このRectの横幅を戻す
+         * </summary>
+         */
+        public int GetWidth()
+        {
+            return this.right - this.left;
+        }
+
+        /**
+         * <summary>
+         * このRectの高さを戻す
+         * </summary>
+         */
+        public int GetHeight()
+        {
+            return this.bottom - this.top;
+        }
+
         public override string ToString()
         {
             return $"top={top},left={left},bottom={bottom},right={right}";
@@ -38,9 +75,11 @@ namespace windows10windowManager.Window
 
     public class AbstractWindowTiler
     {
+        #region Field
         protected List<WindowRect> windowRects = new List<WindowRect>();
 
         public WindowRect defaultWindowRect = new WindowRect(0, 500, 0 ,500);
+        #endregion
 
         /**
          * <summary>
@@ -58,7 +97,7 @@ namespace windows10windowManager.Window
          * もしwindowRectの数より大きな数が指定された場合は、一番最後を戻す
          * </summary>
          */
-        public WindowRect GetWindowRectOf(int windowIndex)
+        public virtual WindowRect GetWindowRectOf(int windowIndex)
         {
             if ( this.windowRects.Count == 0)
             {

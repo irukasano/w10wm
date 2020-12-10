@@ -37,7 +37,7 @@ namespace windows10windowManager
             this.Opacity = 0.8D;
 
             // 指定のモニターで最大化表示する
-            var monitorRect = this.MonitorInfo.MonitorRect;
+            var monitorRect = this.MonitorInfo.monitorRect;
 
             this.Top = monitorRect.top;
             this.Left = monitorRect.left;

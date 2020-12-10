@@ -21,8 +21,8 @@ namespace windows10windowManager.Window
 
     public interface IWindowInfoWithHandle
     {
-        IntPtr WindowHandle { get; }
-        RECT Position { get; }
+        IntPtr windowHandle { get; }
+        RECT position { get; }
     }
 
     public class WindowInfoWithHandle : IWindowInfoWithHandle, IEquatable<WindowInfoWithHandle>
@@ -48,30 +48,30 @@ namespace windows10windowManager.Window
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
 
-        public IntPtr WindowHandle { get; private set; }
+        public IntPtr windowHandle { get; private set; }
 
-        public RECT Position { get; private set; }
+        public RECT position { get; private set; }
 
-        public String WindowTitle { get; private set; }
+        public String windowTitle { get; private set; }
 
-        public IntPtr MonitorHandle { get; private set; }
+        public IntPtr monitorHandle { get; private set; }
 
         public WindowInfoWithHandle(IntPtr hWnd)
         {
-            this.WindowHandle = hWnd;
+            this.windowHandle = hWnd;
 
             RECT rect;
             bool f = GetWindowRect(hWnd, out rect);
-            this.Position = rect;
+            this.position = rect;
 
-            this.WindowTitle = GetCurrentWindowTitle(hWnd);
+            this.windowTitle = GetCurrentWindowTitle(hWnd);
 
             this.ComputeMonitorHandle();
         }
 
         public bool Equals( WindowInfoWithHandle other)
         {
-            return this.WindowHandle == other.WindowHandle;
+            return this.windowHandle == other.windowHandle;
         }
 
         private string GetCurrentWindowTitle(IntPtr hWnd)
@@ -86,11 +86,39 @@ namespace windows10windowManager.Window
             return null;
         }
 
+        /**
+         * <summary>
+         * このウィンドウの現在位置情報を WindowRect で戻す
+         * </summary>
+         */
+        public WindowRect GetCurrentWindowRect()
+        {
+            RECT rect;
+            bool f = GetWindowRect(this.windowHandle, out rect);
+            return new WindowRect(rect.top, rect.bottom, rect.left, rect.right);
+        }
+
+        /**
+         * <summary>
+         * このウィンドウの初期表示時の位置を WindowRect で戻す
+         * </summary>
+         */
+        public WindowRect GetOriginalWindowRect()
+        {
+            var rect = this.position;
+            return new WindowRect(rect.top, rect.bottom, rect.left, rect.right);
+        }
+
+        /**
+         * <summary>
+         * ウィンドウを閉じる
+         * </summary>
+         */
         public void WindowClose()
         {
-            if (! WindowHandle.Equals(IntPtr.Zero))
+            if (! this.windowHandle.Equals(IntPtr.Zero))
             {
-                SendMessage(this.WindowHandle,
+                SendMessage(this.windowHandle,
                     /* wMsg = WM_SYSCOMMAND */ 0x0112,
                     /* wParam = */ new UIntPtr(0x0000F060),
                     /* lParam = */ IntPtr.Zero
@@ -106,66 +134,19 @@ namespace windows10windowManager.Window
          */
         public void ActivateWindow()
         {
-            SetForegroundWindow(this.WindowHandle);
-        }
-
-
-        /* 
-         * RECT を元に X,Y,Width,Height を求める処理
-         */
-        public int CalcPositionX(RECT position)
-        {
-            return position.left;
-        }
-
-        public int CalcPositionY(RECT position)
-        {
-            return position.top;
-        }
-
-        public int CalcPositionWidth(RECT position)
-        {
-            return position.right - position.left;
-        }
-
-        public int CalcPositionHeight(RECT position)
-        {
-            return position.bottom - position.top;
-        }
-
-        /*
-         * このウィンドウの位置情報を戻す
-         */
-        public int GetPositionX()
-        {
-            return CalcPositionX(this.Position);
-        }
-
-        public int GetPositionY()
-        {
-            return CalcPositionY(this.Position);
-        }
-
-        public int GetPositionWidth()
-        {
-            return CalcPositionWidth(this.Position);
-        }
-
-        public int GetPositionHeight()
-        {
-            return CalcPositionHeight(this.Position);
+            SetForegroundWindow(this.windowHandle);
         }
 
         public IntPtr ComputeMonitorHandle()
         {
-            this.MonitorHandle = MonitorFromWindow(this.WindowHandle, MONITOR_DEFAULTTONEAREST);
+            this.monitorHandle = MonitorFromWindow(this.windowHandle, MONITOR_DEFAULTTONEAREST);
 
-            return this.MonitorHandle;
+            return this.monitorHandle;
         }
 
         public IntPtr GetMonitorHandle()
         {
-            return this.MonitorHandle;
+            return this.monitorHandle;
         }
 
         /**
@@ -175,8 +156,8 @@ namespace windows10windowManager.Window
          */
         public bool MovedMonitor()
         {
-            var beforeMovedMonitorHandle = this.MonitorHandle;
-            var currentMonitorHandle = MonitorFromWindow(this.WindowHandle, MONITOR_DEFAULTTONEAREST);
+            var beforeMovedMonitorHandle = this.monitorHandle;
+            var currentMonitorHandle = MonitorFromWindow(this.windowHandle, MONITOR_DEFAULTTONEAREST);
 
             return beforeMovedMonitorHandle != currentMonitorHandle;
         }

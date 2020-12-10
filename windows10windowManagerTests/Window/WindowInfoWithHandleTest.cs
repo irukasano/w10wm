@@ -38,7 +38,7 @@ namespace windows10windowManagerTests.Window
 
         protected bool ExistsWindow(WindowInfoWithHandle wiwh)
         {
-            return IsWindowVisible(wiwh.WindowHandle);
+            return IsWindowVisible(wiwh.windowHandle);
         }
     }
 }

@@ -30,8 +30,8 @@ namespace windows10windowManager.Util
          */
         public static void DebugWindowInfo(string message, WindowInfoWithHandle windowInfoWithHandle)
         {
-            var windowHandle = windowInfoWithHandle.WindowHandle;
-            var windowTitle = windowInfoWithHandle.WindowTitle;
+            var windowHandle = windowInfoWithHandle.windowHandle;
+            var windowTitle = windowInfoWithHandle.windowTitle;
             var monitorHandle = windowInfoWithHandle.GetMonitorHandle();
             var m = message + $" : {windowTitle} ( hWnd={windowHandle}, hMonitor={monitorHandle} )";
             Logger.WriteLine(m);
@@ -39,16 +39,16 @@ namespace windows10windowManager.Util
 
         public static void DebugWindowManager(string message, WindowManager windowManager)
         {
-            var monitorHandle = windowManager.MonitorHandle;
+            var monitorHandle = windowManager.monitorHandle;
             var m = message + $" : hMonitor={monitorHandle}";
             Logger.WriteLine(m);
         }
 
         public static void DebugMonitor(string message, MonitorInfoWithHandle monitorInfoWithHandle)
         {
-            var deviceName = new string(monitorInfoWithHandle.MonitorInfo.szDevice).TrimEnd('\0');
-            var monitorHandle = monitorInfoWithHandle.MonitorHandle;
-            var monitorRect = monitorInfoWithHandle.MonitorRect;
+            var deviceName = new string(monitorInfoWithHandle.monitorInfo.szDevice).TrimEnd('\0');
+            var monitorHandle = monitorInfoWithHandle.monitorHandle;
+            var monitorRect = monitorInfoWithHandle.monitorRect;
             var top = monitorRect.top;
             var bottom = monitorRect.bottom;
             var left = monitorRect.left;

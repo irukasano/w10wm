@@ -13,6 +13,7 @@ namespace windows10windowManager.Window
      */
     public enum WindowTilingType : ushort
     {
+        None = 0,
         Bugn = 1,
         FourDivided = 2,
         Maximize = 4,
@@ -23,10 +24,13 @@ namespace windows10windowManager.Window
     {
         protected AbstractWindowTiler windowTiler;
 
-        public WindowTiler(WindowTilingType windowTilingType, int windowCount, RECT monitorRect)
+        public WindowTiler(WindowTilingType windowTilingType, int windowCount, Monitor.RECT monitorRect)
         {
             switch ( windowTilingType)
             {
+                case WindowTilingType.None:
+                    this.windowTiler = new WindowTilerNone();
+                    break;
                 case WindowTilingType.Bugn:
                     this.windowTiler = new WindowTilerDividerBugn();
                     break;

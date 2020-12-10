@@ -129,6 +129,37 @@ namespace windows10windowManager
                 this.ActivateMonitorN(2);
                 return false;
             }
+            else if (e.Equals(OriginalKey.F, modifierLeftWindows))
+            {
+                this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.Maximize;
+                this.ArrangeWindows();
+                return false;
+            }
+            else if (e.Equals(OriginalKey.G, modifierLeftWindows))
+            {
+                this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.FourDivided;
+                this.ArrangeWindows();
+                return false;
+            }
+            else if (e.Equals(OriginalKey.T, modifierLeftWindows))
+            {
+                this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.Bugn;
+                this.ArrangeWindows();
+                return false;
+            }
+            else if (e.Equals(OriginalKey.R, modifierLeftWindows))
+            {
+                this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.Mdi;
+                this.ArrangeWindows();
+                return false;
+            }
+            else if (e.Equals(OriginalKey.N, modifierLeftWindows))
+            {
+                this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.None;
+                this.ArrangeWindows();
+                return false;
+            }
+
             return true;
         }
 
@@ -143,7 +174,7 @@ namespace windows10windowManager
         {
             Logger.DebugWindowInfo("Window Show", w.WindowInfo);
             var windowManager = this.monitorManager.AddWindowInfo(w.WindowInfo);
-            windowManager.ArrangeWindows();
+            this.ArrangeWindows();
         }
 
 
@@ -157,7 +188,7 @@ namespace windows10windowManager
         {
             Logger.DebugWindowInfo("Window Hide", w.WindowInfo);
             var windowManager = this.monitorManager.RemoveWindowInfo(w.WindowInfo);
-            windowManager.ArrangeWindows();
+            this.ArrangeWindows();
         }
 
         /**
@@ -181,13 +212,13 @@ namespace windows10windowManager
                 {
                     Logger.DebugWindowInfo("Remove From BeforeMovedWindowManager", w.WindowInfo);
                     beforeMovedWindowManager.Remove(w.WindowInfo);
-                    beforeMovedWindowManager.ArrangeWindows();
+                    this.ArrangeWindows();
                 }
                 w.WindowInfo.ComputeMonitorHandle();
                 Logger.DebugWindowInfo("Add To NewWindowManager", w.WindowInfo);
                 var windowManager = this.monitorManager.AddWindowInfo(w.WindowInfo);
-                this.monitorManager.SetCurrentWindowManagerIndexByMonitorHandle(w.WindowInfo.MonitorHandle);
-                windowManager.ArrangeWindows();
+                this.monitorManager.SetCurrentWindowManagerIndexByMonitorHandle(w.WindowInfo.monitorHandle);
+                this.ArrangeWindows();
             }
         }
 
@@ -295,6 +326,21 @@ namespace windows10windowManager
         public void HighlightActiveMonitor()
         {
             this.monitorManager.HighlightCurrentMonitor();
+        }
+
+        /**
+         * <summary>
+         * </summary>
+         */
+        public void ArrangeWindows()
+        {
+            var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
+            var monitorInfoWithHandle = this.monitorManager.GetCurrentMonitor();
+            var windowTiler = new WindowTiler(
+                /* windowTilingType =  */ windowManager.windowTilingType,
+                /* windowCount =  */ windowManager.WindowCount(),
+                /* monitorRect = */ monitorInfoWithHandle.monitorInfo.work);
+            windowManager.ArrangeWindows(windowTiler);
         }
 
         /**

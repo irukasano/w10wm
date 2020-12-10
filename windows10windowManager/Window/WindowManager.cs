@@ -13,23 +13,16 @@ namespace windows10windowManager.Window
 {
     public class WindowManager : IEquatable<WindowManager>
     {
-        public IntPtr MonitorHandle { get; private set; }
+        public IntPtr monitorHandle { get; private set; }
 
         // このモニター内で管理しているウィンドウ情報
         // このリストの並び順でウィンドウを整列させる
-        protected List<WindowInfoWithHandle> WindowInfos { get; set; }
+        protected List<WindowInfoWithHandle> windowInfos { get; set; }
 
-        protected int CurrentWindowInfoIndex { get; set; }
+        protected int currentWindowInfoIndex { get; set; }
 
-        /**
-         * <summary>
-         * 1: m: 全画面
-         * 2: t: タイル(bug.nのような)
-         * 3: w: 四分割
-         * 4: f: MDI的な感じ
-         * </summary>
-         */
-        protected int WindowArrangementMode { get; set; } = 0;
+        public WindowTilingType windowTilingType;
+
 
         [DllImport("user32")]
         private static extern int MoveWindow(IntPtr hwnd, int x, int y,
@@ -37,50 +30,50 @@ namespace windows10windowManager.Window
 
         public WindowManager(IntPtr monitorHandle)
         {
-            this.MonitorHandle = monitorHandle;
-            this.WindowInfos = new List<WindowInfoWithHandle>();
-            this.CurrentWindowInfoIndex = 0;
+            this.monitorHandle = monitorHandle;
+            this.windowInfos = new List<WindowInfoWithHandle>();
+            this.currentWindowInfoIndex = 0;
         }
 
         public int WindowCount()
         {
-            return WindowInfos.Count();
+            return windowInfos.Count();
         }
 
         // ウィンドウリストに追加する
         public void Add(WindowInfoWithHandle windowInfo)
         {
-            this.WindowInfos.Add(windowInfo);
+            this.windowInfos.Add(windowInfo);
 
             // 追加したらこれをカレントウィンドウにする
-            this.CurrentWindowInfoIndex = this.WindowInfos.Count - 1;
+            this.currentWindowInfoIndex = this.windowInfos.Count - 1;
         }
 
         // ウィンドウリストから削除する
         public void Remove(WindowInfoWithHandle windowInfo)
         {
-            if (this.WindowInfos.Contains(windowInfo))
+            if (this.windowInfos.Contains(windowInfo))
             {
-                this.WindowInfos.Remove(windowInfo);
+                this.windowInfos.Remove(windowInfo);
 
                 // 削除したら一つ上をカレントウィンドウにする
                 // 0 なら 0 のまま
-                if (this.CurrentWindowInfoIndex > 0)
+                if (this.currentWindowInfoIndex > 0)
                 {
-                    this.CurrentWindowInfoIndex -= 1;
+                    this.currentWindowInfoIndex -= 1;
                 }
             }
         }
 
         public bool Equals(WindowManager other)
         {
-            return this.MonitorHandle == other.MonitorHandle;
+            return this.monitorHandle == other.monitorHandle;
         }
 
         // モニター内のウィンドウリストを管理する
         public List<WindowInfoWithHandle> GetWindows()
         {
-            return WindowInfos;
+            return windowInfos;
         }
 
         /**
@@ -90,11 +83,11 @@ namespace windows10windowManager.Window
          */
         public WindowInfoWithHandle GetCurrentWindow()
         {
-            if ( this.WindowInfos.Count <= this.CurrentWindowInfoIndex)
+            if ( this.windowInfos.Count <= this.currentWindowInfoIndex)
             {
                 return null;
             }
-            var windowInfoWithHandle = WindowInfos.ElementAt(this.CurrentWindowInfoIndex);
+            var windowInfoWithHandle = this.windowInfos.ElementAt(this.currentWindowInfoIndex);
             Logger.DebugWindowInfo("WindowManager.GetCurrentWindow", windowInfoWithHandle);
             return windowInfoWithHandle;
         }
@@ -106,27 +99,52 @@ namespace windows10windowManager.Window
          */
         public int GetCurrentWindowIndex()
         {
-            return this.CurrentWindowInfoIndex;
+            return this.currentWindowInfoIndex;
         }
 
         public void SetCurrentWindowIndex(int windowIndex)
         {
-            this.CurrentWindowInfoIndex = windowIndex;
-        }
-
-        public void SetWindowArrangementMode(int mode)
-        {
-            this.WindowArrangementMode = mode;
+            this.currentWindowInfoIndex = windowIndex;
         }
 
         /**
          * <summary>
-         * 現在の WindowArrangementMode に基づいてウィンドウを整列しなおす
+         * windowTiler で取得できる位置情報に基づいてウィンドウの位置を移動する
          * </summary>
          */
-        public void ArrangeWindows()
+        public void ArrangeWindows(WindowTiler windowTiler)
         {
-            //TODO
+            for (int i = 0; i < this.windowInfos.Count; i++)
+            {
+                var windowInfoWithHandle = this.windowInfos[i];
+                var windowHandle = windowInfoWithHandle.windowHandle;
+                var currentWindowRect = windowInfoWithHandle.GetCurrentWindowRect();
+                var toBeWindowRect = windowTiler.GetWindowRectOf(i);
+
+                // toBeWindowRect == null の場合はもとの位置に戻す
+                if ( toBeWindowRect == null)
+                {
+                    var asIsWindowRect = windowInfoWithHandle.GetOriginalWindowRect();
+
+                    MoveWindow( windowHandle,
+                        asIsWindowRect.GetX(),
+                        asIsWindowRect.GetY(),
+                        asIsWindowRect.GetWidth(),
+                        asIsWindowRect.GetHeight(),
+                        /* bRepaint = */ 1);
+                    continue;
+                }
+
+                if (! toBeWindowRect.Equals(currentWindowRect))
+                {
+                    MoveWindow( windowHandle,
+                        toBeWindowRect.GetX(),
+                        toBeWindowRect.GetY(),
+                        toBeWindowRect.GetWidth(),
+                        toBeWindowRect.GetHeight(),
+                        /* bRepaint = */ 1);
+                }
+            }
         }
 
         /**
@@ -137,12 +155,12 @@ namespace windows10windowManager.Window
         public WindowInfoWithHandle MoveCurrentFocusPrevious()
         {
             // リストの先頭なら、現在のウィンドウを戻す
-            if (  this.CurrentWindowInfoIndex == 0) 
+            if (  this.currentWindowInfoIndex == 0) 
             {
                 return this.GetCurrentWindow();
             }
 
-            this.CurrentWindowInfoIndex -=  1;
+            this.currentWindowInfoIndex -=  1;
             return this.GetCurrentWindow();
         }
 
@@ -154,12 +172,12 @@ namespace windows10windowManager.Window
         public WindowInfoWithHandle MoveCurrentFocusNext()
         {
             // リストの最後なら、現在のウィンドウを戻す
-            if ( this.CurrentWindowInfoIndex == this.WindowInfos.Count() - 1)
+            if ( this.currentWindowInfoIndex == this.windowInfos.Count() - 1)
             {
                 return this.GetCurrentWindow();
             }
 
-            this.CurrentWindowInfoIndex += 1;
+            this.currentWindowInfoIndex += 1;
             return this.GetCurrentWindow();
         }
 
@@ -170,7 +188,7 @@ namespace windows10windowManager.Window
          */
         public WindowInfoWithHandle MoveCurrentFocusTop()
         {
-            this.CurrentWindowInfoIndex = 0;
+            this.currentWindowInfoIndex = 0;
             return this.GetCurrentWindow();
         }
 
@@ -181,7 +199,7 @@ namespace windows10windowManager.Window
          */
         public WindowInfoWithHandle MoveCurrentFocusBottom()
         {
-            this.CurrentWindowInfoIndex = this.WindowInfos.Count() - 1;
+            this.currentWindowInfoIndex = this.windowInfos.Count() - 1;
             return this.GetCurrentWindow();
         }
 
@@ -192,7 +210,7 @@ namespace windows10windowManager.Window
          */
         public void SetWindowPrevious()
         {
-            var currentIndex = this.CurrentWindowInfoIndex;
+            var currentIndex = this.currentWindowInfoIndex;
             var previousIndex = 0;
             if (currentIndex > 0)
             {
@@ -200,10 +218,10 @@ namespace windows10windowManager.Window
             }
             if (currentIndex != previousIndex)
             {
-                this.Move(WindowInfos, currentIndex, previousIndex);
-                this.ChangeWindowPosition(WindowInfos.ElementAt(currentIndex),
-                    WindowInfos.ElementAt(previousIndex));
-                this.CurrentWindowInfoIndex = previousIndex;
+                this.Move(this.windowInfos, currentIndex, previousIndex);
+                this.ChangeWindowPosition(this.windowInfos.ElementAt(currentIndex),
+                    this.windowInfos.ElementAt(previousIndex));
+                this.currentWindowInfoIndex = previousIndex;
             }
         }
 
@@ -214,18 +232,18 @@ namespace windows10windowManager.Window
          */
         public void SetWindowNext()
         {
-            var currentIndex = this.CurrentWindowInfoIndex;
-            var nextIndex = this.WindowInfos.Count() - 1;
-            if (currentIndex < this.WindowInfos.Count() - 1 )
+            var currentIndex = this.currentWindowInfoIndex;
+            var nextIndex = this.windowInfos.Count() - 1;
+            if (currentIndex < this.windowInfos.Count() - 1 )
             {
                 nextIndex = currentIndex + 1;
             }
             if (currentIndex != nextIndex)
             {
-                this.Move(WindowInfos, currentIndex, nextIndex);
-                this.ChangeWindowPosition(WindowInfos.ElementAt(currentIndex),
-                    WindowInfos.ElementAt(nextIndex));
-                this.CurrentWindowInfoIndex = nextIndex;
+                this.Move(this.windowInfos, currentIndex, nextIndex);
+                this.ChangeWindowPosition(this.windowInfos.ElementAt(currentIndex),
+                    this.windowInfos.ElementAt(nextIndex));
+                this.currentWindowInfoIndex = nextIndex;
             }
         }
 
@@ -236,14 +254,14 @@ namespace windows10windowManager.Window
          */
         public void SetWindowTop()
         {
-            var currentIndex = this.CurrentWindowInfoIndex;
+            var currentIndex = this.currentWindowInfoIndex;
             var topIndex = 0;
             if (currentIndex != topIndex)
             {
-                this.Move(WindowInfos, currentIndex, topIndex);
-                this.ChangeWindowPosition(WindowInfos.ElementAt(currentIndex),
-                    WindowInfos.ElementAt(topIndex));
-                this.CurrentWindowInfoIndex = topIndex;
+                this.Move(this.windowInfos, currentIndex, topIndex);
+                this.ChangeWindowPosition(this.windowInfos.ElementAt(currentIndex),
+                    this.windowInfos.ElementAt(topIndex));
+                this.currentWindowInfoIndex = topIndex;
             }
         }
 
@@ -254,14 +272,14 @@ namespace windows10windowManager.Window
          */
         public void SetWindowBottom()
         {
-            var currentIndex = this.CurrentWindowInfoIndex;
-            var bottomIndex = WindowInfos.Count() - 1;
+            var currentIndex = this.currentWindowInfoIndex;
+            var bottomIndex = this.windowInfos.Count() - 1;
             if ( currentIndex != bottomIndex)
             {
-                this.Move(WindowInfos, currentIndex, bottomIndex);
-                this.ChangeWindowPosition(WindowInfos.ElementAt(currentIndex),
-                    WindowInfos.ElementAt(bottomIndex));
-                this.CurrentWindowInfoIndex = bottomIndex;
+                this.Move(this.windowInfos, currentIndex, bottomIndex);
+                this.ChangeWindowPosition(this.windowInfos.ElementAt(currentIndex),
+                    this.windowInfos.ElementAt(bottomIndex));
+                this.currentWindowInfoIndex = bottomIndex;
             }
         }
 
@@ -280,27 +298,27 @@ namespace windows10windowManager.Window
         public void ChangeWindowPosition(WindowInfoWithHandle srcWindowInfoWithHandle, 
             WindowInfoWithHandle destWindowInfoWithHandle)
         {
-            if ( this.WindowArrangementMode == 0 )
+            if ( this.windowTilingType == WindowTilingType.None )
             {
                 return;
             }
 
-            RECT srcPosotion = srcWindowInfoWithHandle.Position;
+            WindowRect srcWindowRect = srcWindowInfoWithHandle.GetCurrentWindowRect();
+            WindowRect destWindowRect = destWindowInfoWithHandle.GetCurrentWindowRect();
 
-            MoveWindow(srcWindowInfoWithHandle.WindowHandle,
-                destWindowInfoWithHandle.GetPositionX(),
-                destWindowInfoWithHandle.GetPositionY(),
-                destWindowInfoWithHandle.GetPositionWidth(),
-                destWindowInfoWithHandle.GetPositionHeight(),
+            MoveWindow(srcWindowInfoWithHandle.windowHandle,
+                destWindowRect.GetX(),
+                destWindowRect.GetY(),
+                destWindowRect.GetWidth(),
+                destWindowRect.GetHeight(),
                 /* bRepaint = */ 1);
 
-            MoveWindow(destWindowInfoWithHandle.WindowHandle,
-                srcWindowInfoWithHandle.CalcPositionX(srcPosotion),
-                srcWindowInfoWithHandle.CalcPositionY(srcPosotion),
-                srcWindowInfoWithHandle.CalcPositionWidth(srcPosotion),
-                srcWindowInfoWithHandle.CalcPositionHeight(srcPosotion),
+            MoveWindow(destWindowInfoWithHandle.windowHandle,
+                srcWindowRect.GetX(),
+                srcWindowRect.GetY(),
+                srcWindowRect.GetWidth(),
+                srcWindowRect.GetHeight(),
                 /* bRepaint = */ 1);
-
         }
 
     }

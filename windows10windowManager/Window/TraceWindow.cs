@@ -112,7 +112,7 @@ namespace windows10windowManager.Window
         {
             var windowInfo = new WindowInfoWithHandle(hWnd);
             var windowLong = GetWindowLong(hWnd, GWL_STYLE);
-            var windowTitle = windowInfo.WindowTitle;
+            var windowTitle = windowInfo.windowTitle;
 
             if (!this.WindowInfos.Contains(windowInfo))
             {
@@ -184,7 +184,7 @@ namespace windows10windowManager.Window
             var needleWindowInfo = new WindowInfoWithHandle(hWnd);
             var windowLong = GetWindowLong(hWnd, GWL_STYLE);
             var windowLongString = windowLong.ToString("x8");
-            var windowTitle = needleWindowInfo.WindowTitle;
+            var windowTitle = needleWindowInfo.windowTitle;
 
             if ( windowLong == 0 ||
                 ((windowLong & WS_POPUP) == WS_POPUP) ||
@@ -209,7 +209,7 @@ namespace windows10windowManager.Window
             } else
             {
                 var windowInfo = this.WindowInfos.Find(
-                    (WindowInfoWithHandle wi) => { return wi.WindowHandle == needleWindowInfo.WindowHandle; });
+                    (WindowInfoWithHandle wi) => { return wi.windowHandle == needleWindowInfo.windowHandle; });
 
                 if (eventName == EventName.EVENT_OBJECT_DESTROY)
                 {

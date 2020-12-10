@@ -17,10 +17,12 @@ namespace windows10windowManager.Window
         const int WINEVENT_SKIPOWNPROCESS = 2;
         const int WINEVENT_INCONTEXT = 4;
 
+        #region WinApi
         [DllImport("user32.dll", SetLastError = true)]
         private static extern IntPtr SetWinEventHook(int eventMin, int eventMax, IntPtr hmodWinEventProc, WinEventProc lpfnWinEventProc, int idProcess, int idThread, int dwflags);
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int UnhookWinEvent(IntPtr hWinEventHook);
+        #endregion
 
         #region Delegate
         private delegate void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);

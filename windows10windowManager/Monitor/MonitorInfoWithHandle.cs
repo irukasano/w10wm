@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-
 namespace windows10windowManager.Monitor
 {
     #region Structure
@@ -67,11 +66,12 @@ namespace windows10windowManager.Monitor
      */
     public interface IMonitorInfoWithHandle
     {
-        IntPtr MonitorHandle { get; }
+        IntPtr monitorHandle { get; }
 
-        RECT MonitorRect { get; }
+        RECT monitorRect { get; }
 
-        MONITORINFO MonitorInfo { get; }
+        MONITORINFO monitorInfo { get; }
+
     }
     #endregion
 
@@ -90,14 +90,14 @@ namespace windows10windowManager.Monitor
          * The monitor handle.
          * </value>
          */
-        public IntPtr MonitorHandle { get; private set; }
+        public IntPtr monitorHandle { get; private set; }
 
         /**
          * <summary>
          * Gets the monitor rect
          * </summary>
          */
-        public RECT MonitorRect { get; private set; }
+        public RECT monitorRect { get; private set; }
 
         /**
          * <summary>
@@ -107,7 +107,7 @@ namespace windows10windowManager.Monitor
          * The monitor information.
          * </value>
          */
-        public MONITORINFO MonitorInfo { get; private set; }
+        public MONITORINFO monitorInfo { get; private set; }
 
         /**
          * <summary>
@@ -118,14 +118,14 @@ namespace windows10windowManager.Monitor
          */
         public MonitorInfoWithHandle(IntPtr monitorHandle, RECT monitorRect, MONITORINFO monitorInfo)
         {
-            this.MonitorHandle = monitorHandle;
-            this.MonitorRect = monitorRect;
-            this.MonitorInfo = monitorInfo;
+            this.monitorHandle = monitorHandle;
+            this.monitorRect = monitorRect;
+            this.monitorInfo = monitorInfo;
         }
 
         public bool Equals(MonitorInfoWithHandle other)
         {
-            return this.MonitorHandle == other.MonitorHandle;
+            return this.monitorHandle == other.monitorHandle;
         }
 
     }
