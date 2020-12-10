@@ -226,7 +226,7 @@ namespace windows10windowManager.Window
          * アクティヴウィンドウの位置をひとつ前に移動する
          * </summary>
          */
-        public void SetWindowPrevious()
+        public WindowInfoWithHandle SetWindowPrevious()
         {
             var currentIndex = this.currentWindowInfoIndex;
             var previousIndex = 0;
@@ -236,11 +236,13 @@ namespace windows10windowManager.Window
             }
             if (currentIndex != previousIndex)
             {
-                this.Move(this.windowInfos, currentIndex, previousIndex);
+                this.Exchange(this.windowInfos, currentIndex, previousIndex);
                 this.ChangeWindowPosition(this.windowInfos.ElementAt(currentIndex),
                     this.windowInfos.ElementAt(previousIndex));
                 this.currentWindowInfoIndex = previousIndex;
+                return this.windowInfos.ElementAt(previousIndex);
             }
+            return this.windowInfos.ElementAt(currentIndex);
         }
 
         /**
@@ -248,7 +250,7 @@ namespace windows10windowManager.Window
          * アクティヴウィンドウの位置をひとつ後に移動する
          * </summary>
          */
-        public void SetWindowNext()
+        public WindowInfoWithHandle SetWindowNext()
         {
             var currentIndex = this.currentWindowInfoIndex;
             var nextIndex = this.windowInfos.Count() - 1;
@@ -258,11 +260,13 @@ namespace windows10windowManager.Window
             }
             if (currentIndex != nextIndex)
             {
-                this.Move(this.windowInfos, currentIndex, nextIndex);
+                this.Exchange(this.windowInfos, currentIndex, nextIndex);
                 this.ChangeWindowPosition(this.windowInfos.ElementAt(currentIndex),
                     this.windowInfos.ElementAt(nextIndex));
                 this.currentWindowInfoIndex = nextIndex;
+                return this.windowInfos.ElementAt(nextIndex);
             }
+            return this.windowInfos.ElementAt(currentIndex);
         }
 
         /**
@@ -270,17 +274,19 @@ namespace windows10windowManager.Window
          * アクティヴウィンドウの位置を先頭に移動する
          * </summary>
          */
-        public void SetWindowTop()
+        public WindowInfoWithHandle SetWindowTop()
         {
             var currentIndex = this.currentWindowInfoIndex;
             var topIndex = 0;
             if (currentIndex != topIndex)
             {
-                this.Move(this.windowInfos, currentIndex, topIndex);
+                this.Exchange(this.windowInfos, currentIndex, topIndex);
                 this.ChangeWindowPosition(this.windowInfos.ElementAt(currentIndex),
                     this.windowInfos.ElementAt(topIndex));
                 this.currentWindowInfoIndex = topIndex;
+                return this.windowInfos.ElementAt(topIndex);
             }
+            return this.windowInfos.ElementAt(currentIndex);
         }
 
         /**
@@ -288,20 +294,27 @@ namespace windows10windowManager.Window
          * アクティヴウィンドウの位置を最後に移動する
          * </summary>
          */
-        public void SetWindowBottom()
+        public WindowInfoWithHandle SetWindowBottom()
         {
             var currentIndex = this.currentWindowInfoIndex;
             var bottomIndex = this.windowInfos.Count() - 1;
             if ( currentIndex != bottomIndex)
             {
-                this.Move(this.windowInfos, currentIndex, bottomIndex);
+                this.Exchange(this.windowInfos, currentIndex, bottomIndex);
                 this.ChangeWindowPosition(this.windowInfos.ElementAt(currentIndex),
                     this.windowInfos.ElementAt(bottomIndex));
                 this.currentWindowInfoIndex = bottomIndex;
+                return this.windowInfos.ElementAt(bottomIndex);
             }
+            return this.windowInfos.ElementAt(currentIndex);
         }
 
-        protected void Move<T>(List<T> list, int oldIndex, int newIndex)
+        /**
+         * <summary>
+         * リストの位置を入替する
+         * </summary>
+         */
+        protected void Exchange<T>(List<T> list, int oldIndex, int newIndex)
         {
             T aux = list[newIndex];
             list[newIndex] = list[oldIndex];

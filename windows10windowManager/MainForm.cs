@@ -88,78 +88,90 @@ namespace windows10windowManager
         {
             Logger.WriteLine("InterceptKeyboard_KeyDownEvent : " + e.ToString());
 
-            int[] modifierLeftWindows = new int[] { (int)OriginalKey.LeftWindows };
+            int[] modifierLWindows = new int[] { (int)OriginalKey.LeftWindows };
+            int[] modifierLShiftLWindows = new int[] { (int)OriginalKey.LeftWindows, (int)OriginalKey.LeftShift };
+            int[] modifierRShiftLWindows = new int[] { (int)OriginalKey.LeftWindows, (int)OriginalKey.LeftShift };
 
-            if (e.Equals(OriginalKey.J, modifierLeftWindows))
+            if (e.Equals(OriginalKey.J, modifierLWindows))
             {
                 this.MoveCurrentFocusNext();
                 return false;
             }
-            else if (e.Equals(OriginalKey.K, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.K, modifierLWindows))
             {
                 this.MoveCurrentFocusPrevious();
                 return false;
             }
-            else if (e.Equals(OriginalKey.X, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.J, modifierLShiftLWindows) || e.Equals(OriginalKey.J, modifierRShiftLWindows))
+            {
+                this.SetWindowNext();
+                return false;
+            }
+            else if (e.Equals(OriginalKey.K, modifierLShiftLWindows) || e.Equals(OriginalKey.K, modifierRShiftLWindows))
+            {
+                this.SetWindowPrevious();
+                return false;
+            }
+            else if (e.Equals(OriginalKey.X, modifierLWindows))
             {
                 this.CloseCurrentWindow();
                 return false;
             }
-            else if (e.Equals(OriginalKey.C, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.C, modifierLWindows))
             {
                 this.HighlightActiveMonitor();
                 return false;
             }
-            else if (e.Equals(OriginalKey.Period, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.Period, modifierLWindows))
             {
                 this.MoveCurrentFocusPreviousMonitor();
                 return false;
             }
-            else if (e.Equals(OriginalKey.Comma, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.Comma, modifierLWindows))
             {
                 this.MoveCurrentFocusNextMonitor();
                 return false;
             }
-            else if (e.Equals(OriginalKey.F1, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.F1, modifierLWindows))
             {
                 this.ActivateMonitorN(0);
                 return false;
             }
-            else if (e.Equals(OriginalKey.F2, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.F2, modifierLWindows))
             {
                 this.ActivateMonitorN(1);
                 return false;
             }
-            else if (e.Equals(OriginalKey.F3, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.F3, modifierLWindows))
             {
                 this.ActivateMonitorN(2);
                 return false;
             }
-            else if (e.Equals(OriginalKey.F, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.F, modifierLWindows))
             {
                 this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.Maximize;
                 this.ArrangeWindows();
                 return false;
             }
-            else if (e.Equals(OriginalKey.G, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.G, modifierLWindows))
             {
                 this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.FourDivided;
                 this.ArrangeWindows();
                 return false;
             }
-            else if (e.Equals(OriginalKey.T, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.T, modifierLWindows))
             {
                 this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.Bugn;
                 this.ArrangeWindows();
                 return false;
             }
-            else if (e.Equals(OriginalKey.R, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.R, modifierLWindows))
             {
                 this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.Mdi;
                 this.ArrangeWindows();
                 return false;
             }
-            else if (e.Equals(OriginalKey.N, modifierLeftWindows))
+            else if (e.Equals(OriginalKey.N, modifierLWindows))
             {
                 this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.None;
                 this.ArrangeWindows();
@@ -289,6 +301,48 @@ namespace windows10windowManager
             var windowInfo = windowManager.MoveCurrentFocusNext();
             if (windowInfo != null)
             {
+                windowInfo.ActivateWindow();
+            }
+        }
+
+        /**
+         * <summary>
+         * 現在のウィンドウをひとつ上に移動する
+         * </summary>
+         */
+        private void SetWindowPrevious()
+        {
+            Logger.WriteLine("SetWindowPrevious");
+            var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
+            if (windowManager is null)
+            {
+                return;
+            }
+            var windowInfo = windowManager.SetWindowPrevious();
+            if (windowInfo != null)
+            {
+                this.ArrangeWindows();
+                windowInfo.ActivateWindow();
+            }
+        }
+
+        /**
+         * <summary>
+         * 現在のウィンドウをひとつ下に移動する
+         * </summary>
+         */
+        private void SetWindowNext()
+        {
+            Logger.WriteLine("SetWindowPrevious");
+            var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
+            if (windowManager is null)
+            {
+                return;
+            }
+            var windowInfo = windowManager.SetWindowNext();
+            if (windowInfo != null)
+            {
+                this.ArrangeWindows();
                 windowInfo.ActivateWindow();
             }
         }
