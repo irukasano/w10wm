@@ -164,6 +164,9 @@ namespace windows10windowManager.Window
              * 
              * * AS/R
              * w10wm - Asr : 14cf4000
+             * 
+             * * CMD
+             * cmd.exe : 14ef0000
              */
 
             var windowLongString = windowLong.ToString("x8");

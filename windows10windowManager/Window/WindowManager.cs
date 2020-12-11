@@ -170,19 +170,26 @@ namespace windows10windowManager.Window
                 {
                     var asIsWindowRect = windowInfoWithHandle.GetOriginalWindowRect();
 
-                    this.MoveWindow( windowHandle, asIsWindowRect);
+                    this.MoveWindow(windowInfoWithHandle, asIsWindowRect);
                     continue;
                 }
 
                 if (! toBeWindowRect.Equals(currentWindowRect))
                 {
-                    this.MoveWindow( windowHandle, toBeWindowRect);
+                    this.MoveWindow(windowInfoWithHandle, toBeWindowRect);
                 }
             }
         }
 
-        public void MoveWindow( IntPtr hWnd, WindowRect windowRect)
+        /**
+         * <summary>
+         * 指定されたWindowInfoWithHandleをWindowRectの位置に移動する
+         * ただしWindowInfoWithHandle.positionXXAdjustmentで位置を補正して隙間ができないようにする
+         * </summary>
+         */
+        public void MoveWindow( WindowInfoWithHandle windowInfoWithHandle, WindowRect windowRect)
         {
+            var hWnd = windowInfoWithHandle.windowHandle;
             var windowRectString = windowRect.ToString();
             Logger.WriteLine($"WindowManager.MoveWindow : hWnd={hWnd} To {windowRectString}");
 
@@ -193,10 +200,10 @@ namespace windows10windowManager.Window
             }
 
             MoveWindow(hWnd, 
-                windowRect.GetX(),
-                windowRect.GetY(),
-                windowRect.GetWidth(),
-                windowRect.GetHeight(),
+                windowRect.GetX() + windowInfoWithHandle.positionLeftAdjustment,
+                windowRect.GetY() + windowInfoWithHandle.positionTopAdjustment,
+                windowRect.GetWidth() + windowInfoWithHandle.positionWidthAdjustment,
+                windowRect.GetHeight() + windowInfoWithHandle.positionHeightAdjustment,
                 /* bRepaint = */1);
         }
 
@@ -372,9 +379,9 @@ namespace windows10windowManager.Window
             WindowRect srcWindowRect = srcWindowInfoWithHandle.GetCurrentWindowRect();
             WindowRect destWindowRect = destWindowInfoWithHandle.GetCurrentWindowRect();
 
-            this.MoveWindow(srcWindowInfoWithHandle.windowHandle, destWindowRect);
+            this.MoveWindow(srcWindowInfoWithHandle, destWindowRect);
 
-            this.MoveWindow(destWindowInfoWithHandle.windowHandle, srcWindowRect);
+            this.MoveWindow(destWindowInfoWithHandle, srcWindowRect);
         }
 
     }

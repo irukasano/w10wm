@@ -36,6 +36,10 @@ namespace windows10windowManager.Window
         [DllImport("user32.dll")]
         static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 
+        [DllImport("dwmapi.dll")]
+        extern static int DwmGetWindowAttribute(IntPtr hWnd, int dwAttribute, out RECT rect, int cbAttribute);
+
+
         [DllImport("user32.dll", SetLastError = true)]
         static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
@@ -85,6 +89,11 @@ namespace windows10windowManager.Window
 
         public RECT position { get; private set; }
 
+        public int positionTopAdjustment;
+        public int positionLeftAdjustment;
+        public int positionWidthAdjustment;
+        public int positionHeightAdjustment;
+
         public String windowTitle { get; private set; }
 
         public IntPtr monitorHandle { get; private set; }
@@ -98,7 +107,21 @@ namespace windows10windowManager.Window
 
             RECT rect;
             bool f = GetWindowRect(hWnd, out rect);
-            this.position = rect;
+
+            RECT dwmRect;
+            DwmGetWindowAttribute(this.windowHandle,
+                /* DWMWA_EXTENDED_FRAME_BOUNDS */ 9,
+                out dwmRect, Marshal.SizeOf(typeof(RECT)));
+
+            this.position = dwmRect;
+
+            // 位置補正用の情報を計算する
+            this.positionTopAdjustment = rect.top - dwmRect.top;
+            this.positionLeftAdjustment = rect.left - dwmRect.left;
+            this.positionWidthAdjustment = (rect.right - rect.left) -
+                (dwmRect.right - dwmRect.left);
+            this.positionHeightAdjustment = (rect.bottom - rect.top) -
+                (dwmRect.bottom - dwmRect.top);
 
             this.windowTitle = GetCurrentWindowTitle(hWnd);
 
@@ -133,9 +156,15 @@ namespace windows10windowManager.Window
          */
         public WindowRect GetCurrentWindowRect()
         {
-            RECT rect;
-            bool f = GetWindowRect(this.windowHandle, out rect);
-            return new WindowRect(rect.top, rect.bottom, rect.left, rect.right);
+            //RECT rect;
+            //bool f = GetWindowRect(this.windowHandle, out rect);
+
+            RECT dwmRect;
+            DwmGetWindowAttribute(this.windowHandle,
+                /* DWMWA_EXTENDED_FRAME_BOUNDS */ 9,
+                out dwmRect, Marshal.SizeOf(typeof(RECT)));
+
+            return new WindowRect(dwmRect.top, dwmRect.bottom, dwmRect.left, dwmRect.right);
         }
 
         /**

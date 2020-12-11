@@ -115,7 +115,7 @@ namespace windows10windowManager
          */
         private bool InterceptKeyboard_KeyDownEvent(object sender, InterceptKeyboard.OriginalKeyEventArg e)
         {
-            Logger.WriteLine("InterceptKeyboard_KeyDownEvent : " + e.ToString());
+            //Logger.WriteLine("InterceptKeyboard_KeyDownEvent : " + e.ToString());
 
             int[] modifierLWindows = new int[] { (int)OriginalKey.LeftWindows };
             int[] modifierLShiftLWindows = new int[] { (int)OriginalKey.LeftWindows, (int)OriginalKey.LeftShift };
@@ -196,13 +196,15 @@ namespace windows10windowManager
                 this.ActivateMonitorN(2);
                 return false;
             }
-            else if (e.Equals(OriginalKey.P, modifierLWindows))
+            else if (e.Equals(OriginalKey.O, modifierLWindows))
             {
                 // 右クリックメニューを表示する
                 var monitorInfo = this.monitorManager.GetCurrentMonitor();
+
                 System.Drawing.Point p = new System.Drawing.Point();
-                p.X = monitorInfo.monitorRect.left;
-                p.Y = monitorInfo.monitorRect.top;
+                p.X = monitorInfo.monitorRect.left + 100;
+                p.Y = monitorInfo.monitorRect.top + 100;
+
                 this.contextMenuStrip1.Show(p);
                 this.contextMenuStrip1.Focus();
                 return false;
