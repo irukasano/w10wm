@@ -167,6 +167,11 @@ namespace windows10windowManager.Window
              * 
              * * CMD
              * cmd.exe : 14ef0000
+             * 
+             * * KeePass
+             * KeePass.kdbx [ﾛｯｸ中] - KeePass : 26cf0000
+             * KeePass.kdbx [ﾛｯｸ中] - KeePass : 16cf0000
+             * ﾃﾞｰﾀﾍﾞｰｽを開く - KeePass.kdbx : 16c80000
              */
 
             var windowLongString = windowLong.ToString("x8");
