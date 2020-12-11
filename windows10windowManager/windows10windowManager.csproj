@@ -80,6 +80,7 @@
     <Compile Include="MonitorInformationForm.Designer.cs">
       <DependentUpon>MonitorInformationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Setting\SQLiteManager.cs" />
     <Compile Include="Setting\SettingManager.cs" />
     <Compile Include="Util\Logger.cs" />
     <Compile Include="Window\AbstractWindowTiler.cs" />
