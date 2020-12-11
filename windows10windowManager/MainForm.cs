@@ -102,6 +102,12 @@ namespace windows10windowManager
             this.ArrangeWindows();
         }
 
+        private void FToolStripMenuItemTileConcentration_Click(object sender, EventArgs e)
+        {
+            this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.Concentration;
+            this.ArrangeWindows();
+        }
+
         private void FToolStripMenuItemTileNone_Click(object sender, EventArgs e)
         {
             this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.None;
@@ -540,6 +546,7 @@ namespace windows10windowManager
                 /* monitorRect = */ monitorInfoWithHandle.monitorInfo.work);
             windowManager.ArrangeWindows(windowTiler);
         }
+
 
         /**
          * <summary>

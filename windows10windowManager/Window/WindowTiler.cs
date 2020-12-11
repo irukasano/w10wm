@@ -19,7 +19,8 @@ namespace windows10windowManager.Window
         Bugn = 1,
         FourDivided = 2,
         Maximize = 4,
-        Mdi = 8 
+        Mdi = 8,
+        Concentration = 16
     }
 
     public class WindowTiler
@@ -49,6 +50,9 @@ namespace windows10windowManager.Window
                     break;
                 case WindowTilingType.Mdi:
                     this.windowTiler = new WindowTilerMdi();
+                    break;
+                case WindowTilingType.Concentration:
+                    this.windowTiler = new WindowTilerConcentration();
                     break;
             }
 

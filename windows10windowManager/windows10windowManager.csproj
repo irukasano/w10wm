@@ -84,6 +84,7 @@
     <Compile Include="Setting\SettingManager.cs" />
     <Compile Include="Util\Logger.cs" />
     <Compile Include="Window\AbstractWindowTiler.cs" />
+    <Compile Include="Window\WindowTilerConcentration.cs" />
     <Compile Include="Window\WindowTilerNone.cs" />
     <Compile Include="Window\WindowTiler.cs" />
     <Compile Include="Window\WindowTilerMaximize.cs" />

@@ -37,6 +37,7 @@
             this.FToolStripMenuItemTileNone = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolStripMenuItemExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.FToolStripMenuItemTileConcentration = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,11 +48,12 @@
             this.FToolStripMenuItemTileBugn,
             this.FToolStripMenuItemTileMdi,
             this.FToolStripMenuItemTileFullMonitor,
+            this.FToolStripMenuItemTileConcentration,
             this.FToolStripMenuItemTileNone,
             this.toolStripMenuItem1,
             this.ToolStripMenuItemExit});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(255, 164);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(255, 186);
             // 
             // FToolStripMenuItemTile4Window
             // 
@@ -100,6 +102,13 @@
             this.ToolStripMenuItemExit.Text = "終了";
             this.ToolStripMenuItemExit.Click += new System.EventHandler(this.Exit_Click);
             // 
+            // FToolStripMenuItemTileConcentration
+            // 
+            this.FToolStripMenuItemTileConcentration.Name = "FToolStripMenuItemTileConcentration";
+            this.FToolStripMenuItemTileConcentration.Size = new System.Drawing.Size(254, 22);
+            this.FToolStripMenuItemTileConcentration.Text = "ウィンドウを集中モード表示する(&C)";
+            this.FToolStripMenuItemTileConcentration.Click += new System.EventHandler(this.FToolStripMenuItemTileConcentration_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -122,6 +131,7 @@
         private System.Windows.Forms.ToolStripMenuItem FToolStripMenuItemTileNone;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemExit;
+        private System.Windows.Forms.ToolStripMenuItem FToolStripMenuItemTileConcentration;
     }
 }
 
