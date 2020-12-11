@@ -53,7 +53,7 @@ namespace windows10windowManager.Util
             var line = $"{now} : {message}";
 
             Debug.WriteLine(line);
-            Logger.logger.Debug(message);
+            Logger.logger.Trace(message);
         }
 
         /**

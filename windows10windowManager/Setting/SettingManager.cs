@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using windows10windowManager.Window;
+
 namespace windows10windowManager.Setting
 {
     public class SettingManager
@@ -12,11 +14,20 @@ namespace windows10windowManager.Setting
 
         public static Dictionary<string, string> MainSetting { get; set; }
 
+        public static Dictionary<string, string> UserSetting { get; set; }
+
         static SettingManager()
         {
             MainSetting = new Dictionary<string, string>()
             {
                 { "", "" }
+            };
+
+            UserSetting = new Dictionary<string, string>()
+            {
+                { "Monitor1WindowTilingType",  WindowTilingType.Bugn.ToString()},
+                { "Monitor2WindowTilingType",  WindowTilingType.Bugn.ToString()},
+                { "Monitor3WindowTilingType",  WindowTilingType.Bugn.ToString()},
             };
         }
 

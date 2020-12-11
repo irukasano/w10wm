@@ -156,15 +156,15 @@ namespace windows10windowManager.Window
          */
         public WindowRect GetCurrentWindowRect()
         {
-            //RECT rect;
-            //bool f = GetWindowRect(this.windowHandle, out rect);
+            RECT rect;
+            bool f = GetWindowRect(this.windowHandle, out rect);
 
-            RECT dwmRect;
-            DwmGetWindowAttribute(this.windowHandle,
-                /* DWMWA_EXTENDED_FRAME_BOUNDS */ 9,
-                out dwmRect, Marshal.SizeOf(typeof(RECT)));
+            //RECT dwmRect;
+            //DwmGetWindowAttribute(this.windowHandle,
+            //    /* DWMWA_EXTENDED_FRAME_BOUNDS */ 9,
+            //    out dwmRect, Marshal.SizeOf(typeof(RECT)));
 
-            return new WindowRect(dwmRect.top, dwmRect.bottom, dwmRect.left, dwmRect.right);
+            return new WindowRect(rect.top, rect.bottom, rect.left, rect.right);
         }
 
         /**
