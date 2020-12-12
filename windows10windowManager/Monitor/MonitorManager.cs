@@ -86,11 +86,19 @@ namespace windows10windowManager.Monitor
             this.windowManagers.Clear();
 
             foreach (var monitorInfo in this.monitorInfos)
+                {
+
+                }
+
+            for (int i = 0; i < this.monitorInfos.Count; i++)
             {
+                var monitorInfo = this.monitorInfos[i];
                 var monitorHandle = monitorInfo.monitorHandle;
                 var monitorName = new string(monitorInfo.monitorInfo.szDevice).TrimEnd('\0');
                 Logger.WriteLine($"Add WindowManager of Monitor : {monitorName} ({monitorHandle})");
-                this.windowManagers.Add(new WindowManager(monitorInfo.monitorHandle));
+                var windowManager = new WindowManager(monitorInfo.monitorHandle);
+                windowManager.windowTilingType = (WindowTilingType)SettingManager.GetInt($"Window_WindowManager{i}_WindowTilingType");
+                this.windowManagers.Add(windowManager);
             }
 
             foreach (var windowInfoWithHandle in windowInfoWithHandles)

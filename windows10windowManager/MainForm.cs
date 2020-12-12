@@ -82,37 +82,49 @@ namespace windows10windowManager
 
         private void FToolStripMenuItemTile4Window_Click(object sender, EventArgs e)
         {
-            this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.FourDivided;
+            this.monitorManager.GetCurrentMonitorWindowManager().SaveWindowTilingType(
+                this.monitorManager.GetCurrentWindowManagerIndex(),
+                WindowTilingType.FourDivided);
             this.ArrangeWindows();
         }
 
         private void FToolStripMenuItemTileBugn_Click(object sender, EventArgs e)
         {
-            this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.Bugn;
+            this.monitorManager.GetCurrentMonitorWindowManager().SaveWindowTilingType(
+                this.monitorManager.GetCurrentWindowManagerIndex(),
+                WindowTilingType.Bugn);
             this.ArrangeWindows();
         }
 
         private void FToolStripMenuItemTileMdi_Click(object sender, EventArgs e)
         {
-            this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.Mdi;
+            this.monitorManager.GetCurrentMonitorWindowManager().SaveWindowTilingType(
+                this.monitorManager.GetCurrentWindowManagerIndex(),
+                WindowTilingType.Mdi);
             this.ArrangeWindows();
         }
 
         private void FToolStripMenuItemTileFullMonitor_Click(object sender, EventArgs e)
         {
-            this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.Maximize;
+            this.monitorManager.GetCurrentMonitorWindowManager().SaveWindowTilingType(
+                this.monitorManager.GetCurrentWindowManagerIndex(),
+                WindowTilingType.Maximize);
             this.ArrangeWindows();
         }
 
         private void FToolStripMenuItemTileConcentration_Click(object sender, EventArgs e)
         {
-            this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.Concentration;
+            this.monitorManager.GetCurrentMonitorWindowManager().SaveWindowTilingType(
+                this.monitorManager.GetCurrentWindowManagerIndex(),
+                WindowTilingType.Concentration);
             this.ArrangeWindows();
         }
 
         private void FToolStripMenuItemTileNone_Click(object sender, EventArgs e)
         {
-            this.monitorManager.GetCurrentMonitorWindowManager().windowTilingType = WindowTilingType.None;
+            this.monitorManager.GetCurrentMonitorWindowManager().SaveWindowTilingType(
+                this.monitorManager.GetCurrentWindowManagerIndex(),
+                WindowTilingType.None);
             this.ArrangeWindows();
         }
 

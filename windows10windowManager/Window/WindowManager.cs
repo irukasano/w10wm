@@ -23,7 +23,7 @@ namespace windows10windowManager.Window
 
         protected int currentWindowInfoIndex { get; set; }
 
-        public WindowTilingType windowTilingType = WindowTilingType.Bugn;
+        public WindowTilingType windowTilingType;
         #endregion
 
         #region WinApi
@@ -50,6 +50,14 @@ namespace windows10windowManager.Window
             this.windowInfos = new List<WindowInfoWithHandle>();
             this.currentWindowInfoIndex = 0;
         }
+
+        public void SaveWindowTilingType(int currentWindowManagerIndex, WindowTilingType windowTilingType)
+        {
+            this.windowTilingType = windowTilingType;
+            SettingManager.SaveInt($"Window_WindowManager{currentWindowManagerIndex}_WindowTilingType", 
+                (int)windowTilingType);
+        }
+
 
         public int WindowCount()
         {
