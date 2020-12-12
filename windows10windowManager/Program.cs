@@ -16,12 +16,32 @@ namespace windows10windowManager
         [STAThread]
         static void Main()
         {
-            Util.Logger.Initialize();
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new MainForm());
-            var f = new MainForm();
-            Application.Run();
+            // 二重起動を禁止する
+            bool createdNew;
+            System.Threading.Mutex mutex = new System.Threading.Mutex(true, "windows10windowManager", out createdNew);
+            if ( createdNew == false)
+            {
+                mutex.Close();
+                return;
+            }
+
+            try {
+                Util.Logger.Initialize();
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                //Application.Run(new MainForm());
+                var f = new MainForm();
+                Application.Run();
+            }
+            catch ( Exception ex)
+            {
+                Logger.Exception(ex);
+            }
+            finally
+            {
+                mutex.ReleaseMutex();
+                mutex.Close();
+            }
         }
     }
 }

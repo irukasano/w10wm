@@ -58,6 +58,17 @@ namespace windows10windowManager.Util
 
         /**
          * <summary>
+         * Exception用出力
+         * </summary>
+         */
+        public static void Exception(Exception ex)
+        {
+            Debug.Fail(ex.ToString());
+            Logger.logger.Error(ex);
+        }
+
+        /**
+         * <summary>
          * ログ出力を停止
          * </summary>
          */
