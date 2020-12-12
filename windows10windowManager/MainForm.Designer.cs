@@ -34,10 +34,10 @@
             this.FToolStripMenuItemTileBugn = new System.Windows.Forms.ToolStripMenuItem();
             this.FToolStripMenuItemTileMdi = new System.Windows.Forms.ToolStripMenuItem();
             this.FToolStripMenuItemTileFullMonitor = new System.Windows.Forms.ToolStripMenuItem();
+            this.FToolStripMenuItemTileConcentration = new System.Windows.Forms.ToolStripMenuItem();
             this.FToolStripMenuItemTileNone = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolStripMenuItemExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.FToolStripMenuItemTileConcentration = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,7 +53,7 @@
             this.toolStripMenuItem1,
             this.ToolStripMenuItemExit});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(255, 186);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(255, 164);
             // 
             // FToolStripMenuItemTile4Window
             // 
@@ -83,6 +83,13 @@
             this.FToolStripMenuItemTileFullMonitor.Text = "ウィンドウを全画面表示する(&X)";
             this.FToolStripMenuItemTileFullMonitor.Click += new System.EventHandler(this.FToolStripMenuItemTileFullMonitor_Click);
             // 
+            // FToolStripMenuItemTileConcentration
+            // 
+            this.FToolStripMenuItemTileConcentration.Name = "FToolStripMenuItemTileConcentration";
+            this.FToolStripMenuItemTileConcentration.Size = new System.Drawing.Size(254, 22);
+            this.FToolStripMenuItemTileConcentration.Text = "ウィンドウを集中モード表示する(&C)";
+            this.FToolStripMenuItemTileConcentration.Click += new System.EventHandler(this.FToolStripMenuItemTileConcentration_Click);
+            // 
             // FToolStripMenuItemTileNone
             // 
             this.FToolStripMenuItemTileNone.Name = "FToolStripMenuItemTileNone";
@@ -102,20 +109,14 @@
             this.ToolStripMenuItemExit.Text = "終了";
             this.ToolStripMenuItemExit.Click += new System.EventHandler(this.Exit_Click);
             // 
-            // FToolStripMenuItemTileConcentration
-            // 
-            this.FToolStripMenuItemTileConcentration.Name = "FToolStripMenuItemTileConcentration";
-            this.FToolStripMenuItemTileConcentration.Size = new System.Drawing.Size(254, 22);
-            this.FToolStripMenuItemTileConcentration.Text = "ウィンドウを集中モード表示する(&C)";
-            this.FToolStripMenuItemTileConcentration.Click += new System.EventHandler(this.FToolStripMenuItemTileConcentration_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(189, 20);
             this.Name = "MainForm";
             this.Text = "MainForm";
+            this.TopMost = true;
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 

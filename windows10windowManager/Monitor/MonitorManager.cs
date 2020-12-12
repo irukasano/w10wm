@@ -95,7 +95,7 @@ namespace windows10windowManager.Monitor
 
             foreach (var windowInfoWithHandle in windowInfoWithHandles)
             {
-                this.PushWindowInfo(windowInfoWithHandle);
+                this.AddWindowInfo(windowInfoWithHandle);
             }
 
             // 全画面を初期状態で整列する
@@ -108,9 +108,11 @@ namespace windows10windowManager.Monitor
                     /* windowCount =  */ windowManager.WindowCount(),
                     /* monitorRect = */ monitorInfoWithHandle.monitorInfo.work);
                 windowManager.ArrangeWindows(windowTiler);
+                windowManager.MoveCurrentFocusTop();
             }
 
             this.SetCurrentWindowManagerIndex(0);
+            this.GetCurrentMonitorWindowManager().GetCurrentWindow().ActivateWindow();
         }
 
         /**

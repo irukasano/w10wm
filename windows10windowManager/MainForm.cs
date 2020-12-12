@@ -19,9 +19,11 @@ namespace windows10windowManager
 {
     public partial class MainForm : Form
     {
+        #region Field
         private MonitorManager monitorManager { get; set; }
         private TraceWindow traceWindow { get; set; }
         private InterceptKeyboard interceptKeyboard { get; set; }
+        #endregion
 
         public MainForm()
         {
