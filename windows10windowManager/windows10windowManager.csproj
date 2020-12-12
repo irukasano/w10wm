@@ -83,11 +83,12 @@
     <Compile Include="Setting\SettingManager.cs" />
     <Compile Include="Util\Logger.cs" />
     <Compile Include="Window\AbstractWindowTiler.cs" />
+    <Compile Include="Window\WindowTilerDividerFourDivided.cs" />
     <Compile Include="Window\WindowTilerConcentration.cs" />
     <Compile Include="Window\WindowTilerNone.cs" />
     <Compile Include="Window\WindowTiler.cs" />
     <Compile Include="Window\WindowTilerMaximize.cs" />
-    <Compile Include="Window\WindowTilerDividerBugn.cs" />
+    <Compile Include="Window\WindowTilerBugn.cs" />
     <Compile Include="Window\WindowTilerMdi.cs" />
     <Compile Include="Window\WindowTilerDivider.cs" />
     <Compile Include="Window\WindowManager.cs" />

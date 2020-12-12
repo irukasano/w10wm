@@ -59,10 +59,12 @@ namespace windows10windowManager.Window
         // ウィンドウリストの先頭に追加する
         public void Push(WindowInfoWithHandle windowInfo)
         {
-            this.windowInfos.Insert(0, windowInfo);
+            // 集中モードの場合は 1、それ以外は 0 番目にウィンドウを挿入する
+            var pushedIndex = WindowTiler.PushWindowInfo(this.windowTilingType, this.windowInfos, windowInfo);
+            //this.windowInfos.Insert(0, windowInfo);
 
             // 追加したらこれをカレントウィンドウにする
-            this.currentWindowInfoIndex = 0;
+            this.currentWindowInfoIndex = pushedIndex;
         }
 
 

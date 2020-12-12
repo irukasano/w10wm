@@ -8,7 +8,7 @@ using windows10windowManager.Util;
 
 namespace windows10windowManager.Window
 {
-    public class WindowTilerDividerBugn : AbstractWindowTiler
+    public class WindowTilerBugn : AbstractWindowTiler
     {
         /**
          * <summary>

@@ -120,6 +120,11 @@ namespace windows10windowManager.Window
             return this.windowRects.ElementAt(maxWindowRectIndex);
         }
 
+        public virtual int PushWindowInfo(List<WindowInfoWithHandle> windowInfos, WindowInfoWithHandle windowInfoWithHandle)
+        {
+            windowInfos.Insert(0, windowInfoWithHandle);
+            return 0;
+        }
 
     }
 

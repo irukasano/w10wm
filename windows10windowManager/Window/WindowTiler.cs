@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,36 +26,26 @@ namespace windows10windowManager.Window
 
     public class WindowTiler
     {
+        #region Field
         protected AbstractWindowTiler windowTiler;
+
+        protected static Dictionary<int, string> WindowTilerClass = new Dictionary<int, string>()
+        {
+            { (int)WindowTilingType.None,  "WindowTilerNone"},
+            { (int)WindowTilingType.Bugn,  "WindowTilerBugn"},
+            { (int)WindowTilingType.FourDivided,  "WindowTilerDividerFourDivided"},
+            { (int)WindowTilingType.Maximize,  "WindowTilerMaximize"},
+            { (int)WindowTilingType.Mdi,  "WindowTilerMdi"},
+            { (int)WindowTilingType.Concentration,  "WindowTilerConcentration"}
+        };
+        #endregion
+
 
         public WindowTiler(WindowTilingType windowTilingType, int windowCount, Monitor.RECT monitorRect)
         {
             Logger.WriteLine($"WindowTiler(WindowTilingType={windowTilingType}, int={windowCount}");
 
-            switch ( windowTilingType)
-            {
-                case WindowTilingType.None:
-                    this.windowTiler = new WindowTilerNone();
-                    break;
-                case WindowTilingType.Bugn:
-                    this.windowTiler = new WindowTilerDividerBugn();
-                    break;
-                case WindowTilingType.FourDivided:
-                    this.windowTiler = new WindowTilerDivider();
-                    var wt = (WindowTilerDivider)this.windowTiler;
-                    wt.columnCount = 2;
-                    wt.rowCount = 2;
-                    break;
-                case WindowTilingType.Maximize:
-                    this.windowTiler = new WindowTilerMaximize();
-                    break;
-                case WindowTilingType.Mdi:
-                    this.windowTiler = new WindowTilerMdi();
-                    break;
-                case WindowTilingType.Concentration:
-                    this.windowTiler = new WindowTilerConcentration();
-                    break;
-            }
+            this.windowTiler = WindowTiler.CreateWindowTilerInstance(windowTilingType);
 
             this.windowTiler.CalcuratePosition(windowCount, 
                 monitorRect.top, monitorRect.bottom, monitorRect.left, monitorRect.right);
@@ -64,5 +55,27 @@ namespace windows10windowManager.Window
         {
             return this.windowTiler.GetWindowRectOf(windowIndex);
         }
+
+        public static int PushWindowInfo(WindowTilingType windowTilingType, 
+            List<WindowInfoWithHandle> windowInfos, WindowInfoWithHandle windowInfoWithHandle)
+        {
+            var windowTiler = WindowTiler.CreateWindowTilerInstance(windowTilingType);
+            return windowTiler.PushWindowInfo(windowInfos, windowInfoWithHandle);
+        }
+
+        /**
+         * <summary>
+         * 指定された windowTilingType に紐付く WindowTiler クラスインスタンスを作成する
+         * </summary>
+         */
+        public static AbstractWindowTiler CreateWindowTilerInstance( WindowTilingType windowTilingType)
+        {
+            // 指定された windowTilingType に紐付く WindowTiler クラス名を取得し
+            // そのインスタンスによって位置情報を計算する
+            var classNameOfWindowTiler = WindowTilerClass[(int)windowTilingType];
+            Type typeOfWindowTiler = Type.GetType("windows10windowManager.Window." + classNameOfWindowTiler);
+            return (AbstractWindowTiler)Activator.CreateInstance(typeOfWindowTiler);
+        }
+
     }
 }

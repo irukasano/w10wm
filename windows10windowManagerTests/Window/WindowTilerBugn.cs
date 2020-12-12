@@ -13,7 +13,7 @@ namespace windows10windowManagerTests.Window
         [TestMethod]
         public void Test_GetWindowRectOf_NoWindow()
         {
-            WindowTilerDividerBugn windowTiler = new WindowTilerDividerBugn();
+            WindowTilerBugn windowTiler = new WindowTilerBugn();
 
             windowTiler.CalcuratePosition(0, 0, 1000, 0, 2000);
             Assert.IsTrue(windowTiler.defaultWindowRect.Equals(windowTiler.GetWindowRectOf(0)));
@@ -22,7 +22,7 @@ namespace windows10windowManagerTests.Window
         [TestMethod]
         public void Test_GetWindowRectOf_CountOfRightStackWindowIsZero()
         {
-            WindowTilerDividerBugn windowTiler = new WindowTilerDividerBugn();
+            WindowTilerBugn windowTiler = new WindowTilerBugn();
             windowTiler.percentOfLeftColumn = 0.7;
 
             windowTiler.CalcuratePosition(1, 0, 1000, 0, 2000);
@@ -32,7 +32,7 @@ namespace windows10windowManagerTests.Window
         [TestMethod]
         public void Test_GetWindowRectOf_CountOfRightStackWindowIsOne()
         {
-            WindowTilerDividerBugn windowTiler = new WindowTilerDividerBugn();
+            WindowTilerBugn windowTiler = new WindowTilerBugn();
             windowTiler.percentOfLeftColumn = 0.7;
             windowTiler.maxCountOfWindowOfRightColumn = 6;
 
@@ -44,7 +44,7 @@ namespace windows10windowManagerTests.Window
         [TestMethod]
         public void Test_GetWindowRectOf_CountOfRightStackWindowIsThree()
         {
-            WindowTilerDividerBugn windowTiler = new WindowTilerDividerBugn();
+            WindowTilerBugn windowTiler = new WindowTilerBugn();
             windowTiler.percentOfLeftColumn = 0.7;
             windowTiler.maxCountOfWindowOfRightColumn = 6;
 
@@ -59,7 +59,7 @@ namespace windows10windowManagerTests.Window
         [TestMethod]
         public void Test_GetWindowRectOf_CountOfRightStackWindowIsOverMax()
         {
-            WindowTilerDividerBugn windowTiler = new WindowTilerDividerBugn();
+            WindowTilerBugn windowTiler = new WindowTilerBugn();
             windowTiler.percentOfLeftColumn = 0.7;
             windowTiler.maxCountOfWindowOfRightColumn = 4;
 

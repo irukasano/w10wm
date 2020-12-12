@@ -66,5 +66,18 @@ namespace windows10windowManager.Window
 
         }
 
+        public override int PushWindowInfo(List<WindowInfoWithHandle> windowInfos, WindowInfoWithHandle windowInfoWithHandle)
+        {
+            // 集中モードの場合は、新規ウィンドウは先頭ではない（先頭は集中対象のウィンドウだから）
+            // なのでその次の位置に新規ウィンドウを挿入する
+            int targetIndex = 0;
+            if ( windowInfos.Count > 0)
+            {
+                targetIndex = 1;
+            }
+            windowInfos.Insert(targetIndex, windowInfoWithHandle);
+            return targetIndex;
+        }
+
     }
 }
