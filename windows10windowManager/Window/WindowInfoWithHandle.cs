@@ -239,7 +239,7 @@ namespace windows10windowManager.Window
                 AttachThreadInput(thisThread, foreThread, true);
             }
 
-            SetForegroundWindow(this.windowHandle);
+            //SetForegroundWindow(this.windowHandle);
             BringWindowToTop(hWnd);
 
             if (foreThread != thisThread)

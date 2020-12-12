@@ -53,13 +53,14 @@
             this.toolStripMenuItem1,
             this.ToolStripMenuItemExit});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(255, 164);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(255, 186);
             // 
             // FToolStripMenuItemTile4Window
             // 
             this.FToolStripMenuItemTile4Window.Name = "FToolStripMenuItemTile4Window";
             this.FToolStripMenuItemTile4Window.Size = new System.Drawing.Size(254, 22);
             this.FToolStripMenuItemTile4Window.Text = "ウィンドウを４分割表示する(&F)";
+            this.FToolStripMenuItemTile4Window.ToolTipText = "ウィンドウを上下左右に同サイズで４分割表示します。";
             this.FToolStripMenuItemTile4Window.Click += new System.EventHandler(this.FToolStripMenuItemTile4Window_Click);
             // 
             // FToolStripMenuItemTileBugn
@@ -67,6 +68,7 @@
             this.FToolStripMenuItemTileBugn.Name = "FToolStripMenuItemTileBugn";
             this.FToolStripMenuItemTileBugn.Size = new System.Drawing.Size(254, 22);
             this.FToolStripMenuItemTileBugn.Text = "ウィンドウをBug.n風タイル表示する(&B)";
+            this.FToolStripMenuItemTileBugn.ToolTipText = "左側にメインウィンドウを大きく表示し、右側に複数のウィンドウを小さく表示します。";
             this.FToolStripMenuItemTileBugn.Click += new System.EventHandler(this.FToolStripMenuItemTileBugn_Click);
             // 
             // FToolStripMenuItemTileMdi
@@ -74,6 +76,7 @@
             this.FToolStripMenuItemTileMdi.Name = "FToolStripMenuItemTileMdi";
             this.FToolStripMenuItemTileMdi.Size = new System.Drawing.Size(254, 22);
             this.FToolStripMenuItemTileMdi.Text = "ウィンドウをMDI表示する(&M)";
+            this.FToolStripMenuItemTileMdi.ToolTipText = "MDIのようにすべてのウィンドウを一定サイズにして重ねて表示します。";
             this.FToolStripMenuItemTileMdi.Click += new System.EventHandler(this.FToolStripMenuItemTileMdi_Click);
             // 
             // FToolStripMenuItemTileFullMonitor
@@ -81,6 +84,7 @@
             this.FToolStripMenuItemTileFullMonitor.Name = "FToolStripMenuItemTileFullMonitor";
             this.FToolStripMenuItemTileFullMonitor.Size = new System.Drawing.Size(254, 22);
             this.FToolStripMenuItemTileFullMonitor.Text = "ウィンドウを全画面表示する(&X)";
+            this.FToolStripMenuItemTileFullMonitor.ToolTipText = "すべてのウィンドウを全画面表示します。";
             this.FToolStripMenuItemTileFullMonitor.Click += new System.EventHandler(this.FToolStripMenuItemTileFullMonitor_Click);
             // 
             // FToolStripMenuItemTileConcentration
@@ -88,6 +92,7 @@
             this.FToolStripMenuItemTileConcentration.Name = "FToolStripMenuItemTileConcentration";
             this.FToolStripMenuItemTileConcentration.Size = new System.Drawing.Size(254, 22);
             this.FToolStripMenuItemTileConcentration.Text = "ウィンドウを集中モード表示する(&C)";
+            this.FToolStripMenuItemTileConcentration.ToolTipText = "１番目のウィンドウを全画面表示し、それ以外は右下に寄せてある程度の大きさのウィンドウで表示します。";
             this.FToolStripMenuItemTileConcentration.Click += new System.EventHandler(this.FToolStripMenuItemTileConcentration_Click);
             // 
             // FToolStripMenuItemTileNone

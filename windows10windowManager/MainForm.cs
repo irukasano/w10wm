@@ -225,6 +225,13 @@ namespace windows10windowManager
                 p.X = monitorInfo.monitorRect.left + 100;
                 p.Y = monitorInfo.monitorRect.top + 100;
 
+                /*
+                var mainForm = new MainForm();
+                mainForm.StartPosition = FormStartPosition.Manual;
+                mainForm.DesktopLocation = p;
+                mainForm.Show();
+                */
+
                 this.contextMenuStrip1.Show(p);
                 this.contextMenuStrip1.Focus();
                 return false;
