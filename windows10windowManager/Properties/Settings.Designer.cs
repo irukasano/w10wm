@@ -22,59 +22,5 @@ namespace windows10windowManager.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int Window_WindowManager0_WindowTilingType {
-            get {
-                return ((int)(this["Window_WindowManager0_WindowTilingType"]));
-            }
-            set {
-                this["Window_WindowManager0_WindowTilingType"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int Window_WindowManager1_WindowTilingType {
-            get {
-                return ((int)(this["Window_WindowManager1_WindowTilingType"]));
-            }
-            set {
-                this["Window_WindowManager1_WindowTilingType"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int Window_WindowManager2_WindowTilingType {
-            get {
-                return ((int)(this["Window_WindowManager2_WindowTilingType"]));
-            }
-            set {
-                this["Window_WindowManager2_WindowTilingType"] = value;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.65")]
-        public double Window_WindowTilerBugn_percentOfLeftColumn {
-            get {
-                return ((double)(this["Window_WindowTilerBugn_percentOfLeftColumn"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4")]
-        public int Window_WindowTilerBugn_maxCountOfWindowOfRightColumn {
-            get {
-                return ((int)(this["Window_WindowTilerBugn_maxCountOfWindowOfRightColumn"]));
-            }
-        }
     }
 }
