@@ -225,13 +225,6 @@ namespace windows10windowManager
                 p.X = monitorInfo.monitorRect.left + 100;
                 p.Y = monitorInfo.monitorRect.top + 100;
 
-                /*
-                var mainForm = new MainForm();
-                mainForm.StartPosition = FormStartPosition.Manual;
-                mainForm.DesktopLocation = p;
-                mainForm.Show();
-                */
-
                 this.contextMenuStrip1.Show(p);
                 this.contextMenuStrip1.Focus();
                 return false;
@@ -250,7 +243,7 @@ namespace windows10windowManager
         private void TraceWindow_ShowEvent(object sender, TraceWindow.OriginalWinEventArg w)
         {
             Logger.DebugWindowInfo("Window Show", w.WindowInfo);
-            var windowManager = this.monitorManager.PushWindowInfo(w.WindowInfo);
+            var windowManager = this.monitorManager.PushNewWindowInfo(w.WindowInfo);
             this.ArrangeWindows();
         }
 
@@ -292,7 +285,7 @@ namespace windows10windowManager
 
                 w.WindowInfo.ComputeMonitorHandle();
                 Logger.DebugWindowInfo("Add To NewWindowManager", w.WindowInfo);
-                var windowManager = this.monitorManager.PushWindowInfo(w.WindowInfo);
+                var windowManager = this.monitorManager.PushNewWindowInfo(w.WindowInfo);
                 this.monitorManager.SetCurrentWindowManagerIndexByMonitorHandle(w.WindowInfo.monitorHandle);
                 this.ArrangeWindows();
 

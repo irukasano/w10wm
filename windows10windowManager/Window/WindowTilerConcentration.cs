@@ -66,7 +66,7 @@ namespace windows10windowManager.Window
 
         }
 
-        public override int PushWindowInfo(List<WindowInfoWithHandle> windowInfos, WindowInfoWithHandle windowInfoWithHandle)
+        public override int PushNewWindowInfo(List<WindowInfoWithHandle> windowInfos, WindowInfoWithHandle windowInfoWithHandle)
         {
             // 集中モードの場合は、新規ウィンドウは先頭ではない（先頭は集中対象のウィンドウだから）
             // なのでその次の位置に新規ウィンドウを挿入する

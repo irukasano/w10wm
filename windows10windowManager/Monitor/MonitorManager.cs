@@ -245,6 +245,30 @@ namespace windows10windowManager.Monitor
                 (MonitorInfoWithHandle mi) => { return mi.monitorHandle == monitorHandle; });
         }
 
+
+        /**
+         * <summary>
+         * WindowInfoWithHandle をモニターのWindowManagerの先頭に追加する
+         * </summary>
+         */
+        public WindowManager PushNewWindowInfo(WindowInfoWithHandle windowInfoWithHandle)
+        {
+            // このウィンドウのモニターのウィンドウを管理する WindowManager が存在すれば
+            // これに追加して管理させる
+            var monitorHandle = windowInfoWithHandle.GetMonitorHandle();
+            var targetWindowManager = this.FindWindowManagerByMonitorHandle(monitorHandle);
+            if (targetWindowManager is null)
+            {
+                return this.GetCurrentMonitorWindowManager();
+            }
+            Logger.DebugWindowManager("windowManager of MonitorManager.PushNewWindowInfo", targetWindowManager);
+            Logger.DebugWindowInfo("windowInfo of MonitorManager.PushNewWindowInfo", windowInfoWithHandle);
+            this.SetCurrentWindowManagerIndexByMonitorHandle(monitorHandle);
+            targetWindowManager.PushNew(windowInfoWithHandle);
+            return targetWindowManager;
+        }
+
+
         /**
          * <summary>
          * WindowInfoWithHandle をモニターのWindowManagerの先頭に追加する
@@ -260,8 +284,8 @@ namespace windows10windowManager.Monitor
             {
                 return this.GetCurrentMonitorWindowManager();
             }
-            Logger.DebugWindowManager("windowManager of MonitorManager.InsertWindowInfo", targetWindowManager);
-            Logger.DebugWindowInfo("windowInfo of MonitorManager.InsertWindowInfo", windowInfoWithHandle);
+            Logger.DebugWindowManager("windowManager of MonitorManager.PushWindowInfo", targetWindowManager);
+            Logger.DebugWindowInfo("windowInfo of MonitorManager.PushWindowInfo", windowInfoWithHandle);
             this.SetCurrentWindowManagerIndexByMonitorHandle(monitorHandle);
             targetWindowManager.Push(windowInfoWithHandle);
             return targetWindowManager;

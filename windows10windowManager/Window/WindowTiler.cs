@@ -56,11 +56,11 @@ namespace windows10windowManager.Window
             return this.windowTiler.GetWindowRectOf(windowIndex);
         }
 
-        public static int PushWindowInfo(WindowTilingType windowTilingType, 
+        public static int PushNewWindowInfo(WindowTilingType windowTilingType, 
             List<WindowInfoWithHandle> windowInfos, WindowInfoWithHandle windowInfoWithHandle)
         {
             var windowTiler = WindowTiler.CreateWindowTilerInstance(windowTilingType);
-            return windowTiler.PushWindowInfo(windowInfos, windowInfoWithHandle);
+            return windowTiler.PushNewWindowInfo(windowInfos, windowInfoWithHandle);
         }
 
         /**

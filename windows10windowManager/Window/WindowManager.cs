@@ -64,19 +64,37 @@ namespace windows10windowManager.Window
             return windowInfos.Count();
         }
 
-        // ウィンドウリストの先頭に追加する
-        public void Push(WindowInfoWithHandle windowInfo)
+        /**
+         * <summary>
+         * 新規ウィンドウを WindowTilingType に基づいて先頭に追加する
+         * </summary>
+         */
+        public void PushNew(WindowInfoWithHandle windowInfo)
         {
-            // 集中モードの場合は 1、それ以外は 0 番目にウィンドウを挿入する
-            var pushedIndex = WindowTiler.PushWindowInfo(this.windowTilingType, this.windowInfos, windowInfo);
-            //this.windowInfos.Insert(0, windowInfo);
+            int pushedIndex = WindowTiler.PushNewWindowInfo(this.windowTilingType, this.windowInfos, windowInfo);
 
-            // 追加したらこれをカレントウィンドウにする
             this.currentWindowInfoIndex = pushedIndex;
         }
 
+        /**
+         * <summary>
+         * ウィンドウリストの先頭に追加する
+         * </summary>
+         */
+        public void Push(WindowInfoWithHandle windowInfo)
+        {
+            this.windowInfos.Insert(0, windowInfo);
 
-        // ウィンドウリストに追加する
+            // 追加したらこれをカレントウィンドウにする
+            this.currentWindowInfoIndex = 0;
+        }
+
+
+        /**
+         * <summary>
+         * ウィンドウリストに追加する
+         * </summary>
+         */
         public void Add(WindowInfoWithHandle windowInfo)
         {
             this.windowInfos.Add(windowInfo);
@@ -234,7 +252,7 @@ namespace windows10windowManager.Window
             return this.GetCurrentWindow();
         }
 
-        /**
+        /**m
          * <summary>
          * フォーカスするウィンドウをひとつ後に変更する
          * </summary>
