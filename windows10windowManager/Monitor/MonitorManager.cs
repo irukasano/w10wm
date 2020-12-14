@@ -44,7 +44,7 @@ namespace windows10windowManager.Monitor
             this.FindMonitors();
 
             // 渡された WindowHandles を渡し、モニターごとにWindowManagerで管理する
-            this.ManageWindowByMonitors(traceWindow.WindowInfos);
+            this.ManageWindowByMonitors(traceWindow.GetWindowInfos());
         }
 
         /**

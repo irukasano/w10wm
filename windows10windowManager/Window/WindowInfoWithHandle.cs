@@ -71,6 +71,10 @@ namespace windows10windowManager.Window
         private static extern uint GetWindowThreadProcessId(
             IntPtr hWnd, IntPtr ProcessId);
 
+        [DllImport("user32.dll")]
+        private static extern uint GetWindowThreadProcessId(
+            IntPtr hWnd, out uint ProcessId);
+
         [DllImport("kernel32.dll")]
         private static extern uint GetCurrentThreadId();
 
@@ -79,9 +83,25 @@ namespace windows10windowManager.Window
         private static extern bool AttachThreadInput(
             uint idAttach, uint idAttachTo, bool fAttach);
         
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern int GetWindowThreadProcessId(
-            IntPtr hWnd, out int lpdwProcessId);
+        [DllImport("kernel32.dll")]
+        private static extern IntPtr OpenProcess(
+            int dwDesiredAccess, 
+            bool bInheritHandle, 
+            uint dwProcessId
+        );
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool QueryFullProcessImageName(
+            [In] IntPtr hProcess, [
+            In] int dwFlags, 
+            [Out] StringBuilder lpExeName, 
+            ref int lpdwSize
+        );
+
+        [DllImport("kernel32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool CloseHandle(IntPtr hObject);
+
         #endregion
 
         #region Field
@@ -98,7 +118,6 @@ namespace windows10windowManager.Window
 
         public IntPtr monitorHandle { get; private set; }
 
-        public int processId { get; private set; }
         #endregion
 
         public WindowInfoWithHandle(IntPtr hWnd)
@@ -124,10 +143,6 @@ namespace windows10windowManager.Window
                 (dwmRect.bottom - dwmRect.top);
 
             this.windowTitle = GetCurrentWindowTitle(hWnd);
-
-            int processId;
-            GetWindowThreadProcessId(hWnd, out processId);
-            this.processId = processId;
 
             this.ComputeMonitorHandle();
         }
@@ -176,6 +191,34 @@ namespace windows10windowManager.Window
         {
             var rect = this.position;
             return new WindowRect(rect.top, rect.bottom, rect.left, rect.right);
+        }
+
+        /**
+         * <summary>
+         * このウィンドウのモジュール名フルパスを取得する
+         * </summary>
+         */
+        public string ComputeWindowModuleFileName()
+        {
+            int nChars = 1024;
+            uint processId;
+            StringBuilder filename = new StringBuilder(nChars);
+
+            if ( this.windowHandle == IntPtr.Zero)
+            {
+                return null;
+            }
+
+            GetWindowThreadProcessId(this.windowHandle, out processId);
+            IntPtr hProcess = OpenProcess(0x0400 | 0x0010, false, processId);
+            if ( hProcess == IntPtr.Zero)
+            {
+                return null;
+            }
+
+            QueryFullProcessImageName(hProcess, 0, filename, ref nChars);
+            CloseHandle(hProcess);
+            return filename.ToString();
         }
 
         /**

@@ -58,6 +58,17 @@ namespace windows10windowManager.Util
 
         /**
          * <summary>
+         * ログ出力。メッセージ、および List<string>を改行で区切ってログ出力する
+         * </summary>
+         */
+        public static void WriteLine(string message, List<string> messages)
+        {
+            var messagesString = string.Join("\r\n", messages.ToArray());
+            Logger.WriteLine($"{message}\r\n{messagesString}");
+        }
+
+        /**
+         * <summary>
          * Exception用出力
          * </summary>
          */

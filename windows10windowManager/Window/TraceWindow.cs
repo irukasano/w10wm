@@ -105,12 +105,17 @@ namespace windows10windowManager.Window
         #endregion
 
         #region Field
-        public List<WindowInfoWithHandle> WindowInfos { get; protected set; } = new List<WindowInfoWithHandle>();
-        protected WindowInfoWithHandle MouseDraggingWindowHandle { get; set; }
+        protected List<WindowInfoWithHandle> windowInfos { get; set; } = new List<WindowInfoWithHandle>();
+        protected WindowInfoWithHandle mouseDraggingWindowHandle { get; set; }
+
+        protected List<string> denyExePaths = null;
         #endregion
 
         public TraceWindow()
         {
+            this.denyExePaths = SettingManager.GetStringList("Window_TraceWindow_Deny_ExePath");
+            Logger.WriteLine("Window_TraceWindow_Deny_ExePath : ", this.denyExePaths);
+
             EnumWindows(EnumerateWindows, IntPtr.Zero);
         }
 
@@ -120,12 +125,12 @@ namespace windows10windowManager.Window
             var windowLong = GetWindowLong(hWnd, GWL_STYLE);
             var windowTitle = windowInfo.windowTitle;
 
-            if (!this.WindowInfos.Contains(windowInfo))
+            if (!this.windowInfos.Contains(windowInfo))
             {
-                if ( this.IsValidWindow(hWnd, windowLong, windowTitle))
+                if ( this.IsValidWindow(windowInfo, windowLong))
                 {
-                    Logger.WriteLine("TraceWindows.EnumerateWindows ADD:  : {windowTitle} : {windowLongString}");
-                    this.WindowInfos.Add(windowInfo);
+                    Logger.WriteLine("TraceWindows.EnumerateWindows ADD: (hWnd) {windowTitle} : {windowLongString}");
+                    this.windowInfos.Add(windowInfo);
                     OnAddEvent(windowInfo);
                 }
             }
@@ -133,12 +138,17 @@ namespace windows10windowManager.Window
             return true;
         }
 
+        public List<WindowInfoWithHandle> GetWindowInfos()
+        {
+            return this.windowInfos;
+        }
+
         /**
          * <summary>
          * 対象のウィンドウが本アプリケーションの管理下に置かれるべきウィンドウかどうか判定する
          * </summary>
          */
-        protected bool IsValidWindow(IntPtr hWnd, UInt32 windowLong, string windowTitle)
+        protected bool IsValidWindow(WindowInfoWithHandle windowInfoWithHandle, UInt32 windowLong)
         {
             var isVisible = (windowLong & WS_VISIBLE) == WS_VISIBLE;
             var isOverlappedwindow = (windowLong & WS_OVERLAPPEDWINDOW) == WS_OVERLAPPEDWINDOW;
@@ -174,13 +184,36 @@ namespace windows10windowManager.Window
              * ﾃﾞｰﾀﾍﾞｰｽを開く - KeePass.kdbx : 16c80000
              */
 
+            var moduleFileName = windowInfoWithHandle.ComputeWindowModuleFileName();
+            var hWnd = windowInfoWithHandle.windowHandle;
+            var windowTitle = windowInfoWithHandle.windowTitle;
             var windowLongString = windowLong.ToString("x8");
-            Logger.WriteLine($"TraceWindows.IsValidWindow : ({hWnd}){windowTitle} : {windowLongString}");
 
-            return (isVisible && 
-                (isOverlappedwindow || isTypeVscode) && 
-                !isUwp && 
-                windowTitle != null);
+            var isValid = (isVisible &&
+                (isOverlappedwindow || isTypeVscode) &&
+                !isUwp &&
+                windowTitle != null && 
+                !this.IsDenyModuleFileName(moduleFileName)
+            );
+            var isValidString = isValid.ToString();
+
+            Logger.WriteLine($"TraceWindows.IsValidWindow = {isValidString} : ({hWnd}){windowTitle}(path={moduleFileName}) : {windowLongString}");
+
+            return isValid;
+        }
+
+        /**
+         * <summary>
+         * 指定されたパスの実行ファイルが、拒否リストに含まれていれば True を戻す
+         * 実行ファイル名はフルパスに対する後方一致で含まれていると見なす
+         * </summary>
+         */
+        protected bool IsDenyModuleFileName(string moduleFileName)
+        {
+            int foundIndex = this.denyExePaths.FindIndex(
+                denyExePath => moduleFileName.EndsWith(denyExePath));
+
+            return foundIndex >= 0;
         }
 
         public override void HookProcedure(IntPtr hWinEventHook, uint eventType, IntPtr hWnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
@@ -207,28 +240,28 @@ namespace windows10windowManager.Window
                 return;
             }
 
-            if (! this.WindowInfos.Contains(needleWindowInfo))
+            if (! this.windowInfos.Contains(needleWindowInfo))
             {
-                if (this.IsValidWindow(hWnd, windowLong, windowTitle) &&
+                if (this.IsValidWindow(needleWindowInfo, windowLong) &&
                     (eventName == EventName.EVENT_OBJECT_SHOW || 
                     eventName == EventName.EVENT_OBJECT_NAMECHANGE))
                 {
                     Logger.WriteLine($"TraceWindows.HookProcedure OnAdd : ({hWnd}){windowTitle} : {windowLongString}");
-                    this.WindowInfos.Add(needleWindowInfo);
+                    this.windowInfos.Add(needleWindowInfo);
                     OnAddEvent(needleWindowInfo);
                     OnShowEvent(needleWindowInfo);
                 }
 
             } else
             {
-                var windowInfo = this.WindowInfos.Find(
+                var windowInfo = this.windowInfos.Find(
                     (WindowInfoWithHandle wi) => { return wi.windowHandle == needleWindowInfo.windowHandle; });
 
                 if (eventName == EventName.EVENT_OBJECT_DESTROY)
                 {
                     // Window がなくなった
                     Logger.WriteLine($"TraceWindows.HookProcedure OnDestroy : ({hWnd}){windowTitle} : {windowLongString}");
-                    this.WindowInfos.Remove(windowInfo);
+                    this.windowInfos.Remove(windowInfo);
                     OnRemoveEvent(windowInfo);
                     OnDestroyEvent(windowInfo);
                 }
@@ -236,7 +269,7 @@ namespace windows10windowManager.Window
                 {
                     // Window が HIDDEN
                     Logger.WriteLine($"TraceWindows.HookProcedure OnHide : ({hWnd}){windowTitle} : {windowLongString}");
-                    this.WindowInfos.Remove(windowInfo);
+                    this.windowInfos.Remove(windowInfo);
                     OnRemoveEvent(windowInfo);
                     OnHideEvent(windowInfo);
                 }
@@ -244,16 +277,16 @@ namespace windows10windowManager.Window
                 {
                     // Window がマウスでドラッグ開始
                     Logger.WriteLine($"TraceWindows.HookProcedure OnMouseDragStart : ({hWnd}){windowTitle} : {windowLongString}");
-                    MouseDraggingWindowHandle = windowInfo;
+                    this.mouseDraggingWindowHandle = windowInfo;
                     OnMouseDragStartEvent(windowInfo);
                 } 
                 else if ( eventName == EventName.EVENT_SYSTEM_MOVESIZEEND)
                 {
                     // Window がマウスでドラッグ終了
-                    if (MouseDraggingWindowHandle.Equals(windowInfo))
+                    if (this.mouseDraggingWindowHandle.Equals(windowInfo))
                     {
                         Logger.WriteLine($"TraceWindows.HookProcedure OnMouseDragEnd : ({hWnd}){windowTitle} : {windowLongString}");
-                        MouseDraggingWindowHandle = null;
+                        this.mouseDraggingWindowHandle = null;
                         OnMouseDragEndEvent(windowInfo);
                         OnLocationChangeEvent(windowInfo);
                     }
@@ -261,7 +294,7 @@ namespace windows10windowManager.Window
                 else if ( eventName == EventName.EVENT_OBJECT_LOCATIONCHANGE)
                 {
                     // ショートカットキーだけで場所移動
-                    if (MouseDraggingWindowHandle == null)
+                    if (this.mouseDraggingWindowHandle == null)
                     {
                         Logger.WriteLine($"TraceWindows.HookProcedure OnLocationChange : ({hWnd}){windowTitle} : {windowLongString}");
                         OnLocationChangeEvent(windowInfo);
