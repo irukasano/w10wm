@@ -29,9 +29,17 @@ namespace windows10windowManager
         {
             InitializeComponent();
 
-            this.InitializeHooks();
+            try
+            {
+                this.InitializeHooks();
 
-            this.InitializeTaskTray();
+                this.InitializeTaskTray();
+
+            } catch ( Exception ex)
+            {
+                Logger.Exception(ex);
+                throw ex;
+            }
         }
 
         private void InitializeTaskTray()
@@ -67,12 +75,13 @@ namespace windows10windowManager
             this.traceWindow.ShowEvent += TraceWindow_ShowEvent;
             this.traceWindow.HideEvent += TraceWindow_HideEvent;
             this.traceWindow.LocationChangeEvent += TraceWindow_LocationChangeEvent;
+            this.traceWindow.ActivateEvent += TraceWindow_ActivateEvent;
             this.traceWindow.Hook();
 
             this.monitorManager = new MonitorManager(this.traceWindow);
         }
 
-        private void Exit_Click(object sender, EventArgs e)
+        private void Terminate()
         {
             this.traceWindow.UnHook();
             this.interceptKeyboard.UnHook();
@@ -80,52 +89,105 @@ namespace windows10windowManager
             Application.Exit();
         }
 
+        private void Exit_Click(object sender, EventArgs e)
+        {
+            this.Terminate();
+        }
+
         private void FToolStripMenuItemTile4Window_Click(object sender, EventArgs e)
         {
-            this.monitorManager.GetCurrentMonitorWindowManager().SaveWindowTilingType(
-                this.monitorManager.GetCurrentWindowManagerIndex(),
-                WindowTilingType.FourDivided);
-            this.ArrangeWindows();
+            try
+            {
+                this.monitorManager.GetCurrentMonitorWindowManager().SaveWindowTilingType(
+                    this.monitorManager.GetCurrentWindowManagerIndex(),
+                    WindowTilingType.FourDivided);
+                this.ArrangeWindows();
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                throw ex;
+            }
         }
 
         private void FToolStripMenuItemTileBugn_Click(object sender, EventArgs e)
         {
-            this.monitorManager.GetCurrentMonitorWindowManager().SaveWindowTilingType(
-                this.monitorManager.GetCurrentWindowManagerIndex(),
-                WindowTilingType.Bugn);
-            this.ArrangeWindows();
+            try
+            {
+                this.monitorManager.GetCurrentMonitorWindowManager().SaveWindowTilingType(
+                    this.monitorManager.GetCurrentWindowManagerIndex(),
+                    WindowTilingType.Bugn);
+                this.ArrangeWindows();
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                throw ex;
+            }
         }
 
         private void FToolStripMenuItemTileMdi_Click(object sender, EventArgs e)
         {
-            this.monitorManager.GetCurrentMonitorWindowManager().SaveWindowTilingType(
-                this.monitorManager.GetCurrentWindowManagerIndex(),
-                WindowTilingType.Mdi);
-            this.ArrangeWindows();
+            try
+            {
+                this.monitorManager.GetCurrentMonitorWindowManager().SaveWindowTilingType(
+                    this.monitorManager.GetCurrentWindowManagerIndex(),
+                    WindowTilingType.Mdi);
+                this.ArrangeWindows();
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                throw ex;
+            }
         }
 
         private void FToolStripMenuItemTileFullMonitor_Click(object sender, EventArgs e)
         {
-            this.monitorManager.GetCurrentMonitorWindowManager().SaveWindowTilingType(
-                this.monitorManager.GetCurrentWindowManagerIndex(),
-                WindowTilingType.Maximize);
-            this.ArrangeWindows();
+            try
+            {
+                this.monitorManager.GetCurrentMonitorWindowManager().SaveWindowTilingType(
+                    this.monitorManager.GetCurrentWindowManagerIndex(),
+                    WindowTilingType.Maximize);
+                this.ArrangeWindows();
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                throw ex;
+            }
         }
 
         private void FToolStripMenuItemTileConcentration_Click(object sender, EventArgs e)
         {
-            this.monitorManager.GetCurrentMonitorWindowManager().SaveWindowTilingType(
-                this.monitorManager.GetCurrentWindowManagerIndex(),
-                WindowTilingType.Concentration);
-            this.ArrangeWindows();
+            try
+            {
+                this.monitorManager.GetCurrentMonitorWindowManager().SaveWindowTilingType(
+                    this.monitorManager.GetCurrentWindowManagerIndex(),
+                    WindowTilingType.Concentration);
+                this.ArrangeWindows();
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                throw ex;
+            }
         }
 
         private void FToolStripMenuItemTileNone_Click(object sender, EventArgs e)
         {
-            this.monitorManager.GetCurrentMonitorWindowManager().SaveWindowTilingType(
-                this.monitorManager.GetCurrentWindowManagerIndex(),
-                WindowTilingType.None);
-            this.ArrangeWindows();
+            try
+            {
+                this.monitorManager.GetCurrentMonitorWindowManager().SaveWindowTilingType(
+                    this.monitorManager.GetCurrentWindowManagerIndex(),
+                    WindowTilingType.None);
+                this.ArrangeWindows();
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                throw ex;
+            }
         }
 
         /**
@@ -137,99 +199,107 @@ namespace windows10windowManager
         {
             //Logger.WriteLine("InterceptKeyboard_KeyDownEvent : " + e.ToString());
 
-            int[] modifierLWindows = new int[] { (int)OriginalKey.LeftWindows };
-            int[] modifierLShiftLWindows = new int[] { (int)OriginalKey.LeftWindows, (int)OriginalKey.LeftShift };
-            int[] modifierRShiftLWindows = new int[] { (int)OriginalKey.LeftWindows, (int)OriginalKey.LeftShift };
+            try
+            {
+                int[] modifierLWindows = new int[] { (int)OriginalKey.LeftWindows };
+                int[] modifierLShiftLWindows = new int[] { (int)OriginalKey.LeftWindows, (int)OriginalKey.LeftShift };
+                int[] modifierRShiftLWindows = new int[] { (int)OriginalKey.LeftWindows, (int)OriginalKey.LeftShift };
 
-            if (e.Equals(OriginalKey.J, modifierLWindows))
-            {
-                this.MoveCurrentFocusNext();
-                return false;
-            }
-            else if (e.Equals(OriginalKey.K, modifierLWindows))
-            {
-                this.MoveCurrentFocusPrevious();
-                return false;
-            }
-            else if (e.Equals(OriginalKey.U, modifierLWindows))
-            {
-                this.MoveCurrentFocusTop();
-                return false;
-            }
-            else if (e.Equals(OriginalKey.M, modifierLWindows))
-            {
-                this.MoveCurrentFocusBottom();
-                return false;
-            }
-            else if (e.Equals(OriginalKey.J, modifierLShiftLWindows) || e.Equals(OriginalKey.J, modifierRShiftLWindows))
-            {
-                this.SetWindowNext();
-                return false;
-            }
-            else if (e.Equals(OriginalKey.K, modifierLShiftLWindows) || e.Equals(OriginalKey.K, modifierRShiftLWindows))
-            {
-                this.SetWindowPrevious();
-                return false;
-            }
-            else if (e.Equals(OriginalKey.U, modifierLShiftLWindows) || e.Equals(OriginalKey.U, modifierRShiftLWindows))
-            {
-                this.SetWindowTop();
-                return false;
-            }
-            else if (e.Equals(OriginalKey.M, modifierLShiftLWindows) || e.Equals(OriginalKey.M, modifierRShiftLWindows))
-            {
-                this.SetWindowBottom();
-                return false;
-            }
-            else if (e.Equals(OriginalKey.X, modifierLWindows))
-            {
-                this.CloseCurrentWindow();
-                return false;
-            }
-            else if (e.Equals(OriginalKey.C, modifierLWindows))
-            {
-                this.HighlightActiveMonitor();
-                return false;
-            }
-            else if (e.Equals(OriginalKey.Period, modifierLWindows))
-            {
-                this.MoveCurrentFocusPreviousMonitor();
-                return false;
-            }
-            else if (e.Equals(OriginalKey.Comma, modifierLWindows))
-            {
-                this.MoveCurrentFocusNextMonitor();
-                return false;
-            }
-            else if (e.Equals(OriginalKey.F1, modifierLWindows))
-            {
-                this.ActivateMonitorN(0);
-                return false;
-            }
-            else if (e.Equals(OriginalKey.F2, modifierLWindows))
-            {
-                this.ActivateMonitorN(1);
-                return false;
-            }
-            else if (e.Equals(OriginalKey.F3, modifierLWindows))
-            {
-                this.ActivateMonitorN(2);
-                return false;
-            }
-            else if (e.Equals(OriginalKey.O, modifierLWindows))
-            {
-                // 右クリックメニューを表示する
-                var monitorInfo = this.monitorManager.GetCurrentMonitor();
+                if (e.Equals(OriginalKey.J, modifierLWindows))
+                {
+                    this.MoveCurrentFocusNext();
+                    return false;
+                }
+                else if (e.Equals(OriginalKey.K, modifierLWindows))
+                {
+                    this.MoveCurrentFocusPrevious();
+                    return false;
+                }
+                else if (e.Equals(OriginalKey.U, modifierLWindows))
+                {
+                    this.MoveCurrentFocusTop();
+                    return false;
+                }
+                else if (e.Equals(OriginalKey.M, modifierLWindows))
+                {
+                    this.MoveCurrentFocusBottom();
+                    return false;
+                }
+                else if (e.Equals(OriginalKey.J, modifierLShiftLWindows) || e.Equals(OriginalKey.J, modifierRShiftLWindows))
+                {
+                    this.SetWindowNext();
+                    return false;
+                }
+                else if (e.Equals(OriginalKey.K, modifierLShiftLWindows) || e.Equals(OriginalKey.K, modifierRShiftLWindows))
+                {
+                    this.SetWindowPrevious();
+                    return false;
+                }
+                else if (e.Equals(OriginalKey.U, modifierLShiftLWindows) || e.Equals(OriginalKey.U, modifierRShiftLWindows))
+                {
+                    this.SetWindowTop();
+                    return false;
+                }
+                else if (e.Equals(OriginalKey.M, modifierLShiftLWindows) || e.Equals(OriginalKey.M, modifierRShiftLWindows))
+                {
+                    this.SetWindowBottom();
+                    return false;
+                }
+                else if (e.Equals(OriginalKey.X, modifierLWindows))
+                {
+                    this.CloseCurrentWindow();
+                    return false;
+                }
+                else if (e.Equals(OriginalKey.C, modifierLWindows))
+                {
+                    this.HighlightActiveMonitor();
+                    return false;
+                }
+                else if (e.Equals(OriginalKey.Period, modifierLWindows))
+                {
+                    this.MoveCurrentFocusPreviousMonitor();
+                    return false;
+                }
+                else if (e.Equals(OriginalKey.Comma, modifierLWindows))
+                {
+                    this.MoveCurrentFocusNextMonitor();
+                    return false;
+                }
+                else if (e.Equals(OriginalKey.F1, modifierLWindows))
+                {
+                    this.ActivateMonitorN(0);
+                    return false;
+                }
+                else if (e.Equals(OriginalKey.F2, modifierLWindows))
+                {
+                    this.ActivateMonitorN(1);
+                    return false;
+                }
+                else if (e.Equals(OriginalKey.F3, modifierLWindows))
+                {
+                    this.ActivateMonitorN(2);
+                    return false;
+                }
+                else if (e.Equals(OriginalKey.O, modifierLWindows))
+                {
+                    // 右クリックメニューを表示する
+                    var monitorInfo = this.monitorManager.GetCurrentMonitor();
 
-                System.Drawing.Point p = new System.Drawing.Point();
-                p.X = monitorInfo.monitorRect.left + 100;
-                p.Y = monitorInfo.monitorRect.top + 100;
+                    System.Drawing.Point p = new System.Drawing.Point();
+                    p.X = monitorInfo.monitorRect.left + 100;
+                    p.Y = monitorInfo.monitorRect.top + 100;
 
-                this.contextMenuStrip1.Show(p);
-                this.contextMenuStrip1.Focus();
-                return false;
+                    this.contextMenuStrip1.Show(p);
+                    this.contextMenuStrip1.Focus();
+                    return false;
+                }
+
             }
-
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                throw ex;
+            }
             return true;
         }
 
@@ -242,9 +312,17 @@ namespace windows10windowManager
          */
         private void TraceWindow_ShowEvent(object sender, TraceWindow.OriginalWinEventArg w)
         {
-            Logger.DebugWindowInfo("Window Show", w.WindowInfo);
-            var windowManager = this.monitorManager.PushNewWindowInfo(w.WindowInfo);
-            this.ArrangeWindows();
+            try
+            {
+                Logger.DebugWindowInfo("Window Show", w.WindowInfo);
+                var windowManager = this.monitorManager.PushNewWindowInfo(w.WindowInfo);
+                this.ArrangeWindows();
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                throw ex;
+            }
         }
 
 
@@ -256,9 +334,17 @@ namespace windows10windowManager
          */
         private void TraceWindow_HideEvent(object sender, TraceWindow.OriginalWinEventArg w)
         {
-            Logger.DebugWindowInfo("Window Hide", w.WindowInfo);
-            var windowManager = this.monitorManager.RemoveWindowInfo(w.WindowInfo);
-            this.ArrangeWindows();
+            try
+            {
+                Logger.DebugWindowInfo("Window Hide", w.WindowInfo);
+                var windowManager = this.monitorManager.RemoveWindowInfo(w.WindowInfo);
+                this.ArrangeWindows();
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                throw ex;
+            }
         }
 
         /**
@@ -272,26 +358,65 @@ namespace windows10windowManager
          */
         private void TraceWindow_LocationChangeEvent(object sender, TraceWindow.OriginalWinEventArg w)
         {
-            Logger.DebugWindowInfo("Window LocationChange", w.WindowInfo);
-            if (w.WindowInfo.MovedMonitor())
+            try
             {
-                Logger.DebugWindowInfo("Window MonitorChange", w.WindowInfo);
-                var beforeMovedMonitorHandle = w.WindowInfo.GetMonitorHandle();
-                var beforeMovedWindowManager = this.monitorManager.FindWindowManagerByMonitorHandle(beforeMovedMonitorHandle);
+                Logger.DebugWindowInfo("Window LocationChange", w.WindowInfo);
+                if (w.WindowInfo.MovedMonitor())
+                {
+                    Logger.DebugWindowInfo("Window MonitorChange", w.WindowInfo);
+                    var beforeMovedMonitorHandle = w.WindowInfo.GetMonitorHandle();
+                    var beforeMovedWindowManager = this.monitorManager.FindWindowManagerByMonitorHandle(beforeMovedMonitorHandle);
 
-                Logger.DebugWindowInfo("Remove From BeforeMovedWindowManager", w.WindowInfo);
-                beforeMovedWindowManager.Remove(w.WindowInfo);
-                this.ArrangeWindows();
+                    Logger.DebugWindowInfo("Remove From BeforeMovedWindowManager", w.WindowInfo);
+                    beforeMovedWindowManager.Remove(w.WindowInfo);
+                    this.ArrangeWindows();
 
-                w.WindowInfo.ComputeMonitorHandle();
-                Logger.DebugWindowInfo("Add To NewWindowManager", w.WindowInfo);
-                var windowManager = this.monitorManager.PushNewWindowInfo(w.WindowInfo);
-                this.monitorManager.SetCurrentWindowManagerIndexByMonitorHandle(w.WindowInfo.monitorHandle);
-                this.ArrangeWindows();
+                    w.WindowInfo.ComputeMonitorHandle();
+                    Logger.DebugWindowInfo("Add To NewWindowManager", w.WindowInfo);
+                    var windowManager = this.monitorManager.PushNewWindowInfo(w.WindowInfo);
+                    this.monitorManager.SetCurrentWindowManagerIndexByMonitorHandle(w.WindowInfo.monitorHandle);
+                    this.ArrangeWindows();
 
-                // TODO フォーカスが移動先のモニターに移動してしまうが、元のモニターのほうがよいような気もする
+                    // TODO フォーカスが移動先のモニターに移動してしまうが、元のモニターのほうがよいような気もする
 
-                this.HighlightActiveMonitor();
+                    this.HighlightActiveMonitor();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                throw ex;
+            }
+        }
+
+        /**
+         * <summary>
+         * ウィンドウアクティヴ化イベントが発生したら
+         * カレントモニターのカレントウィンドウと等しいか確認し
+         * 異なればそのウィンドウをカレントウィンドウ、カレントモニターにする
+         * </summary>
+         */
+        private void TraceWindow_ActivateEvent(object sender, TraceWindow.OriginalWinEventArg w)
+        {
+            try
+            {
+                Logger.DebugWindowInfo("Window Activated", w.WindowInfo);
+
+                var currentWindowInfo = this.monitorManager.GetCurrentMonitorWindowManager().GetCurrentWindow();
+                var activatedWindowInfo = w.WindowInfo;
+
+                if (currentWindowInfo == null || currentWindowInfo.Equals(activatedWindowInfo))
+                {
+                    return;
+                }
+
+                // アクティヴ化されたウィンドウをカレントにして、そのウィンドウの所属モニターをカレントにする
+                this.monitorManager.ActivateWindowInfo(activatedWindowInfo);
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                throw ex;
             }
         }
 

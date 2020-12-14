@@ -245,6 +245,26 @@ namespace windows10windowManager.Monitor
                 (MonitorInfoWithHandle mi) => { return mi.monitorHandle == monitorHandle; });
         }
 
+        /**
+         * <summary>
+         * WindowInfoWithHandle をカレントモニター、カレントウィンドウにする
+         * </summary>
+         */
+        public void ActivateWindowInfo(WindowInfoWithHandle windowInfoWithHandle)
+        {
+            var monitorHandle = windowInfoWithHandle.GetMonitorHandle();
+            var targetWindowManager = this.FindWindowManagerByMonitorHandle(monitorHandle);
+            if (targetWindowManager is null)
+            {
+                return;
+            }
+            Logger.DebugWindowManager("windowManager of MonitorManager.ActivateWindowInfo", targetWindowManager);
+            Logger.DebugWindowInfo("windowInfo of MonitorManager.ActivateWindowInfo", windowInfoWithHandle);
+            this.SetCurrentWindowManagerIndexByMonitorHandle(monitorHandle);
+            targetWindowManager.SetCurrentWindowIndexByWindowInfo(windowInfoWithHandle);
+            return;
+
+        }
 
         /**
          * <summary>

@@ -100,6 +100,7 @@
             this.FToolStripMenuItemTileNone.Name = "FToolStripMenuItemTileNone";
             this.FToolStripMenuItemTileNone.Size = new System.Drawing.Size(254, 22);
             this.FToolStripMenuItemTileNone.Text = "ウィンドウをタイル表示しない(&N)";
+            this.FToolStripMenuItemTileNone.Visible = false;
             this.FToolStripMenuItemTileNone.Click += new System.EventHandler(this.FToolStripMenuItemTileNone_Click);
             // 
             // toolStripMenuItem1
@@ -111,7 +112,7 @@
             // 
             this.ToolStripMenuItemExit.Name = "ToolStripMenuItemExit";
             this.ToolStripMenuItemExit.Size = new System.Drawing.Size(254, 22);
-            this.ToolStripMenuItemExit.Text = "終了";
+            this.ToolStripMenuItemExit.Text = "終了(&Q)";
             this.ToolStripMenuItemExit.Click += new System.EventHandler(this.Exit_Click);
             // 
             // MainForm

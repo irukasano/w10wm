@@ -156,9 +156,23 @@ namespace windows10windowManager.Window
             return this.currentWindowInfoIndex;
         }
 
+
         public void SetCurrentWindowIndex(int windowIndex)
         {
+            Logger.WriteLine($"WindowManager.SetCurrentWindowIndex = {windowIndex}");
             this.currentWindowInfoIndex = windowIndex;
+        }
+
+        /**
+         * <summary>
+         * WindowInfowWithHandleをカレントウィンドウにする
+         * </summary>
+         */
+        public void SetCurrentWindowIndexByWindowInfo(WindowInfoWithHandle windowInfoWithHandle)
+        {
+            var index = this.windowInfos.FindIndex(
+                (WindowInfoWithHandle needleWindowInfo) => { return windowInfoWithHandle.Equals(needleWindowInfo); });
+            this.SetCurrentWindowIndex(index);
         }
 
         /**

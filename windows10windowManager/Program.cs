@@ -36,6 +36,7 @@ namespace windows10windowManager
             catch ( Exception ex)
             {
                 Logger.Exception(ex);
+                throw ex;
             }
             finally
             {

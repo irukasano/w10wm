@@ -99,6 +99,7 @@ namespace windows10windowManager.Window
         public event EventHandler ShowEvent;
         public event EventHandler DestroyEvent;
         public event EventHandler HideEvent;
+        public event EventHandler ActivateEvent;
         public event EventHandler MouseDragStartEvent;
         public event EventHandler MouseDragEndEvent;
         public event EventHandler LocationChangeEvent;
@@ -256,6 +257,10 @@ namespace windows10windowManager.Window
             {
                 var windowInfo = this.windowInfos.Find(
                     (WindowInfoWithHandle wi) => { return wi.windowHandle == needleWindowInfo.windowHandle; });
+                if ( windowInfo == null)
+                {
+                    return;
+                }
 
                 if (eventName == EventName.EVENT_OBJECT_DESTROY)
                 {
@@ -300,25 +305,13 @@ namespace windows10windowManager.Window
                         OnLocationChangeEvent(windowInfo);
                     }
                 }
+                else if (eventName == EventName.EVENT_SYSTEM_FOREGROUND)
+                {
+                    // Window がアクティヴになった
+                    Logger.WriteLine($"TraceWindows.HookProcedure OnActivate : ({hWnd}){windowTitle} : {windowLongString}");
+                    OnActivateEvent(windowInfo);
+                }
             }
-
-            /*
-            if (this.WindowInfos.Contains(needleWindowInfo))
-            {
-                // Debug.WriteLine(" - " + eventName + " : " + windowTitle);
-
-            }
-
-            Debug.WriteLine("----");
-            Debug.WriteLine("hWinEventHook:" + hWinEventHook);
-            Debug.WriteLine("eventType:"+eventName);
-            Debug.WriteLine("hwnd:" + hwnd);
-            Debug.WriteLine("title:" + GetCurrentWindowTitle(hwnd));0
-            Debug.WriteLine("idObject:" + idObject);
-            Debug.WriteLine("idChild:" + idChild);
-            Debug.WriteLine("dwEventThread:" + dwEventThread);
-            Debug.WriteLine("dwmsEventTime:" + dwmsEventTime);
-            */
         }
 
         protected void OnAddEvent(WindowInfoWithHandle windowInfo)
@@ -340,6 +333,10 @@ namespace windows10windowManager.Window
         protected void OnHideEvent(WindowInfoWithHandle windowInfo)
         {
             HideEvent?.Invoke(this, new OriginalWinEventArg(windowInfo));
+        }
+        protected void OnActivateEvent(WindowInfoWithHandle windowInfo)
+        {
+            ActivateEvent?.Invoke(this, new OriginalWinEventArg(windowInfo));
         }
         protected void OnMouseDragStartEvent(WindowInfoWithHandle windowInfo)
         {
