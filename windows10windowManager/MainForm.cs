@@ -405,7 +405,7 @@ namespace windows10windowManager
                 var currentWindowInfo = this.monitorManager.GetCurrentMonitorWindowManager().GetCurrentWindow();
                 var activatedWindowInfo = w.WindowInfo;
 
-                if (currentWindowInfo == null || currentWindowInfo.Equals(activatedWindowInfo))
+                if ((currentWindowInfo == null) || currentWindowInfo.Equals(activatedWindowInfo))
                 {
                     return;
                 }

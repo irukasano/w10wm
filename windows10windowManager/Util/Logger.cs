@@ -30,7 +30,7 @@ namespace windows10windowManager.Util
 
             var file = new FileTarget("file");
             file.Encoding = System.Text.Encoding.GetEncoding("utf-8");
-            file.Layout = "${longdate} [${threadid:padding=2}] [${uppercase:${level:padding=-5}}] ${message}${exception:format=ToString}";
+            file.Layout = "${longdate}[${threadid:padding=2}][${uppercase:${level:padding=-5}}] ${message}${exception:format=Message, Type, ToString:separator=*}";
             file.FileName = "${basedir}/logs/w10wm.log";
             file.ArchiveNumbering = ArchiveNumberingMode.Rolling;
             file.ArchiveFileName = "${basedir}/logs/archives/w10wm.log.{#}";
