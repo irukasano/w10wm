@@ -68,6 +68,10 @@ namespace windows10windowManager.Window
         private static extern bool IsIconic(IntPtr hWnd);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        [DllImport("user32.dll")]
         private static extern uint GetWindowThreadProcessId(
             IntPtr hWnd, IntPtr ProcessId);
 
@@ -239,7 +243,7 @@ namespace windows10windowManager.Window
         public void WindowClose()
         {
             var hWnd = this.windowHandle;
-            Logger.WriteLine($"WindowInfoWithHandle.ActivateWindow : hWnd={hWnd}");
+            Logger.WriteLine($"WindowInfoWithHandle.CloseWindow : hWnd={hWnd}");
             if (! hWnd.Equals(IntPtr.Zero))
             {
                 SendMessage(hWnd,
@@ -266,7 +270,7 @@ namespace windows10windowManager.Window
             }
             if (IsIconic(hWnd))
             {
-                return;
+                ShowWindow(hWnd, /* SW_RESTORE = */ 9);
             }
             IntPtr forehWnd = GetForegroundWindow();
             if (forehWnd == hWnd)

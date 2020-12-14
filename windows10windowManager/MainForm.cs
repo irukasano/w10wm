@@ -456,6 +456,7 @@ namespace windows10windowManager
             var windowInfo = windowManager.MoveCurrentFocusPrevious();
             if (windowInfo != null)
             {
+                this.ArrangeWindows();
                 windowInfo.ActivateWindow();
             }
         }
@@ -476,6 +477,7 @@ namespace windows10windowManager
             var windowInfo = windowManager.MoveCurrentFocusNext();
             if (windowInfo != null)
             {
+                this.ArrangeWindows();
                 windowInfo.ActivateWindow();
             }
         }
@@ -496,6 +498,7 @@ namespace windows10windowManager
             var windowInfo = windowManager.MoveCurrentFocusTop();
             if (windowInfo != null)
             {
+                this.ArrangeWindows();
                 windowInfo.ActivateWindow();
             }
         }
@@ -516,6 +519,7 @@ namespace windows10windowManager
             var windowInfo = windowManager.MoveCurrentFocusBottom();
             if (windowInfo != null)
             {
+                this.ArrangeWindows();
                 windowInfo.ActivateWindow();
             }
         }
