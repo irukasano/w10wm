@@ -190,6 +190,57 @@ namespace windows10windowManager
             }
         }
 
+        private void FToolStripMenuItemAddDenyExePath_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var activeWindowInfo = this.monitorManager.GetCurrentMonitorWindowManager().GetCurrentWindow();
+                if ( activeWindowInfo == null)
+                {
+                    return;
+                }
+                // アクティヴウィンドウの実行ファイル名を設定ファイルに記述
+                // アクティヴウィンドウを管理下から削除して整頓し直す
+                var activeWindowExePath = activeWindowInfo.ComputeWindowModuleFileName();
+                this.traceWindow.denyExePaths.Add(activeWindowExePath);
+                SettingManager.SaveStringList("Window_TraceWindow_Deny_ExePath", this.traceWindow.denyExePaths);
+                this.monitorManager.RemoveWindowInfo(activeWindowInfo);
+                this.ArrangeWindows();
+                this.monitorManager.ActivateWindow();
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                throw ex;
+            }
+        }
+
+        private void FToolStripMenuItemAddDenyWindowTitles_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var activeWindowInfo = this.monitorManager.GetCurrentMonitorWindowManager().GetCurrentWindow();
+                if (activeWindowInfo == null)
+                {
+                    return;
+                }
+                // アクティヴウィンドウのウィンドウタイトルを設定ファイルに記述
+                // アクティヴウィンドウを管理下から削除して整頓し直す
+                var activeWindowTitle = activeWindowInfo.windowTitle;
+                this.traceWindow.denyWindowTitles.Add(activeWindowTitle);
+                SettingManager.SaveStringList("Window_TraceWindow_Deny_WindowTitle", this.traceWindow.denyWindowTitles);
+                this.monitorManager.RemoveWindowInfo(activeWindowInfo);
+                this.ArrangeWindows();
+                this.monitorManager.ActivateWindow();
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                throw ex;
+            }
+        }
+
+
         /**
          * <summary>
          * ホットキーの定義
@@ -316,6 +367,7 @@ namespace windows10windowManager
             {
                 Logger.DebugWindowInfo("Window Show", w.WindowInfo);
                 var windowManager = this.monitorManager.PushNewWindowInfo(w.WindowInfo);
+                this.monitorManager.ActivateWindow();
                 this.ArrangeWindows();
             }
             catch (Exception ex)
@@ -338,6 +390,7 @@ namespace windows10windowManager
             {
                 Logger.DebugWindowInfo("Window Hide", w.WindowInfo);
                 var windowManager = this.monitorManager.RemoveWindowInfo(w.WindowInfo);
+                this.monitorManager.ActivateWindow();
                 this.ArrangeWindows();
             }
             catch (Exception ex)
@@ -652,15 +705,7 @@ namespace windows10windowManager
         {
             Logger.WriteLine($"ActivateMonitorN : {monitorNumber}");
             var windowManager = this.monitorManager.ActivateMonitorNWindowManager(monitorNumber);
-            if (windowManager is null)
-            {
-                return;
-            }
-            var windowInfo = windowManager.GetCurrentWindow();
-            if ( windowInfo != null)
-            {
-                windowInfo.ActivateWindow();
-            }
+            this.monitorManager.ActivateWindow();
             this.HighlightActiveMonitor();
         }
 
@@ -676,6 +721,7 @@ namespace windows10windowManager
 
         /**
          * <summary>
+         * 現在のアクティヴモニターをその整列方法に基づいて整列しなおす
          * </summary>
          */
         public void ArrangeWindows()
@@ -689,18 +735,6 @@ namespace windows10windowManager
                 /* monitorRect = */ monitorInfoWithHandle.monitorInfo.work);
             windowManager.ArrangeWindows(windowTiler);
         }
-
-
-        /**
-         * <summary>
-         * ウィンドウ移動イベントが発生したら
-         * 移動前モニターのWindowManagerから削除し
-         * 移動先モニターのWindowManagerに追加する
-         * 移動前、移動先両方を現在のモードで整列しなおす
-         * </summary>
-         */
-
-
 
     }
 }

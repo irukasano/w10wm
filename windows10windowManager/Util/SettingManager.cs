@@ -50,7 +50,13 @@ namespace windows10windowManager.Util
 
         public static void SaveString(string key, string value)
         {
-            configuration.AppSettings.Settings[key].Value = value;
+            if (SettingManager.ContainsKey(key))
+            {
+                configuration.AppSettings.Settings[key].Value = value;
+            } else
+            {
+                configuration.AppSettings.Settings.Add(key, value);
+            }
             configuration.Save();
         }
 

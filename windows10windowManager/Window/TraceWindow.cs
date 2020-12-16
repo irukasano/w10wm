@@ -109,13 +109,18 @@ namespace windows10windowManager.Window
         protected List<WindowInfoWithHandle> windowInfos { get; set; } = new List<WindowInfoWithHandle>();
         protected WindowInfoWithHandle mouseDraggingWindowHandle { get; set; }
 
-        protected List<string> denyExePaths = null;
+        public List<string> denyExePaths = null;
+
+        public List<string> denyWindowTitles = null;
         #endregion
 
         public TraceWindow()
         {
             this.denyExePaths = SettingManager.GetStringList("Window_TraceWindow_Deny_ExePath");
             Logger.WriteLine("Window_TraceWindow_Deny_ExePath : ", this.denyExePaths);
+
+            this.denyWindowTitles = SettingManager.GetStringList("Window_TraceWindow_Deny_WindowTitle");
+            Logger.WriteLine("Window_TraceWindow_Deny_WindowTitle : ", this.denyWindowTitles);
 
             EnumWindows(EnumerateWindows, IntPtr.Zero);
         }
@@ -194,7 +199,8 @@ namespace windows10windowManager.Window
                 (isOverlappedwindow || isTypeVscode) &&
                 !isUwp &&
                 windowTitle != null && 
-                !this.IsDenyModuleFileName(moduleFileName)
+                !this.IsDenyModuleFileName(moduleFileName) &&
+                !this.IsDenyWindowTitle(windowTitle)
             );
             var isValidString = isValid.ToString();
 
@@ -205,7 +211,7 @@ namespace windows10windowManager.Window
 
         /**
          * <summary>
-         * 指定されたパスの実行ファイルが、拒否リストに含まれていれば True を戻す
+         * 指定されたパスの実行ファイルが、拒否リスト(ExePath)に含まれていれば True を戻す
          * 実行ファイル名はフルパスに対する後方一致で含まれていると見なす
          * </summary>
          */
@@ -213,6 +219,20 @@ namespace windows10windowManager.Window
         {
             int foundIndex = this.denyExePaths.FindIndex(
                 denyExePath => moduleFileName.EndsWith(denyExePath));
+
+            return foundIndex >= 0;
+        }
+
+        /**
+         * <summary>
+         * 指定されたウィンドウタイトルが、拒否リスト(WindowTitle)に含まれていれば True を戻す
+         * ウィンドウタイトルは完全一致すれば True
+         * </summary>
+         */
+        protected bool IsDenyWindowTitle(string windowTitle)
+        {
+            int foundIndex = this.denyWindowTitles.FindIndex(
+                denyWindowTitle => windowTitle == denyWindowTitle);
 
             return foundIndex >= 0;
         }

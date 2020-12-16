@@ -247,6 +247,26 @@ namespace windows10windowManager.Monitor
 
         /**
          * <summary>
+         * カレントモニターのカレントウィンドウをアクティヴにする
+         * </summary>
+         */
+        public void ActivateWindow()
+        {
+            var targetWindowManager = this.GetCurrentMonitorWindowManager();
+            if ( targetWindowManager == null)
+            {
+                return;
+            }
+            var targetWindow = targetWindowManager.GetCurrentWindow();
+            if ( targetWindow == null)
+            {
+                return;
+            }
+            targetWindow.ActivateWindow();
+        }
+
+        /**
+         * <summary>
          * WindowInfoWithHandle をカレントモニター、カレントウィンドウにする
          * </summary>
          */
@@ -254,7 +274,7 @@ namespace windows10windowManager.Monitor
         {
             var monitorHandle = windowInfoWithHandle.GetMonitorHandle();
             var targetWindowManager = this.FindWindowManagerByMonitorHandle(monitorHandle);
-            if (targetWindowManager is null)
+            if (targetWindowManager == null)
             {
                 return;
             }

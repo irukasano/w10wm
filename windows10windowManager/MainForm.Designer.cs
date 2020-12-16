@@ -38,6 +38,10 @@
             this.FToolStripMenuItemTileNone = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolStripMenuItemExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.現在のウィンドウを管理下から常に除外ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.FToolStripMenuItemAddDenyExePath = new System.Windows.Forms.ToolStripMenuItem();
+            this.FToolStripMenuItemAddDenyWindowTitles = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -50,15 +54,17 @@
             this.FToolStripMenuItemTileFullMonitor,
             this.FToolStripMenuItemTileConcentration,
             this.FToolStripMenuItemTileNone,
+            this.toolStripMenuItem3,
+            this.現在のウィンドウを管理下から常に除外ToolStripMenuItem,
             this.toolStripMenuItem1,
             this.ToolStripMenuItemExit});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(255, 186);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(316, 214);
             // 
             // FToolStripMenuItemTile4Window
             // 
             this.FToolStripMenuItemTile4Window.Name = "FToolStripMenuItemTile4Window";
-            this.FToolStripMenuItemTile4Window.Size = new System.Drawing.Size(254, 22);
+            this.FToolStripMenuItemTile4Window.Size = new System.Drawing.Size(315, 22);
             this.FToolStripMenuItemTile4Window.Text = "ウィンドウを４分割表示する(&F)";
             this.FToolStripMenuItemTile4Window.ToolTipText = "ウィンドウを上下左右に同サイズで４分割表示します。";
             this.FToolStripMenuItemTile4Window.Click += new System.EventHandler(this.FToolStripMenuItemTile4Window_Click);
@@ -66,7 +72,7 @@
             // FToolStripMenuItemTileBugn
             // 
             this.FToolStripMenuItemTileBugn.Name = "FToolStripMenuItemTileBugn";
-            this.FToolStripMenuItemTileBugn.Size = new System.Drawing.Size(254, 22);
+            this.FToolStripMenuItemTileBugn.Size = new System.Drawing.Size(315, 22);
             this.FToolStripMenuItemTileBugn.Text = "ウィンドウをBug.n風タイル表示する(&B)";
             this.FToolStripMenuItemTileBugn.ToolTipText = "左側にメインウィンドウを大きく表示し、右側に複数のウィンドウを小さく表示します。";
             this.FToolStripMenuItemTileBugn.Click += new System.EventHandler(this.FToolStripMenuItemTileBugn_Click);
@@ -74,7 +80,7 @@
             // FToolStripMenuItemTileMdi
             // 
             this.FToolStripMenuItemTileMdi.Name = "FToolStripMenuItemTileMdi";
-            this.FToolStripMenuItemTileMdi.Size = new System.Drawing.Size(254, 22);
+            this.FToolStripMenuItemTileMdi.Size = new System.Drawing.Size(315, 22);
             this.FToolStripMenuItemTileMdi.Text = "ウィンドウをMDI表示する(&M)";
             this.FToolStripMenuItemTileMdi.ToolTipText = "MDIのようにすべてのウィンドウを一定サイズにして重ねて表示します。";
             this.FToolStripMenuItemTileMdi.Click += new System.EventHandler(this.FToolStripMenuItemTileMdi_Click);
@@ -82,7 +88,7 @@
             // FToolStripMenuItemTileFullMonitor
             // 
             this.FToolStripMenuItemTileFullMonitor.Name = "FToolStripMenuItemTileFullMonitor";
-            this.FToolStripMenuItemTileFullMonitor.Size = new System.Drawing.Size(254, 22);
+            this.FToolStripMenuItemTileFullMonitor.Size = new System.Drawing.Size(315, 22);
             this.FToolStripMenuItemTileFullMonitor.Text = "ウィンドウを全画面表示する(&X)";
             this.FToolStripMenuItemTileFullMonitor.ToolTipText = "すべてのウィンドウを全画面表示します。";
             this.FToolStripMenuItemTileFullMonitor.Click += new System.EventHandler(this.FToolStripMenuItemTileFullMonitor_Click);
@@ -90,7 +96,7 @@
             // FToolStripMenuItemTileConcentration
             // 
             this.FToolStripMenuItemTileConcentration.Name = "FToolStripMenuItemTileConcentration";
-            this.FToolStripMenuItemTileConcentration.Size = new System.Drawing.Size(254, 22);
+            this.FToolStripMenuItemTileConcentration.Size = new System.Drawing.Size(315, 22);
             this.FToolStripMenuItemTileConcentration.Text = "ウィンドウを集中モード表示する(&C)";
             this.FToolStripMenuItemTileConcentration.ToolTipText = "１番目のウィンドウを全画面表示し、それ以外は右下に寄せてある程度の大きさのウィンドウで表示します。";
             this.FToolStripMenuItemTileConcentration.Click += new System.EventHandler(this.FToolStripMenuItemTileConcentration_Click);
@@ -98,7 +104,7 @@
             // FToolStripMenuItemTileNone
             // 
             this.FToolStripMenuItemTileNone.Name = "FToolStripMenuItemTileNone";
-            this.FToolStripMenuItemTileNone.Size = new System.Drawing.Size(254, 22);
+            this.FToolStripMenuItemTileNone.Size = new System.Drawing.Size(315, 22);
             this.FToolStripMenuItemTileNone.Text = "ウィンドウをタイル表示しない(&N)";
             this.FToolStripMenuItemTileNone.Visible = false;
             this.FToolStripMenuItemTileNone.Click += new System.EventHandler(this.FToolStripMenuItemTileNone_Click);
@@ -106,14 +112,42 @@
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(251, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(312, 6);
             // 
             // ToolStripMenuItemExit
             // 
             this.ToolStripMenuItemExit.Name = "ToolStripMenuItemExit";
-            this.ToolStripMenuItemExit.Size = new System.Drawing.Size(254, 22);
+            this.ToolStripMenuItemExit.Size = new System.Drawing.Size(315, 22);
             this.ToolStripMenuItemExit.Text = "終了(&Q)";
             this.ToolStripMenuItemExit.Click += new System.EventHandler(this.Exit_Click);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(312, 6);
+            // 
+            // 現在のウィンドウを管理下から常に除外ToolStripMenuItem
+            // 
+            this.現在のウィンドウを管理下から常に除外ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.FToolStripMenuItemAddDenyExePath,
+            this.FToolStripMenuItemAddDenyWindowTitles});
+            this.現在のウィンドウを管理下から常に除外ToolStripMenuItem.Name = "現在のウィンドウを管理下から常に除外ToolStripMenuItem";
+            this.現在のウィンドウを管理下から常に除外ToolStripMenuItem.Size = new System.Drawing.Size(315, 22);
+            this.現在のウィンドウを管理下から常に除外ToolStripMenuItem.Text = "現在アクティヴなウィンドウを管理下から常に除外(&-)";
+            // 
+            // FToolStripMenuItemAddDenyExePath
+            // 
+            this.FToolStripMenuItemAddDenyExePath.Name = "FToolStripMenuItemAddDenyExePath";
+            this.FToolStripMenuItemAddDenyExePath.Size = new System.Drawing.Size(200, 22);
+            this.FToolStripMenuItemAddDenyExePath.Text = "実行ファイル名で除外(&E)";
+            this.FToolStripMenuItemAddDenyExePath.Click += new System.EventHandler(this.FToolStripMenuItemAddDenyExePath_Click);
+            // 
+            // FToolStripMenuItemAddDenyWindowTitles
+            // 
+            this.FToolStripMenuItemAddDenyWindowTitles.Name = "FToolStripMenuItemAddDenyWindowTitles";
+            this.FToolStripMenuItemAddDenyWindowTitles.Size = new System.Drawing.Size(200, 22);
+            this.FToolStripMenuItemAddDenyWindowTitles.Text = "ウィンドウタイトルで除外(&T)";
+            this.FToolStripMenuItemAddDenyWindowTitles.Click += new System.EventHandler(this.FToolStripMenuItemAddDenyWindowTitles_Click);
             // 
             // MainForm
             // 
@@ -139,6 +173,10 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemExit;
         private System.Windows.Forms.ToolStripMenuItem FToolStripMenuItemTileConcentration;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem 現在のウィンドウを管理下から常に除外ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem FToolStripMenuItemAddDenyExePath;
+        private System.Windows.Forms.ToolStripMenuItem FToolStripMenuItemAddDenyWindowTitles;
     }
 }
 
