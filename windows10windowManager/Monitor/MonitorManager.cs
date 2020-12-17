@@ -120,7 +120,7 @@ namespace windows10windowManager.Monitor
             }
 
             this.SetCurrentWindowManagerIndex(0);
-            this.GetCurrentMonitorWindowManager().GetCurrentWindow().ActivateWindow();
+            this.ActivateWindow();
         }
 
         /**
