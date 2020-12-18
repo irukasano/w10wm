@@ -170,7 +170,7 @@ namespace windows10windowManager.Window
             }
             return null;
         }
-
+        
         /**
          * <summary>
          * このウィンドウの現在位置情報を WindowRect で戻す
@@ -246,7 +246,7 @@ namespace windows10windowManager.Window
         public void WindowClose()
         {
             var hWnd = this.windowHandle;
-            Logger.WriteLine($"WindowInfoWithHandle.CloseWindow : hWnd={hWnd}");
+            Logger.DebugWindowInfo("WindowInfoWithHandle.CloseWindow", this);
             if (! hWnd.Equals(IntPtr.Zero))
             {
                 SendMessage(hWnd,
@@ -260,13 +260,38 @@ namespace windows10windowManager.Window
 
         /**
          * <summary>
+         * ウィンドウを最大化する
+         * </summary>
+         */
+        public void Maximize()
+        {
+            var hWnd = this.windowHandle;
+            Logger.DebugWindowInfo("WindowInfoWithHandle.Maximize", this);
+            ShowWindow(hWnd, /* SW_SHOWMAXIMIZED = */ 3);
+        }
+
+        /**
+         * <summary>
+         * ウィンドウを最小化する
+         * </summary>
+         */
+        public void Minimize()
+        {
+            var hWnd = this.windowHandle;
+            Logger.DebugWindowInfo("WindowInfoWithHandle.Minimize", this);
+            //ShowWindow(hWnd, /* SW_MINIMIZE = */ 6);
+            ShowWindow(hWnd, /* SW_SHOWMINIMIZED = */ 2);
+        }
+
+        /**
+         * <summary>
          * ウィンドウをアクティヴにする
          * </summary>
          */
         public void ActivateWindow()
         {
             var hWnd = this.windowHandle;
-            Logger.WriteLine($"WindowInfoWithHandle.ActivateWindow : hWnd={hWnd}");
+            Logger.DebugWindowInfo("WindowInfoWithHandle.ActivateWindow", this);
             if ( hWnd.Equals(IntPtr.Zero))
             {
                 return;

@@ -48,7 +48,7 @@ namespace windows10windowManager
 
             // メニュー項目を作成します。
             var menuItem = new ToolStripMenuItem();
-            menuItem.Text = "&Exit";
+            menuItem.Text = "このアプリケーションを終了(&Q)";
             menuItem.Click += new EventHandler(Exit_Click);
 
             // メニューを作成します。
@@ -89,6 +89,9 @@ namespace windows10windowManager
             Application.Exit();
         }
 
+        /** ******************************************************************************************************************
+         * コンテクストメニューの定義
+         */
         private void Exit_Click(object sender, EventArgs e)
         {
             this.Terminate();
@@ -242,8 +245,74 @@ namespace windows10windowManager
             }
         }
 
+        private void FToolStripMenuItemCloseMenu_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Logger.WriteLine("Close context menu");
+                contextMenuStrip1.Close();
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                throw ex;
+            }
+        }
 
-        /**
+        private void FToolStripMenuItemWindowMaximize_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var activeWindowInfo = this.monitorManager.GetCurrentMonitorWindowManager().GetCurrentWindow();
+                if (activeWindowInfo == null)
+                {
+                    return;
+                }
+                Logger.DebugWindowInfo("Window maximize", activeWindowInfo);
+                activeWindowInfo.Maximize();
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                throw ex;
+            }
+        }
+
+        private void FToolStripMenuItemWindowMinimize_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var activeWindowInfo = this.monitorManager.GetCurrentMonitorWindowManager().GetCurrentWindow();
+                if (activeWindowInfo == null)
+                {
+                    return;
+                }
+                Logger.DebugWindowInfo("Window maximize", activeWindowInfo);
+                activeWindowInfo.Minimize();
+                this.monitorManager.GetCurrentMonitorWindowManager().MoveCurrentFocusPrevious();
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                throw ex;
+            }
+        }
+
+        private void FToolStripMenuItemRearrangeWindow_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Logger.WriteLine("Window rearrange");
+                this.ArrangeWindows();
+            }
+            catch (Exception ex)
+            {
+                Logger.Exception(ex);
+                throw ex;
+            }
+        }
+
+        /** ******************************************************************************************************************
          * <summary>
          * ホットキーの定義
          * </summary>
@@ -357,7 +426,8 @@ namespace windows10windowManager
         }
 
 
-        /**
+        /** ******************************************************************************************************************
+         * ウィンドウイベントによる処理の定義
          * <summary>
          * ウィンドウ表示イベントが発生したら、
          * これを該当モニターのWindowManagerに追加し、現在のモードで整列しなおす
@@ -475,6 +545,7 @@ namespace windows10windowManager
             }
         }
 
+        /** ******************************************************************************************************************
         /**
          * <summary>
          * 現在のウィンドウを閉じる

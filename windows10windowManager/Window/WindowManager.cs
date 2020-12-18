@@ -235,11 +235,14 @@ namespace windows10windowManager.Window
             var windowRectString = windowRect.ToString();
             Logger.WriteLine($"WindowManager.MoveWindow : hWnd={hWnd} To {windowRectString}");
 
+
             // 最大化、最小化Windowの場合は元のウィンドウにする
-            if ( IsZoomed(hWnd) || IsIconic(hWnd))
+            // if ( IsZoomed(hWnd) || IsIconic(hWnd))
+            if (IsZoomed(hWnd))
             {
                 ShowWindow(hWnd, /* SW_RESTORE = */ 9);
             }
+            
 
             MoveWindow(hWnd, 
                 windowRect.GetX() + windowInfoWithHandle.positionLeftAdjustment,
