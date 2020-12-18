@@ -199,6 +199,7 @@ namespace windows10windowManager
                 {
                     return;
                 }
+                Logger.DebugWindowInfo("Add Deny ExePath", activeWindowInfo);
                 // アクティヴウィンドウの実行ファイル名を設定ファイルに記述
                 // アクティヴウィンドウを管理下から削除して整頓し直す
                 var activeWindowExePath = activeWindowInfo.ComputeWindowModuleFileName();
@@ -224,9 +225,10 @@ namespace windows10windowManager
                 {
                     return;
                 }
+                Logger.DebugWindowInfo("Add Deny WindowTitle", activeWindowInfo);
                 // アクティヴウィンドウのウィンドウタイトルを設定ファイルに記述
                 // アクティヴウィンドウを管理下から削除して整頓し直す
-                var activeWindowTitle = activeWindowInfo.windowTitle;
+                var activeWindowTitle = activeWindowInfo.ComputeWindowTitle();
                 this.traceWindow.denyWindowTitles.Add(activeWindowTitle);
                 SettingManager.SaveStringList("Window_TraceWindow_Deny_WindowTitle", this.traceWindow.denyWindowTitles);
                 this.monitorManager.RemoveWindowInfo(activeWindowInfo);

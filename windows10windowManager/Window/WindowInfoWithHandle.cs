@@ -146,7 +146,7 @@ namespace windows10windowManager.Window
             this.positionHeightAdjustment = (rect.bottom - rect.top) -
                 (dwmRect.bottom - dwmRect.top);
 
-            this.windowTitle = GetCurrentWindowTitle(hWnd);
+            this.windowTitle = ComputeWindowTitle();
 
             this.ComputeMonitorHandle();
         }
@@ -156,12 +156,15 @@ namespace windows10windowManager.Window
             return this.windowHandle == other.windowHandle;
         }
 
-        private string GetCurrentWindowTitle(IntPtr hWnd)
+        /**
+         * 現時点のウィンドウタイトルを取得する
+         */
+        public string ComputeWindowTitle()
         {
             const int nChars = 256;
             StringBuilder Buff = new StringBuilder(nChars);
 
-            if (GetWindowText(hWnd, Buff, nChars) > 0)
+            if (GetWindowText(this.windowHandle, Buff, nChars) > 0)
             {
                 return Buff.ToString();
             }

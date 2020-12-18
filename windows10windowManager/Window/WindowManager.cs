@@ -312,6 +312,10 @@ namespace windows10windowManager.Window
          */
         public WindowInfoWithHandle SetWindowPrevious()
         {
+            if (this.windowInfos.Count() < 2)
+            {
+                return null;
+            }
             var currentIndex = this.currentWindowInfoIndex;
             var previousIndex = 0;
             if (currentIndex > 0)
@@ -336,6 +340,10 @@ namespace windows10windowManager.Window
          */
         public WindowInfoWithHandle SetWindowNext()
         {
+            if ( this.windowInfos.Count() < 2)
+            {
+                return null;
+            }
             var currentIndex = this.currentWindowInfoIndex;
             var nextIndex = this.windowInfos.Count() - 1;
             if (currentIndex < this.windowInfos.Count() - 1 )
