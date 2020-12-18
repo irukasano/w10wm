@@ -15,14 +15,22 @@ namespace windows10windowManager.Window
          * 左側列の横幅％
          * </summary>
          */
-        public double percentOfLeftColumn = 0.65;
+        public double percentOfLeftColumn; /* = 0.65 ; */
 
         /**
          * <summary>
          * 右側列に縦に並べる最大ウィンドウ数
          * </summary>
          */
-        public int maxCountOfWindowOfRightColumn = 4;
+        public int maxCountOfWindowOfRightColumn; /* = 4; */
+
+        public WindowTilerBugn()
+        {
+            this.percentOfLeftColumn = 
+                SettingManager.GetDouble("Window_WindowTilerBugn_percentOfLeftColumn");
+            this.maxCountOfWindowOfRightColumn =
+                SettingManager.GetInt("Window_WindowTilerBugn_maxCountOfWindowOfRightColumn");
+        }
 
         /**
          * <summary>

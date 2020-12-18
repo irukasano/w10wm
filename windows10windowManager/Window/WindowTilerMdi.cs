@@ -15,14 +15,14 @@ namespace windows10windowManager.Window
          * MDI形式のウィンドウのモニター横幅に対する割合
          * </summary>
          */
-        public double percentOfMonitorWidth = 0.6;
+        public double percentOfWidthOfWindow;/* = 0.6; */
 
         /**
          * <summary>
          * MDI形式のウィンドウのモニター縦長に対する割合
          * </summary>
          */
-        public double percentOfMonitorHeight = 0.6;
+        public double percentOfHeightOfWindow;/* = 0.6; */
 
         /**
          * <summary>
@@ -30,18 +30,38 @@ namespace windows10windowManager.Window
          * 指定された分だけTop/Leftの位置をずらす
          * </summary>
          */
-        public int shiftWidthToNextWindow = 50;
-        public int shiftHeightToNextWindow = 50;
+        public int shiftWidthToNextWindow;/* = 50; */
+        public int shiftHeightToNextWindow;/* = 50; */
 
         /**
          * <summary>
          * MDI形式のウィンドウのモニター端までのマージン
          * </summary>
          */
-        public int marginLeftToMonitor = 20;
-        public int marginTopToMonitor = 20;
-        public int marginRightToMonitor = 20;
-        public int marginBottomToMonitor = 20;
+        public int marginLeftToMonitor;/* = 20; */
+        public int marginTopToMonitor;/* = 20; */
+        public int marginRightToMonitor;/* = 20; */
+        public int marginBottomToMonitor;/* = 20; */
+
+        public WindowTilerMdi()
+        {
+            this.percentOfWidthOfWindow =
+                SettingManager.GetDouble("Window_WindowTilerMdi_percentOfWidthOfWindow");
+            this.percentOfHeightOfWindow =
+                SettingManager.GetDouble("Window_WindowTilerMdi_percentOfHeightOfWindow");
+            this.shiftWidthToNextWindow =
+                SettingManager.GetInt("Window_WindowTilerMdi_shiftWidthToNextWindow");
+            this.shiftHeightToNextWindow =
+                SettingManager.GetInt("Window_WindowTilerMdi_shiftHeightToNextWindow");
+            this.marginLeftToMonitor =
+                SettingManager.GetInt("Window_WindowTilerMdi_marginLeftToMonitor");
+            this.marginLeftToMonitor =
+                SettingManager.GetInt("Window_WindowTilerMdi_marginTopToMonitor");
+            this.marginRightToMonitor =
+                SettingManager.GetInt("Window_WindowTilerMdi_marginRightToMonitor");
+            this.marginBottomToMonitor =
+                SettingManager.GetInt("Window_WindowTilerMdi_marginBottomToMonitor");
+        }
 
         /**
          * <summary>
@@ -54,8 +74,8 @@ namespace windows10windowManager.Window
         {
             var monitorWidth = monitorRight - monitorLeft;
             var monitorHeight = monitorBottom - monitorTop;
-            var windowWidth = (int)Math.Floor(monitorWidth * this.percentOfMonitorWidth);
-            var windowHeight = (int)Math.Floor(monitorHeight * this.percentOfMonitorHeight);
+            var windowWidth = (int)Math.Floor(monitorWidth * this.percentOfWidthOfWindow);
+            var windowHeight = (int)Math.Floor(monitorHeight * this.percentOfHeightOfWindow);
 
             var marginedMonitorTop = monitorTop + this.marginTopToMonitor;
             var marginedMonitorBottom = monitorBottom - this.marginBottomToMonitor;
