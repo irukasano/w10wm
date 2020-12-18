@@ -228,7 +228,7 @@ namespace windows10windowManager
                 Logger.DebugWindowInfo("Add Deny WindowTitle", activeWindowInfo);
                 // アクティヴウィンドウのウィンドウタイトルを設定ファイルに記述
                 // アクティヴウィンドウを管理下から削除して整頓し直す
-                var activeWindowTitle = activeWindowInfo.ComputeWindowTitle();
+                var activeWindowTitle = activeWindowInfo.windowTitle;
                 this.traceWindow.denyWindowTitles.Add(activeWindowTitle);
                 SettingManager.SaveStringList("Window_TraceWindow_Deny_WindowTitle", this.traceWindow.denyWindowTitles);
                 this.monitorManager.RemoveWindowInfo(activeWindowInfo);
