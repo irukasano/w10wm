@@ -402,6 +402,11 @@ namespace windows10windowManager
                     this.ActivateMonitorN(2);
                     return false;
                 }
+                else if (e.Equals(OriginalKey.Question, modifierLWindows))
+                {
+                    this.ShowHelpForm();
+                    return false;
+                }
                 else if (e.Equals(OriginalKey.O, modifierLWindows))
                 {
                     // 右クリックメニューを表示する
@@ -807,6 +812,17 @@ namespace windows10windowManager
                 /* windowCount =  */ windowManager.WindowCount(),
                 /* monitorRect = */ monitorInfoWithHandle.monitorInfo.work);
             windowManager.ArrangeWindows(windowTiler);
+        }
+
+        /**
+         * <summary>
+         * ヘルプフォームを表示する
+         * </summary>
+         */
+        public void ShowHelpForm()
+        {
+            HelpForm helpForm = new HelpForm();
+            helpForm.Show();
         }
 
     }
