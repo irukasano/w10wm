@@ -137,6 +137,10 @@ namespace windows10windowManager.Window
          */
         public WindowInfoWithHandle GetCurrentWindow()
         {
+            if ( this.windowInfos.Count == 0)
+            {
+                return null;
+            }
             if ( this.windowInfos.Count <= this.currentWindowInfoIndex)
             {
                 return null;
