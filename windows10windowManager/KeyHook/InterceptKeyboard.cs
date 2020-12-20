@@ -128,7 +128,7 @@ namespace windows10windowManager.KeyHook
                 ! (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN || 
                     wParam == (IntPtr)WM_KEYUP || wParam == (IntPtr)WM_SYSKEYUP))
             {
-                return new IntPtr(1);
+                return base.HookProcedure(nCode, wParam, lParam);
             }
 
             var kb = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT));

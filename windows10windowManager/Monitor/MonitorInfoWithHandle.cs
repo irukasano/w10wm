@@ -82,6 +82,7 @@ namespace windows10windowManager.Monitor
      */
     public class MonitorInfoWithHandle : IMonitorInfoWithHandle, IEquatable<MonitorInfoWithHandle>
     {
+        #region Field
         /**
          * <summary>
          * Gets the monitor handle.
@@ -109,6 +110,11 @@ namespace windows10windowManager.Monitor
          */
         public MONITORINFO monitorInfo { get; private set; }
 
+        protected MonitorInformationForm monitorInformationForm;
+
+        #endregion
+
+
         /**
          * <summary>
          * Initializes a new instance of the <see cref="MonitorInfoWithHandle"/> class.
@@ -121,11 +127,23 @@ namespace windows10windowManager.Monitor
             this.monitorHandle = monitorHandle;
             this.monitorRect = monitorRect;
             this.monitorInfo = monitorInfo;
+
+            this.monitorInformationForm = new MonitorInformationForm(this);
         }
 
         public bool Equals(MonitorInfoWithHandle other)
         {
             return this.monitorHandle == other.monitorHandle;
+        }
+
+        /**
+         * <summary>
+         * このモニターをハイライト表示する
+         * </summary>
+         */
+        public void Highlight()
+        {
+            this.monitorInformationForm.Highlight();
         }
 
     }

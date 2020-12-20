@@ -386,8 +386,7 @@ namespace windows10windowManager.Monitor
             //currentMonitorInfo.MonitorInfo.
 
             Logger.DebugMonitor("Hightlight", currentMonitorInfo);
-            MonitorInformationForm monitorInformationForm = new MonitorInformationForm(currentMonitorInfo);
-            monitorInformationForm.Show();
+            currentMonitorInfo.Highlight();
         }
 
 

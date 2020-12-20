@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 //using System.Diagnostics;
+using System.Reflection;
 
 using windows10windowManager.Monitor;
 using windows10windowManager.Window;
@@ -321,8 +322,50 @@ namespace windows10windowManager
         {
             //Logger.WriteLine("InterceptKeyboard_KeyDownEvent : " + e.ToString());
 
+            foreach (InterceptKeyboardSetting interceptKeyboardSetting in InterceptKeyboardSettingManager.GetSettings())
+            {
+                if ( e.Equals(interceptKeyboardSetting.key, interceptKeyboardSetting.modifiers))
+                {
+                    if ( interceptKeyboardSetting.needsAsync)
+                    {
+                        Task task = Task.Run(() => {
+                            Type t = this.GetType();
+                            MethodInfo methodInfo = t.GetMethod(interceptKeyboardSetting.methodName);
+                            object r = methodInfo.Invoke(this, null);
+                        });
+
+                        task.ContinueWith((t) => {
+                            if (t.Exception != null)
+                            {
+                                Logger.Exception(t.Exception);
+                            }
+                        });
+
+                        return false;
+                    } else
+                    {
+                        try
+                        {
+                            Type t = this.GetType();
+                            MethodInfo methodInfo = t.GetMethod(interceptKeyboardSetting.methodName);
+                            object r = methodInfo.Invoke(this, null);
+                        }
+                        catch ( Exception ex)
+                        {
+                            Logger.Exception(ex);
+                            throw ex;
+                        }
+                    }
+                }
+            }
+            return true;
+
+
+
+            /*
             try
             {
+
                 int[] modifierLWindows = new int[] { (int)OriginalKey.LeftWindows };
                 int[] modifierLShiftLWindows = new int[] { (int)OriginalKey.LeftWindows, (int)OriginalKey.LeftShift };
                 int[] modifierRShiftLWindows = new int[] { (int)OriginalKey.LeftWindows, (int)OriginalKey.LeftShift };
@@ -410,14 +453,7 @@ namespace windows10windowManager
                 else if (e.Equals(OriginalKey.O, modifierLWindows))
                 {
                     // 右クリックメニューを表示する
-                    var monitorInfo = this.monitorManager.GetCurrentMonitor();
-
-                    System.Drawing.Point p = new System.Drawing.Point();
-                    p.X = monitorInfo.monitorRect.left + 100;
-                    p.Y = monitorInfo.monitorRect.top + 100;
-
-                    this.contextMenuStrip1.Show(p);
-                    this.contextMenuStrip1.Focus();
+                    this.ShowContextMenu();
                     return false;
                 }
 
@@ -428,6 +464,7 @@ namespace windows10windowManager
                 throw ex;
             }
             return true;
+            */
         }
 
 
@@ -556,7 +593,7 @@ namespace windows10windowManager
          * 現在のウィンドウを閉じる
          * </summary>
          */
-        private void CloseCurrentWindow()
+        public void CloseCurrentWindow()
         {
             Logger.WriteLine("CloseCurrentWindow");
             var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
@@ -576,7 +613,7 @@ namespace windows10windowManager
          * ひとつ上のウィンドウをアクティヴにする
          * </summary>
          */
-        private void MoveCurrentFocusPrevious()
+        public void MoveCurrentFocusPrevious()
         {
             Logger.WriteLine("MoveCurrentFocusPrevious");
             var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
@@ -597,7 +634,7 @@ namespace windows10windowManager
          * ひとつ後ろのウィンドウをアクティヴにする
          * </summary>
          */
-        private void MoveCurrentFocusNext()
+        public void MoveCurrentFocusNext()
         {
             Logger.WriteLine("MoveCurrentFocusNext");
             var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
@@ -618,7 +655,7 @@ namespace windows10windowManager
          * 一番上のウィンドウをアクティヴにする
          * </summary>
          */
-        private void MoveCurrentFocusTop()
+        public void MoveCurrentFocusTop()
         {
             Logger.WriteLine("MoveCurrentFocusTop");
             var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
@@ -639,7 +676,7 @@ namespace windows10windowManager
          * 一番下のウィンドウをアクティヴにする
          * </summary>
          */
-        private void MoveCurrentFocusBottom()
+        public void MoveCurrentFocusBottom()
         {
             Logger.WriteLine("MoveCurrentFocusBottom");
             var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
@@ -660,7 +697,7 @@ namespace windows10windowManager
          * 現在のウィンドウをひとつ上に移動する
          * </summary>
          */
-        private void SetWindowPrevious()
+        public void SetWindowPrevious()
         {
             Logger.WriteLine("SetWindowPrevious");
             var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
@@ -681,7 +718,7 @@ namespace windows10windowManager
          * 現在のウィンドウをひとつ下に移動する
          * </summary>
          */
-        private void SetWindowNext()
+        public void SetWindowNext()
         {
             Logger.WriteLine("SetWindowPrevious");
             var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
@@ -702,7 +739,7 @@ namespace windows10windowManager
          * 一番上のウィンドウをひとつ下に移動する
          * </summary>
          */
-        private void SetWindowTop()
+        public void SetWindowTop()
         {
             Logger.WriteLine("SetWindowTop");
             var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
@@ -723,7 +760,7 @@ namespace windows10windowManager
          * 一番上のウィンドウをひとつ下に移動する
          * </summary>
          */
-        private void SetWindowBottom()
+        public void SetWindowBottom()
         {
             Logger.WriteLine("SetWindowBottom");
             var windowManager = this.monitorManager.GetCurrentMonitorWindowManager();
@@ -744,7 +781,7 @@ namespace windows10windowManager
          * ひとつ前のモニターをアクティヴにする
          * </summary>
          */
-        private void MoveCurrentFocusPreviousMonitor()
+        public void MoveCurrentFocusPreviousMonitor()
         {
             Logger.WriteLine("MoveCurrentFocusPreviousMonitor");
             var windowManager = this.monitorManager.MoveCurrentFocusPrevious();
@@ -761,7 +798,7 @@ namespace windows10windowManager
          * ひとつ後ろのモニターをアクティヴにする
          * </summary>
          */
-        private void MoveCurrentFocusNextMonitor()
+        public void MoveCurrentFocusNextMonitor()
         {
             Logger.WriteLine("MoveCurrentFocusNextMonitor");
             var windowManager = this.monitorManager.MoveCurrentFocusNext();
@@ -779,12 +816,27 @@ namespace windows10windowManager
          * モニターNのカレントウィンドウをアクティヴにする
          * </summary>
          */
-        private void ActivateMonitorN(int monitorNumber)
+        public void ActivateMonitorN(int monitorNumber)
         {
             Logger.WriteLine($"ActivateMonitorN : {monitorNumber}");
             var windowManager = this.monitorManager.ActivateMonitorNWindowManager(monitorNumber);
             this.monitorManager.ActivateWindow();
             this.HighlightActiveMonitor();
+        }
+
+        public void ActivateMonitor1()
+        {
+            this.ActivateMonitorN(0);
+        }
+
+        public void ActivateMonitor2()
+        {
+            this.ActivateMonitorN(1);
+        }
+
+        public void ActivateMonitor3()
+        {
+            this.ActivateMonitorN(2);
         }
 
         /**
@@ -812,6 +864,23 @@ namespace windows10windowManager
                 /* windowCount =  */ windowManager.WindowCount(),
                 /* monitorRect = */ monitorInfoWithHandle.monitorInfo.work);
             windowManager.ArrangeWindows(windowTiler);
+        }
+
+        /**
+         * <summary>
+         * コンテキストメニューを表示する
+         * </summary>
+         */
+        public void ShowContextMenu()
+        {
+            var monitorInfo = this.monitorManager.GetCurrentMonitor();
+
+            System.Drawing.Point p = new System.Drawing.Point();
+            p.X = monitorInfo.monitorRect.left + 100;
+            p.Y = monitorInfo.monitorRect.top + 100;
+
+            this.contextMenuStrip1.Show(p);
+            this.contextMenuStrip1.Focus();
         }
 
         /**

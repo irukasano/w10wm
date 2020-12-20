@@ -80,12 +80,14 @@
     <Compile Include="HelpForm.Designer.cs">
       <DependentUpon>HelpForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="KeyHook\InterceptKeyboardSettingManager.cs" />
     <Compile Include="MonitorInformationForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MonitorInformationForm.Designer.cs">
       <DependentUpon>MonitorInformationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="KeyHook\InterceptKeyboardSetting.cs" />
     <Compile Include="Util\SettingManager.cs" />
     <Compile Include="Util\Logger.cs" />
     <Compile Include="Window\AbstractWindowTiler.cs" />
