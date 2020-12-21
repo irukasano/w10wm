@@ -106,6 +106,11 @@ namespace windows10windowManager.Window
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool CloseHandle(IntPtr hObject);
 
+        [DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
+        public static extern IntPtr GetParent(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        static extern bool IsChild(IntPtr hWndParent, IntPtr hWnd);
         #endregion
 
         #region Field
@@ -208,7 +213,6 @@ namespace windows10windowManager.Window
         public string ComputeWindowModuleFileName()
         {
             int nChars = 1024;
-            uint processId;
             StringBuilder filename = new StringBuilder(nChars);
 
             if ( this.windowHandle == IntPtr.Zero)
@@ -216,7 +220,7 @@ namespace windows10windowManager.Window
                 return null;
             }
 
-            GetWindowThreadProcessId(this.windowHandle, out processId);
+            var processId = this.ComputeProcessId();
             IntPtr hProcess = OpenProcess(0x0400 | 0x0010, false, processId);
             if ( hProcess == IntPtr.Zero)
             {
@@ -226,6 +230,28 @@ namespace windows10windowManager.Window
             QueryFullProcessImageName(hProcess, 0, filename, ref nChars);
             CloseHandle(hProcess);
             return filename.ToString();
+        }
+
+        public uint ComputeProcessId()
+        {
+            uint processId;
+            GetWindowThreadProcessId(this.windowHandle, out processId);
+            return processId;
+        }
+
+        /**
+         * <summary>
+         * このウィンドウが子ウィンドウかどうかを求める
+         * </summary>
+         */
+        public bool ComputeIsChildWindow()
+        {
+            IntPtr hWndParent = GetParent(this.windowHandle);
+            if (hWndParent == IntPtr.Zero)
+            {
+                return false;
+            }
+            return IsChild(hWndParent, this.windowHandle);
         }
 
         /**

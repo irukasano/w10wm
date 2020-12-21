@@ -191,6 +191,7 @@ namespace windows10windowManager.Window
              */
 
             var moduleFileName = windowInfoWithHandle.ComputeWindowModuleFileName();
+            var isChildWindow = windowInfoWithHandle.ComputeIsChildWindow();
             var hWnd = windowInfoWithHandle.windowHandle;
             var windowTitle = windowInfoWithHandle.windowTitle;
             var windowLongString = windowLong.ToString("x8");
@@ -198,13 +199,14 @@ namespace windows10windowManager.Window
             var isValid = (isVisible &&
                 (isOverlappedwindow || isTypeVscode) &&
                 !isUwp &&
+                !isChildWindow &&
                 windowTitle != null && 
                 !this.IsDenyModuleFileName(moduleFileName) &&
                 !this.IsDenyWindowTitle(windowTitle)
             );
             var isValidString = isValid.ToString();
 
-            Logger.WriteLine($"TraceWindows.IsValidWindow = {isValidString} : ({hWnd}){windowTitle}(path={moduleFileName}) : {windowLongString}");
+            Logger.WriteLine($"TraceWindows.IsValidWindow = {isValidString} : ({hWnd}){windowTitle}(path={moduleFileName}) : {windowLongString}, IsChild={isChildWindow}");
 
             return isValid;
         }
@@ -261,11 +263,16 @@ namespace windows10windowManager.Window
                 return;
             }
 
+            var contains = this.windowInfos.Contains(needleWindowInfo);
+            var processId = needleWindowInfo.ComputeProcessId();
+            Logger.DebugWindowInfo($"{eventName} : ProcessId={processId}, Contains={contains}", needleWindowInfo);
+
             if (! this.windowInfos.Contains(needleWindowInfo))
             {
                 if (this.IsValidWindow(needleWindowInfo, windowLong) &&
-                    (eventName == EventName.EVENT_OBJECT_SHOW || 
-                    eventName == EventName.EVENT_OBJECT_NAMECHANGE))
+                    (eventName == EventName.EVENT_OBJECT_SHOW ))
+                    //eventName == EventName.EVENT_OBJECT_SHOW ||
+                    //eventName == EventName.EVENT_OBJECT_NAMECHANGE))
                 {
                     Logger.WriteLine($"TraceWindows.HookProcedure OnAdd : ({hWnd}){windowTitle} : {windowLongString}");
                     this.windowInfos.Add(needleWindowInfo);

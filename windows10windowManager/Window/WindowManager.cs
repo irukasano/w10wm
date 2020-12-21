@@ -73,9 +73,12 @@ namespace windows10windowManager.Window
          */
         public void PushNew(WindowInfoWithHandle windowInfo)
         {
-            int pushedIndex = WindowTiler.PushNewWindowInfo(this.windowTilingType, this.windowInfos, windowInfo);
+            lock (this.windowInfosLock)
+            {
+                int pushedIndex = WindowTiler.PushNewWindowInfo(this.windowTilingType, this.windowInfos, windowInfo);
 
-            this.currentWindowInfoIndex = pushedIndex;
+                this.currentWindowInfoIndex = pushedIndex;
+            }
         }
 
         /**
@@ -85,10 +88,13 @@ namespace windows10windowManager.Window
          */
         public void Push(WindowInfoWithHandle windowInfo)
         {
-            this.windowInfos.Insert(0, windowInfo);
+            lock (this.windowInfosLock)
+            {
+                this.windowInfos.Insert(0, windowInfo);
 
-            // 追加したらこれをカレントウィンドウにする
-            this.currentWindowInfoIndex = 0;
+                // 追加したらこれをカレントウィンドウにする
+                this.currentWindowInfoIndex = 0;
+            }
         }
 
 

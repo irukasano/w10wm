@@ -43,7 +43,7 @@ namespace windows10windowManager
 
         }
 
-        public void Highlight()
+        public async void Highlight()
         {
             this.Opacity = 0.8D;
             this.BringToFront();
@@ -55,8 +55,10 @@ namespace windows10windowManager
                 this.Opacity = 0.05 * i;
                 //一時停止
                 System.Threading.Thread.Sleep(30);
+                //await Task.Delay(30);
             }
 
+            this.Hide();
             this.Close();
         }
 
