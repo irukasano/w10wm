@@ -360,8 +360,6 @@ namespace windows10windowManager
             }
             return true;
 
-
-
             /*
             try
             {

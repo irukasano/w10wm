@@ -46,6 +46,7 @@ namespace windows10windowManager
         public void Highlight()
         {
             this.Opacity = 0.8D;
+            this.BringToFront();
             this.Show();
 
             for (int i = 20; i >= 0; i--)
@@ -56,8 +57,9 @@ namespace windows10windowManager
                 System.Threading.Thread.Sleep(30);
             }
 
-            this.Hide();
+            this.Close();
         }
+
 
     }
 }

@@ -110,7 +110,7 @@ namespace windows10windowManager.Monitor
          */
         public MONITORINFO monitorInfo { get; private set; }
 
-        protected MonitorInformationForm monitorInformationForm;
+        //protected MonitorInformationForm monitorInformationForm;
 
         #endregion
 
@@ -128,7 +128,7 @@ namespace windows10windowManager.Monitor
             this.monitorRect = monitorRect;
             this.monitorInfo = monitorInfo;
 
-            this.monitorInformationForm = new MonitorInformationForm(this);
+            //this.monitorInformationForm = new MonitorInformationForm(this);
         }
 
         public bool Equals(MonitorInfoWithHandle other)
@@ -143,7 +143,9 @@ namespace windows10windowManager.Monitor
          */
         public void Highlight()
         {
-            this.monitorInformationForm.Highlight();
+            //this.monitorInformationForm.Highlight();
+            var monitorInformationForm = new MonitorInformationForm(this);
+            monitorInformationForm.Highlight();
         }
 
     }
