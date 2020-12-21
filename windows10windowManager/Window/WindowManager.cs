@@ -24,6 +24,8 @@ namespace windows10windowManager.Window
         protected int currentWindowInfoIndex { get; set; }
 
         public WindowTilingType windowTilingType;
+
+        private readonly object windowInfosLock = new object();
         #endregion
 
         #region WinApi
@@ -97,10 +99,13 @@ namespace windows10windowManager.Window
          */
         public void Add(WindowInfoWithHandle windowInfo)
         {
-            this.windowInfos.Add(windowInfo);
+            lock (this.windowInfosLock)
+            {
+                this.windowInfos.Add(windowInfo);
 
-            // 追加したらこれをカレントウィンドウにする
-            this.currentWindowInfoIndex = this.windowInfos.Count - 1;
+                // 追加したらこれをカレントウィンドウにする
+                this.currentWindowInfoIndex = this.windowInfos.Count - 1;
+            }
         }
 
         // ウィンドウリストから削除する
@@ -108,13 +113,16 @@ namespace windows10windowManager.Window
         {
             if (this.windowInfos.Contains(windowInfo))
             {
-                this.windowInfos.Remove(windowInfo);
-
-                // 削除したら一つ上をカレントウィンドウにする
-                // 0 なら 0 のまま
-                if (this.currentWindowInfoIndex > 0)
+                lock(this.windowInfos)
                 {
-                    this.currentWindowInfoIndex -= 1;
+                    this.windowInfos.Remove(windowInfo);
+
+                    // 削除したら一つ上をカレントウィンドウにする
+                    // 0 なら 0 のまま
+                    if (this.currentWindowInfoIndex > 0)
+                    {
+                        this.currentWindowInfoIndex -= 1;
+                    }
                 }
             }
         }
