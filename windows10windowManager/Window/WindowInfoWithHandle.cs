@@ -318,7 +318,12 @@ namespace windows10windowManager.Window
         {
             var hWnd = this.windowHandle;
             Logger.DebugWindowInfo("WindowInfoWithHandle.ActivateWindow", this);
-            if ( hWnd.Equals(IntPtr.Zero))
+            WindowInfoWithHandle.SetWindowForground(hWnd);
+        }
+
+        public static void SetWindowForground(IntPtr hWnd)
+        {
+            if (hWnd.Equals(IntPtr.Zero))
             {
                 return;
             }
@@ -361,7 +366,6 @@ namespace windows10windowManager.Window
             //0, 0, 0, 0,
             ///* SWP_SHOWWINDOW | SWP_NOMOVE | SWP_NOSIZE */
             //0x0040 | 0x0002 | 0x0001);
-
         }
 
         public IntPtr ComputeMonitorHandle()

@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 using windows10windowManager.Monitor;
 using windows10windowManager.Util;
+using windows10windowManager.Window;
 
 namespace windows10windowManager
 {
@@ -46,8 +47,10 @@ namespace windows10windowManager
         public async void Highlight()
         {
             this.Opacity = 0.8D;
-            this.BringToFront();
+            //this.BringToFront();
+            //this.TopMost = true;
             this.Show();
+            WindowInfoWithHandle.SetWindowForground(this.Handle);
 
             for (int i = 20; i >= 0; i--)
             {
