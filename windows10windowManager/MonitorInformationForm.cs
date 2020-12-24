@@ -19,6 +19,7 @@ namespace windows10windowManager
         #region Field
         protected MonitorInfoWithHandle MonitorInfo { get; private set; }
 
+        private readonly object formLock = new object();
         #endregion
 
 
@@ -50,7 +51,11 @@ namespace windows10windowManager
 
         public void Highlight()
         {
-            this.Opacity = 0.8D;
+            lock (this.formLock)
+            {
+                this.Opacity = 0.8D;
+            }
+
             //this.BringToFront();
             //this.TopMost = true;
             this.Show();
@@ -59,9 +64,12 @@ namespace windows10windowManager
             for (int i = 20; i >= 0; i--)
             {
                 //フォームの不透明度を変更する
-                this.Opacity = 0.05 * i;
+                lock (this.formLock)
+                {
+                    this.Opacity = 0.05 * i;
+                }
                 //一時停止
-                System.Threading.Thread.Sleep(30);
+                System.Threading.Thread.Sleep(3);
                 //await Task.Delay(30);
             }
 

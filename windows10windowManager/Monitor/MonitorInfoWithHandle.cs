@@ -111,6 +111,7 @@ namespace windows10windowManager.Monitor
         public MONITORINFO monitorInfo { get; private set; }
 
         //protected MonitorInformationForm monitorInformationForm;
+
         private readonly object formLock = new object();
 
         #endregion
