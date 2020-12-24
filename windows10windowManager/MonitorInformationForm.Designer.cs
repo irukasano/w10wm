@@ -57,8 +57,6 @@ namespace windows10windowManager
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "MonitorInformationForm";
             this.TopMost = true;
-            this.Load += new System.EventHandler(this.MonitorInformationForm_Load);
-            this.Shown += new System.EventHandler(this.MonitorInformationForm_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

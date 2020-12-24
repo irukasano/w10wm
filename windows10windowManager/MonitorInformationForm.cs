@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 using windows10windowManager.Monitor;
 using windows10windowManager.Util;
+using windows10windowManager.Window;
 
 namespace windows10windowManager
 {
@@ -31,12 +32,7 @@ namespace windows10windowManager
 
             this.MonitorInfo = monitorInfoWithHandle;
 
-        }
-        private void MonitorInformationForm_Load(object sender, EventArgs e)
-        {
-            this.Opacity = 0.8D;
-
-            // 指定のモニターで最大化表示する
+            // このモニターで最大化表示する
             var monitorRect = this.MonitorInfo.monitorRect;
 
             this.Top = monitorRect.top;
@@ -46,40 +42,29 @@ namespace windows10windowManager
 
             this.Location = new Point(monitorRect.left, monitorRect.top);
 
-            /*
-            // 指定のモニター情報を表示する
-            var crlf = "\r\n";
-            var deviceName = new string(monitorInfoWithHandle.MonitorInfo.szDevice).TrimEnd('\0');
-            var monitorHandle = monitorInfoWithHandle.MonitorHandle;
-            var top = monitorRect.top;
-            var bottom = monitorRect.bottom;
-            var left = monitorRect.left;
-            var right = monitorRect.right;
-            var workRect = monitorInfoWithHandle.MonitorInfo.work;
-            var workTop = workRect.top;
-            var workBottom = workRect.bottom;
-            var workLeft = workRect.left;
-            var workRight = workRect.right;
-
-            this.MonitorInformationLabel.Text = $"DeviceName={deviceName}{crlf}" +
-                $"Handle={monitorHandle}{crlf}" +
-                $"MonitorRect=top:{top}/bottom:{bottom}/left:{left}/right:{right}{crlf}" +
-                $"WorkRect=top:{workTop}/bottom:{workBottom}/left:{workLeft}/right:{workRight}{crlf}";
-            */
         }
 
-        private void MonitorInformationForm_Shown(object sender, EventArgs e)
+        public async void Highlight()
         {
+            this.Opacity = 0.8D;
+            //this.BringToFront();
+            //this.TopMost = true;
+            this.Show();
+            WindowInfoWithHandle.SetWindowForground(this.Handle);
+
             for (int i = 20; i >= 0; i--)
             {
                 //フォームの不透明度を変更する
                 this.Opacity = 0.05 * i;
                 //一時停止
                 System.Threading.Thread.Sleep(30);
+                //await Task.Delay(30);
             }
 
+            this.Hide();
             this.Close();
         }
+
 
     }
 }
