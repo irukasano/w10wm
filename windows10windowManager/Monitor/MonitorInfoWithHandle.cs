@@ -111,6 +111,7 @@ namespace windows10windowManager.Monitor
         public MONITORINFO monitorInfo { get; private set; }
 
         //protected MonitorInformationForm monitorInformationForm;
+        private readonly object formLock = new object();
 
         #endregion
 
@@ -143,9 +144,11 @@ namespace windows10windowManager.Monitor
          */
         public void Highlight()
         {
-            //this.monitorInformationForm.Highlight();
-            var monitorInformationForm = new MonitorInformationForm(this);
-            monitorInformationForm.Highlight();
+            lock(this.formLock){
+                //this.monitorInformationForm.Highlight();
+                var monitorInformationForm = new MonitorInformationForm(this);
+                monitorInformationForm.Highlight();
+            }
         }
 
     }

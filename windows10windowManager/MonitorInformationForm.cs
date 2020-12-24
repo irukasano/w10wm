@@ -16,7 +16,11 @@ namespace windows10windowManager
 {
     public partial class MonitorInformationForm : Form
     {
+        #region Field
         protected MonitorInfoWithHandle MonitorInfo { get; private set; }
+
+        #endregion
+
 
         public MonitorInformationForm(MonitorInfoWithHandle monitorInfoWithHandle)
         {
@@ -44,7 +48,7 @@ namespace windows10windowManager
 
         }
 
-        public async void Highlight()
+        public void Highlight()
         {
             this.Opacity = 0.8D;
             //this.BringToFront();

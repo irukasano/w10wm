@@ -210,6 +210,7 @@ namespace windows10windowManager
                 this.traceWindow.denyExePaths.Add(activeWindowExePath);
                 SettingManager.SaveStringList("Window_TraceWindow_Deny_ExePath", this.traceWindow.denyExePaths);
                 this.monitorManager.RemoveWindowInfo(activeWindowInfo);
+                this.traceWindow.RemoveWindowInfo(activeWindowInfo);
                 this.ArrangeWindows();
                 this.monitorManager.ActivateWindow();
             }
@@ -236,6 +237,7 @@ namespace windows10windowManager
                 this.traceWindow.denyWindowTitles.Add(activeWindowTitle);
                 SettingManager.SaveStringList("Window_TraceWindow_Deny_WindowTitle", this.traceWindow.denyWindowTitles);
                 this.monitorManager.RemoveWindowInfo(activeWindowInfo);
+                this.traceWindow.RemoveWindowInfo(activeWindowInfo);
                 this.ArrangeWindows();
                 this.monitorManager.ActivateWindow();
             }

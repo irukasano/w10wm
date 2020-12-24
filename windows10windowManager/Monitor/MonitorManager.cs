@@ -142,7 +142,10 @@ namespace windows10windowManager.Monitor
          */
         public int GetCurrentWindowManagerIndex()
         {
-            return this.currentWindowManagerIndex;
+            lock (this.currentWindowManagerIndexLock)
+            {
+                return this.currentWindowManagerIndex;
+            }
         }
 
         public void SetCurrentWindowManagerIndex(int windowManagerIndex)

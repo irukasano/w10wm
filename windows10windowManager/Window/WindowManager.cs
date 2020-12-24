@@ -119,7 +119,7 @@ namespace windows10windowManager.Window
         {
             if (this.windowInfos.Contains(windowInfo))
             {
-                lock(this.windowInfos)
+                lock (this.windowInfosLock)
                 {
                     this.windowInfos.Remove(windowInfo);
 
@@ -178,6 +178,16 @@ namespace windows10windowManager.Window
         public void SetCurrentWindowIndex(int windowIndex)
         {
             Logger.WriteLine($"WindowManager.SetCurrentWindowIndex = {windowIndex}");
+            if ( windowIndex < 0 || windowIndex >= this.windowInfos.Count())
+            {
+                windowIndex = this.GetCurrentWindowIndex();
+                Logger.WriteLine($"WindowManager.SetCurrentWindowIndex = {windowIndex}(Changed)");
+            }
+            if (windowIndex < 0 || windowIndex >= this.windowInfos.Count())
+            {
+                windowIndex = 0;
+                Logger.WriteLine($"WindowManager.SetCurrentWindowIndex = {windowIndex}(Changed)");
+            }
             lock ( this.windowInfosLock)
             {
                 this.currentWindowInfoIndex = windowIndex;

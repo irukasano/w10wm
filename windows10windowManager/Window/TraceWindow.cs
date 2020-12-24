@@ -112,6 +112,8 @@ namespace windows10windowManager.Window
         public List<string> denyExePaths = null;
 
         public List<string> denyWindowTitles = null;
+
+        private readonly object windowInfosLock = new object();
         #endregion
 
         public TraceWindow()
@@ -147,6 +149,17 @@ namespace windows10windowManager.Window
         public List<WindowInfoWithHandle> GetWindowInfos()
         {
             return this.windowInfos;
+        }
+
+        public void RemoveWindowInfo(WindowInfoWithHandle windowInfoWithHandle)
+        {
+            if (this.windowInfos.Contains(windowInfoWithHandle))
+            {
+                lock (this.windowInfosLock)
+                {
+                    this.windowInfos.Remove(windowInfoWithHandle);
+                }
+            }
         }
 
         /**
