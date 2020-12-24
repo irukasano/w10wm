@@ -35,6 +35,8 @@ namespace windows10windowManager.Monitor
         public List<WindowManager> windowManagers { get; set; }
 
         protected int currentWindowManagerIndex { get; set; } = 0;
+
+        private readonly object currentWindowManagerIndexLock = new object();
         #endregion
 
         public MonitorManager(TraceWindow traceWindow)
@@ -145,8 +147,12 @@ namespace windows10windowManager.Monitor
 
         public void SetCurrentWindowManagerIndex(int windowManagerIndex)
         {
+            // TODO
             Logger.WriteLine($"MonitorManager.SetCurrentWindowManagerIndex = {windowManagerIndex}");
-            this.currentWindowManagerIndex = windowManagerIndex;
+            lock (this.currentWindowManagerIndexLock)
+            {
+                this.currentWindowManagerIndex = windowManagerIndex;
+            }
         }
 
         /**
@@ -219,7 +225,7 @@ namespace windows10windowManager.Monitor
             }
             var monitorInfo = this.monitorInfos.ElementAt(monitorNumber);
             Logger.DebugMonitor($"Get Monitor number={monitorNumber}", monitorInfo);
-            this.currentWindowManagerIndex = monitorNumber;
+            this.SetCurrentWindowManagerIndex(monitorNumber);
             return this.FindWindowManagerByMonitorHandle(monitorInfo.monitorHandle);
         }
 

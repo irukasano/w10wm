@@ -479,8 +479,8 @@ namespace windows10windowManager
             {
                 Logger.DebugWindowInfo("Window Show", w.WindowInfo);
                 var windowManager = this.monitorManager.PushNewWindowInfo(w.WindowInfo);
-                this.monitorManager.ActivateWindow();
                 this.ArrangeWindows();
+                this.monitorManager.ActivateWindow();
             }
             catch (Exception ex)
             {
@@ -502,8 +502,8 @@ namespace windows10windowManager
             {
                 Logger.DebugWindowInfo("Window Hide", w.WindowInfo);
                 var windowManager = this.monitorManager.RemoveWindowInfo(w.WindowInfo);
-                this.monitorManager.ActivateWindow();
                 this.ArrangeWindows();
+                this.monitorManager.ActivateWindow();
             }
             catch (Exception ex)
             {
