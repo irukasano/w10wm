@@ -69,7 +69,7 @@ namespace windows10windowManager
                     this.Opacity = 0.05 * i;
                 }
                 //一時停止
-                System.Threading.Thread.Sleep(3);
+                System.Threading.Thread.Sleep(1);
                 //await Task.Delay(30);
             }
 

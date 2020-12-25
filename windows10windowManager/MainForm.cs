@@ -362,109 +362,6 @@ namespace windows10windowManager
             }
             return true;
 
-            /*
-            try
-            {
-
-                int[] modifierLWindows = new int[] { (int)OriginalKey.LeftWindows };
-                int[] modifierLShiftLWindows = new int[] { (int)OriginalKey.LeftWindows, (int)OriginalKey.LeftShift };
-                int[] modifierRShiftLWindows = new int[] { (int)OriginalKey.LeftWindows, (int)OriginalKey.LeftShift };
-
-                if (e.Equals(OriginalKey.J, modifierLWindows))
-                {
-                    this.MoveCurrentFocusNext();
-                    return false;
-                }
-                else if (e.Equals(OriginalKey.K, modifierLWindows))
-                {
-                    this.MoveCurrentFocusPrevious();
-                    return false;
-                }
-                else if (e.Equals(OriginalKey.U, modifierLWindows))
-                {
-                    this.MoveCurrentFocusTop();
-                    return false;
-                }
-                else if (e.Equals(OriginalKey.M, modifierLWindows))
-                {
-                    this.MoveCurrentFocusBottom();
-                    return false;
-                }
-                else if (e.Equals(OriginalKey.J, modifierLShiftLWindows) || e.Equals(OriginalKey.J, modifierRShiftLWindows))
-                {
-                    this.SetWindowNext();
-                    return false;
-                }
-                else if (e.Equals(OriginalKey.K, modifierLShiftLWindows) || e.Equals(OriginalKey.K, modifierRShiftLWindows))
-                {
-                    this.SetWindowPrevious();
-                    return false;
-                }
-                else if (e.Equals(OriginalKey.U, modifierLShiftLWindows) || e.Equals(OriginalKey.U, modifierRShiftLWindows))
-                {
-                    this.SetWindowTop();
-                    return false;
-                }
-                else if (e.Equals(OriginalKey.M, modifierLShiftLWindows) || e.Equals(OriginalKey.M, modifierRShiftLWindows))
-                {
-                    this.SetWindowBottom();
-                    return false;
-                }
-                else if (e.Equals(OriginalKey.X, modifierLWindows))
-                {
-                    this.CloseCurrentWindow();
-                    return false;
-                }
-                else if (e.Equals(OriginalKey.C, modifierLWindows))
-                {
-                    this.HighlightActiveMonitor();
-                    return false;
-                }
-                else if (e.Equals(OriginalKey.Period, modifierLWindows))
-                {
-                    this.MoveCurrentFocusPreviousMonitor();
-                    return false;
-                }
-                else if (e.Equals(OriginalKey.Comma, modifierLWindows))
-                {
-                    this.MoveCurrentFocusNextMonitor();
-                    return false;
-                }
-                else if (e.Equals(OriginalKey.F1, modifierLWindows))
-                {
-                    this.ActivateMonitorN(0);
-                    return false;
-                }
-                else if (e.Equals(OriginalKey.F2, modifierLWindows))
-                {
-                    this.ActivateMonitorN(1);
-                    return false;
-                }
-                else if (e.Equals(OriginalKey.F3, modifierLWindows))
-                {
-                    this.ActivateMonitorN(2);
-                    return false;
-                }
-                else if (e.Equals(OriginalKey.Question, modifierLWindows))
-                {
-                    this.ShowHelpForm();
-                    return false;
-                }
-                else if (e.Equals(OriginalKey.O, modifierLWindows))
-                {
-                    // 右クリックメニューを表示する
-                    this.ShowContextMenu();
-                    return false;
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Logger.Exception(ex);
-                throw ex;
-            }
-            return true;
-            */
         }
 
 
@@ -880,7 +777,8 @@ namespace windows10windowManager
             p.Y = monitorInfo.monitorRect.top + 100;
 
             this.contextMenuStrip1.Show(p);
-            this.contextMenuStrip1.Focus();
+            WindowInfoWithHandle.SetWindowForground(this.contextMenuStrip1.Handle);
+            //this.contextMenuStrip1.Focus();
         }
 
         /**
