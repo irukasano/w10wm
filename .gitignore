@@ -2,4 +2,8 @@
 # この .gitignore ファイルは Microsoft(R) Visual Studio によって自動的に作成されました。
 ################################################################################
 
-/inAdvance/Calculator/Calculator/bin/Debug/netcoreapp3.1/calculator.log
+*.log
+bin/
+obj/
+.suo
+.dtbcache*

@@ -7,11 +7,28 @@
     <ProjectGuid>{833DEB65-5AFF-426E-BC49-3ABCD3D41701}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>windows10windowManager</RootNamespace>
-    <AssemblyName>windows10windowManager</AssemblyName>
+    <AssemblyName>w10wm</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -25,7 +42,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -33,8 +50,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>packages\NLog.4.7.6\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,14 +72,60 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="HelpForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="HelpForm.Designer.cs">
+      <DependentUpon>HelpForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="KeyHook\InterceptKeyboardSettingManager.cs" />
+    <Compile Include="MonitorInformationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MonitorInformationForm.Designer.cs">
+      <DependentUpon>MonitorInformationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeyHook\InterceptKeyboardSetting.cs" />
+    <Compile Include="Util\SettingManager.cs" />
+    <Compile Include="Util\Logger.cs" />
+    <Compile Include="Window\AbstractWindowTiler.cs" />
+    <Compile Include="Window\WindowTilerDividerFourDivided.cs" />
+    <Compile Include="Window\WindowTilerConcentration.cs" />
+    <Compile Include="Window\WindowTilerNone.cs" />
+    <Compile Include="Window\WindowTiler.cs" />
+    <Compile Include="Window\WindowTilerMaximize.cs" />
+    <Compile Include="Window\WindowTilerBugn.cs" />
+    <Compile Include="Window\WindowTilerMdi.cs" />
+    <Compile Include="Window\WindowTilerDivider.cs" />
+    <Compile Include="Window\WindowManager.cs" />
+    <Compile Include="Window\EventMap\EventMap.cs" />
+    <Compile Include="Window\EventMap\EventMapConverter.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeyHook\AbstractInterceptKeyboard.cs" />
+    <Compile Include="KeyHook\InterceptKeyboard.cs" />
+    <Compile Include="KeyHook\KeyMap\KeyMap.cs" />
+    <Compile Include="KeyHook\KeyMap\KeyMapConverter.cs" />
+    <Compile Include="Monitor\MonitorInfoWithHandle.cs" />
+    <Compile Include="Monitor\MonitorManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Window\AbstractTraceWindow.cs" />
+    <Compile Include="Window\TraceWindow.cs" />
+    <Compile Include="Window\WindowInfoWithHandle.cs" />
+    <EmbeddedResource Include="HelpForm.resx">
+      <DependentUpon>HelpForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MonitorInformationForm.resx">
+      <DependentUpon>MonitorInformationForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -63,6 +135,13 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -76,5 +155,23 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 および x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if $(ConfigurationName) == Release (
+cd $(ProjectDir)
+powershell -ExecutionPolicy Unrestricted .\CreateZip.ps1 .\bin\Release .\bin\w10wm.zip
+)</PostBuildEvent>
+  </PropertyGroup>
 </Project>

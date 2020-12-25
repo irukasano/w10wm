@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -22,9 +23,8 @@ namespace eventHook
         private void Form1_Load(object sender, EventArgs e)
         {
             traceProcess = new TraceProcess();
+            traceProcess.ShowEvent += TraceProcess_ShowEvent;
 
-            // 起動中のウィンドウを取得
-            traceProcess.InitializeWindowHandles();
 
             // イベントをフックしてウィンドウ状態の変更を補足
             traceProcess.Hook();
@@ -34,5 +34,11 @@ namespace eventHook
         {
             traceProcess.UnHook();
         }
+
+        private void TraceProcess_ShowEvent(object sender, TraceProcess.OriginalWinEventArg w)
+        {
+            Debug.WriteLine("Window Show : " + w.WindowInfo.WindowTitle);
+        }
+
     }
 }
