@@ -27,6 +27,7 @@ Copy-Item "..\README.md" -destination $tempDir -recurse
 Copy-Item "..\INSTALL.md" -destination $tempDir -recurse
 Copy-Item "..\LICENSE" -destination $tempDir -recurse
 Copy-Item "..\COPYRIGHT" -destination $tempDir -recurse
+Copy-Item ".\favicon.ico" -destination $tempDir -recurse
 
 # 一時ディレクトリから不要なファイルを削除(プロジェクトに応じて要変更)
 Remove-Item -Recurse -path $tempDir -include *.log
