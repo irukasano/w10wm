@@ -59,7 +59,7 @@ namespace windows10windowManager
             // アイコンを作成します。
             // アイコンファイルは32x32の24bit Bitmap
             var icon = new NotifyIcon();
-            icon.Icon = new Icon("..\\..\\favicon.ico");
+            icon.Icon = new Icon(".\\favicon.ico");
             icon.Visible = true;
             icon.Text = "w10wm";
             icon.ContextMenuStrip = menu;

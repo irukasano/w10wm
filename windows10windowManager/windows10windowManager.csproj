@@ -169,7 +169,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if $(ConfigurationName) == Release (
+    <PostBuildEvent>xcopy "$(ProjectDir)\favicon.ico" $(TargetDir) /Y
+
+if $(ConfigurationName) == Release (
 cd $(ProjectDir)
 powershell -ExecutionPolicy Unrestricted .\CreateZip.ps1 .\bin\Release .\bin\w10wm.zip
 )</PostBuildEvent>
