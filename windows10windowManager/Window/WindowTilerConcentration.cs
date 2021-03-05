@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 using windows10windowManager.Util;
+using windows10windowManagerUtil.Util;
+using windows10windowManagerUtil.Window;
+using windows10windowManagerWindowHook;
 
 namespace windows10windowManager.Window
 {

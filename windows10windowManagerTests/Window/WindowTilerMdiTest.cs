@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 using windows10windowManager.Window;
+using windows10windowManagerUtil.Window;
 
 namespace windows10windowManagerTests.Window
 {
@@ -23,8 +24,8 @@ namespace windows10windowManagerTests.Window
         public void Test_GetWindowRectOf_MultiWindowIsInMonitorRect()
         {
             WindowTilerMdi windowTiler = new WindowTilerMdi();
-            windowTiler.percentOfMonitorHeight = 0.1;
-            windowTiler.percentOfMonitorWidth = 0.2;
+            //windowTiler.percentOfMonitorHeight = 0.1;
+            //windowTiler.percentOfMonitorWidth = 0.2;
             windowTiler.marginTopToMonitor = 10;
             windowTiler.marginBottomToMonitor = 20;
             windowTiler.marginLeftToMonitor = 30;
@@ -47,8 +48,8 @@ namespace windows10windowManagerTests.Window
         public void Test_GetWindowRectOf_MultiWindowOverBottom()
         {
             WindowTilerMdi windowTiler = new WindowTilerMdi();
-            windowTiler.percentOfMonitorHeight = 0.8;
-            windowTiler.percentOfMonitorWidth = 0.2;
+            //windowTiler.percentOfMonitorHeight = 0.8;
+            //windowTiler.percentOfMonitorWidth = 0.2;
             windowTiler.marginTopToMonitor = 10;
             windowTiler.marginBottomToMonitor = 10;
             windowTiler.marginLeftToMonitor = 10;
@@ -70,8 +71,8 @@ namespace windows10windowManagerTests.Window
         public void Test_GetWindowRectOf_MultiWindowOverRight()
         {
             WindowTilerMdi windowTiler = new WindowTilerMdi();
-            windowTiler.percentOfMonitorHeight = 0.8;
-            windowTiler.percentOfMonitorWidth = 0.6;
+            //windowTiler.percentOfMonitorHeight = 0.8;
+            //windowTiler.percentOfMonitorWidth = 0.6;
             windowTiler.marginTopToMonitor = 10;
             windowTiler.marginBottomToMonitor = 10;
             windowTiler.marginLeftToMonitor = 10;

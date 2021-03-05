@@ -14,7 +14,9 @@ using windows10windowManager.Monitor;
 using windows10windowManager.Window;
 using windows10windowManager.KeyHook;
 using windows10windowManager.KeyHook.KeyMap;
-using windows10windowManager.Util;
+//using windows10windowManager.Util;
+using windows10windowManagerUtil.Util;
+using windows10windowManagerWindowHook;
 
 namespace windows10windowManager
 {

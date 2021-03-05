@@ -6,8 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-using windows10windowManager.Window;
-using windows10windowManager.Util;
+using windows10windowManagerUtil.Util;
+using windows10windowManagerUtil.Window;
+using windows10windowManagerWindowHook;
+//using windows10windowManager.Util;
 
 namespace windows10windowManager.Window
 {
@@ -50,7 +52,7 @@ namespace windows10windowManager.Window
         {
             this.monitorHandle = monitorHandle;
             this.windowInfos = new List<WindowInfoWithHandle>();
-            this.SetCurrentWindowIndex( 0);
+            this.SetCurrentWindowIndex(0);
         }
 
         public void SaveWindowTilingType(int currentWindowManagerIndex, WindowTilingType windowTilingType)

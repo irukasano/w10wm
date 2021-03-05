@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransparentForm", "..\inAdv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLiteApplication", "..\inAdvance\SQLiteApplication\SQLiteApplication.csproj", "{B0196952-0DA9-4D6E-8D77-8E93A527C6E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "windows10windowManagerWindowHook", "..\windows10windowManagerWindowHookDll\windows10windowManagerWindowHook.csproj", "{744F8CF1-F5BB-491A-B271-FF69ECDFBB90}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "windows10windowManagerUtil", "..\windows10windowManagerUtil\windows10windowManagerUtil.csproj", "{7934BA61-C33D-49D9-A3DE-8E4C2DABC2C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +79,14 @@ Global
 		{B0196952-0DA9-4D6E-8D77-8E93A527C6E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0196952-0DA9-4D6E-8D77-8E93A527C6E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0196952-0DA9-4D6E-8D77-8E93A527C6E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{744F8CF1-F5BB-491A-B271-FF69ECDFBB90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{744F8CF1-F5BB-491A-B271-FF69ECDFBB90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{744F8CF1-F5BB-491A-B271-FF69ECDFBB90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{744F8CF1-F5BB-491A-B271-FF69ECDFBB90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7934BA61-C33D-49D9-A3DE-8E4C2DABC2C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7934BA61-C33D-49D9-A3DE-8E4C2DABC2C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7934BA61-C33D-49D9-A3DE-8E4C2DABC2C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7934BA61-C33D-49D9-A3DE-8E4C2DABC2C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

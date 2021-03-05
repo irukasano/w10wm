@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using windows10windowManager.Util;
+using windows10windowManagerUtil.Util;
+using windows10windowManagerUtil.Window;
 
 namespace windows10windowManager.Window
 {

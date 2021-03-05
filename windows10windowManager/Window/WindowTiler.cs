@@ -6,6 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 using windows10windowManager.Util;
+using windows10windowManagerUtil;
+using windows10windowManagerUtil.Window;
+using windows10windowManagerWindowHook;
+
 
 namespace windows10windowManager.Window
 {
@@ -41,7 +45,7 @@ namespace windows10windowManager.Window
         #endregion
 
 
-        public WindowTiler(WindowTilingType windowTilingType, int windowCount, Monitor.RECT monitorRect)
+        public WindowTiler(WindowTilingType windowTilingType, int windowCount, RECT monitorRect)
         {
             Logger.WriteLine($"WindowTiler(WindowTilingType={windowTilingType}, int={windowCount}");
 

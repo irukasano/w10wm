@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using windows10windowManagerWindowHook;
 using windows10windowManager.Monitor;
 using windows10windowManager.Util;
 using windows10windowManager.Window;

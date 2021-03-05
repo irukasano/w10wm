@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 //using System.Diagnostics;
 
+using windows10windowManagerUtil;
+//using windows10windowManagerUtil.Util;
+using windows10windowManagerUtil.Monitor;
+using windows10windowManagerUtil.Window;
+using windows10windowManagerWindowHook;
 using windows10windowManager.Window;
 using windows10windowManager.Util;
 
@@ -99,7 +104,8 @@ namespace windows10windowManager.Monitor
                 var monitorName = new string(monitorInfo.monitorInfo.szDevice).TrimEnd('\0');
                 Logger.WriteLine($"Add WindowManager of Monitor : {monitorName} ({monitorHandle})");
                 var windowManager = new WindowManager(monitorInfo.monitorHandle);
-                windowManager.windowTilingType = (WindowTilingType)SettingManager.GetInt($"Window_WindowManager{i}_WindowTilingType");
+                windowManager.windowTilingType = 
+                    (WindowTilingType)windows10windowManagerUtil.Util.SettingManager.GetInt($"Window_WindowManager{i}_WindowTilingType");
                 this.windowManagers.Add(windowManager);
             }
 

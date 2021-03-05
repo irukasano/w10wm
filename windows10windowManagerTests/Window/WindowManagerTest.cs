@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using windows10windowManager.Window;
+using windows10windowManagerWindowHook;
 
 namespace windows10windowManagerTests.Window
 {

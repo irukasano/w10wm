@@ -39,6 +39,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -50,11 +51,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>packages\NLog.4.7.6\lib\net45\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.Serialization" />
@@ -86,7 +83,6 @@
       <DependentUpon>MonitorInformationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="KeyHook\InterceptKeyboardSetting.cs" />
-    <Compile Include="Util\SettingManager.cs" />
     <Compile Include="Util\Logger.cs" />
     <Compile Include="Window\AbstractWindowTiler.cs" />
     <Compile Include="Window\WindowTilerDividerFourDivided.cs" />
@@ -98,8 +94,6 @@
     <Compile Include="Window\WindowTilerMdi.cs" />
     <Compile Include="Window\WindowTilerDivider.cs" />
     <Compile Include="Window\WindowManager.cs" />
-    <Compile Include="Window\EventMap\EventMap.cs" />
-    <Compile Include="Window\EventMap\EventMapConverter.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,9 +108,6 @@
     <Compile Include="Monitor\MonitorManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Window\AbstractTraceWindow.cs" />
-    <Compile Include="Window\TraceWindow.cs" />
-    <Compile Include="Window\WindowInfoWithHandle.cs" />
     <EmbeddedResource Include="HelpForm.resx">
       <DependentUpon>HelpForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -166,6 +157,16 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\windows10windowManagerUtil\windows10windowManagerUtil.csproj">
+      <Project>{7934ba61-c33d-49d9-a3de-8e4c2dabc2c0}</Project>
+      <Name>windows10windowManagerUtil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\windows10windowManagerWindowHookDll\windows10windowManagerWindowHook.csproj">
+      <Project>{744f8cf1-f5bb-491a-b271-ff69ecdfbb90}</Project>
+      <Name>windows10windowManagerWindowHook</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
