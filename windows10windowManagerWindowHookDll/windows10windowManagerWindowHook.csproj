@@ -42,7 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractTraceWindow.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="EventMap\EventMap.cs" />
     <Compile Include="EventMap\EventMapConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

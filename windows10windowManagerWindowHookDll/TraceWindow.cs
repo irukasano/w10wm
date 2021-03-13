@@ -241,13 +241,13 @@ namespace windows10windowManagerWindowHook
         /**
          * <summary>
          * 指定されたウィンドウタイトルが、拒否リスト(WindowTitle)に含まれていれば True を戻す
-         * ウィンドウタイトルは完全一致すれば True
+         * ウィンドウタイトルは部分一致すれば True
          * </summary>
          */
         protected bool IsDenyWindowTitle(string windowTitle)
         {
             int foundIndex = this.denyWindowTitles.FindIndex(
-                denyWindowTitle => windowTitle == denyWindowTitle);
+                denyWindowTitle => windowTitle.IndexOf(denyWindowTitle) >= 0);
 
             return foundIndex >= 0;
         }
@@ -260,10 +260,12 @@ namespace windows10windowManagerWindowHook
             {
                 return;
             }
-            if (eventName == EventName.UNKNOWN)
+            if (eventName == EventName.UNKNOWN ||
+                eventName == EventName.EVENT_CONSOLE_LAYOUT)
             {
                 return;
             }
+
             var needleWindowInfo = new WindowInfoWithHandle(hWnd);
             var windowLong = GetWindowLong(hWnd, GWL_STYLE);
             var windowLongString = windowLong.ToString("x8");

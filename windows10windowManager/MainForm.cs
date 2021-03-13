@@ -38,7 +38,7 @@ namespace windows10windowManager
 
                 this.InitializeTaskTray();
 
-            } catch ( Exception ex)
+            } catch (Exception ex)
             {
                 Logger.Exception(ex);
                 throw ex;
@@ -50,13 +50,25 @@ namespace windows10windowManager
             ShowInTaskbar = false;
 
             // メニュー項目を作成します。
-            var menuItem = new ToolStripMenuItem();
-            menuItem.Text = "このアプリケーションを終了(&Q)";
-            menuItem.Click += new EventHandler(Exit_Click);
+            var menuItemExit = new ToolStripMenuItem();
+            menuItemExit.Text = "このアプリケーションを終了(&Q)";
+            menuItemExit.Click += new EventHandler(Exit_Click);
+
+            var menuItemShowLog = new ToolStripMenuItem();
+            menuItemShowLog.Text = "ログを表示";
+            menuItemShowLog.Click += new EventHandler(ShowLog_Click);
+
+            var menuItemShowConfig = new ToolStripMenuItem();
+            menuItemShowConfig.Text = "設定を編集";
+            menuItemShowConfig.Click += new EventHandler(ShowConfig_Click);
+
 
             // メニューを作成します。
             var menu = new ContextMenuStrip();
-            menu.Items.Add(menuItem);
+            menu.Items.Add(menuItemShowLog);
+            menu.Items.Add(menuItemShowConfig);
+            menu.Items.Add("-");
+            menu.Items.Add(menuItemExit);
 
             // アイコンを作成します。
             // アイコンファイルは32x32の24bit Bitmap
@@ -98,6 +110,22 @@ namespace windows10windowManager
         private void Exit_Click(object sender, EventArgs e)
         {
             this.Terminate();
+        }
+
+        private void ShowLog_Click(object sender, EventArgs e)
+        {
+            var proc = new System.Diagnostics.Process();
+            proc.StartInfo.FileName = Logger.GetLogFilename();
+            proc.StartInfo.UseShellExecute = true;
+            proc.Start();
+        }
+
+        private void ShowConfig_Click(object sender, EventArgs e)
+        {
+            var proc = new System.Diagnostics.Process();
+            proc.StartInfo.FileName = SettingManager.GetConfigrationFileName();
+            proc.StartInfo.UseShellExecute = true;
+            proc.Start();
         }
 
         private void FToolStripMenuItemTile4Window_Click(object sender, EventArgs e)

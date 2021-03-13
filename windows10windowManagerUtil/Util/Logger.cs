@@ -41,6 +41,13 @@ namespace windows10windowManagerUtil.Util
             LogManager.Configuration = conf;
         }
 
+        public static string GetLogFilename()
+        {
+            var file = (FileTarget)LogManager.Configuration.FindTargetByName("file");
+            var logEventInfo = new LogEventInfo { TimeStamp = DateTime.Now };
+            return file.FileName.Render(logEventInfo);
+        }
+
         /**
          * <summary>
          * ログ出力

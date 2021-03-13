@@ -13,6 +13,11 @@ namespace windows10windowManagerUtil.Util
     {
         public static Configuration configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
+        public static string GetConfigrationFileName()
+        {
+            return configuration.FilePath;
+        }
+
         public static string GetString(string key)
         {
             return (string)ConfigurationManager.AppSettings[key];
