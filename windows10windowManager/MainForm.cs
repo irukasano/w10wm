@@ -88,7 +88,7 @@ namespace windows10windowManager
 
             this.traceWindow = new TraceWindow();
             this.traceWindow.ShowEvent += TraceWindow_ShowEvent;
-            this.traceWindow.HideEvent += TraceWindow_HideEvent;
+            this.traceWindow.DestroyEvent += TraceWindow_HideEvent;
             this.traceWindow.LocationChangeEvent += TraceWindow_LocationChangeEvent;
             this.traceWindow.ActivateEvent += TraceWindow_ActivateEvent;
             this.traceWindow.Hook();

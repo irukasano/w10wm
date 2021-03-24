@@ -261,7 +261,8 @@ namespace windows10windowManagerWindowHook
                 return;
             }
             if (eventName == EventName.UNKNOWN ||
-                eventName == EventName.EVENT_CONSOLE_LAYOUT)
+                eventName == EventName.EVENT_CONSOLE_LAYOUT ||
+                eventName == EventName.EVENT_CONSOLE_UPDATE_SCROLL)
             {
                 return;
             }
