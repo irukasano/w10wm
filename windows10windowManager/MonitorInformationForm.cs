@@ -64,6 +64,8 @@ namespace windows10windowManager
 
             for (int i = 20; i >= 0; i--)
             {
+                Application.DoEvents();
+
                 //フォームの不透明度を変更する
                 lock (this.formLock)
                 {
