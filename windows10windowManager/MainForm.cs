@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -58,6 +59,10 @@ namespace windows10windowManager
             menuItemShowLog.Text = "ログを表示";
             menuItemShowLog.Click += new EventHandler(ShowLog_Click);
 
+            var menuItemSnapshotLog = new ToolStripMenuItem();
+            menuItemSnapshotLog.Text = "今のログを保存";
+            menuItemSnapshotLog.Click += new EventHandler(SnapshotLog_Click);
+
             var menuItemShowConfig = new ToolStripMenuItem();
             menuItemShowConfig.Text = "設定を編集";
             menuItemShowConfig.Click += new EventHandler(ShowConfig_Click);
@@ -67,6 +72,7 @@ namespace windows10windowManager
             var menu = new ContextMenuStrip();
             menu.Items.Add(menuItemShowLog);
             menu.Items.Add(menuItemShowConfig);
+            menu.Items.Add(menuItemSnapshotLog);
             menu.Items.Add("-");
             menu.Items.Add(menuItemExit);
 
@@ -88,7 +94,7 @@ namespace windows10windowManager
 
             this.traceWindow = new TraceWindow();
             this.traceWindow.ShowEvent += TraceWindow_ShowEvent;
-            this.traceWindow.DestroyEvent += TraceWindow_HideEvent;
+            this.traceWindow.HideEvent += TraceWindow_HideEvent;
             this.traceWindow.LocationChangeEvent += TraceWindow_LocationChangeEvent;
             this.traceWindow.ActivateEvent += TraceWindow_ActivateEvent;
             this.traceWindow.Hook();
@@ -110,6 +116,14 @@ namespace windows10windowManager
         private void Exit_Click(object sender, EventArgs e)
         {
             this.Terminate();
+        }
+
+        private void SnapshotLog_Click(object sender, EventArgs e)
+        {
+            var proc = new System.Diagnostics.Process();
+            var fileName = Logger.GetLogFilename();
+            var currentTime = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            File.Copy(fileName, fileName + "." + currentTime);
         }
 
         private void ShowLog_Click(object sender, EventArgs e)
